@@ -1,0 +1,46 @@
+./etc/rabbitmq/conf.d/10-default-guest-user.conf
+
+
+
+
+
+
+Dados Anteriores
+
+## DEFAULT SETTINGS ARE NOT MEANT TO BE TAKEN STRAIGHT INTO PRODUCTION
+## see https://www.rabbitmq.com/configure.html for further information
+## on configuring RabbitMQ
+
+## allow access to the guest user from anywhere on the network
+## https://www.rabbitmq.com/access-control.html#loopback-users
+## https://www.rabbitmq.com/production-checklist.html#users
+loopback_users.guest = false
+
+
+Novos dados 
+
+echo "loopback_users.guest = false
+
+listeners.tcp.default = 5671
+
+default_pass = admin
+
+default_user = admin
+
+default_vhost = keycloak_test
+
+management.load_definitions = /srv/definitions.json
+
+auth_backends.1 = http
+
+auth_backends.2 = internal
+
+auth_http.http_method = post
+
+auth_http.user_path = http://keycloak-proxy:3000/user
+
+auth_http.vhost_path = http://keycloak-proxy:3000/vhost
+
+auth_http.resource_path = http://keycloak-proxy:3000/resource
+
+auth_http.topic_path = http://keycloak-proxy:3000/topic" > 10-default-guest-user.conf

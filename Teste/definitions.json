@@ -1,0 +1,37 @@
+{
+    "rabbit_version": "3.9.12",
+    "policies": [],
+    "parameters": [],
+    "topic_permissions": [],
+    "global_parameters": [
+        {
+            "name": "cluster_name",
+            "value": "keycloak-rabbit"
+        }
+    ],
+    "users": [
+        {
+            "name": "admin",
+            "password_hash": "8C6976E5B5410415BDE908BD4DEE15DFB167A9C873FC4BB8A81F6F2AB448A918",
+            "hashing_algorithm": "rabbit_password_hashing_sha256",
+            "tags": "administrator"
+        }
+    ],
+    "permissions": [
+        {
+            "user": "admin",
+            "vhost": "keycloak_test",
+            "configure": ".*",
+            "write": ".*",
+            "read": ".*"
+        }
+    ],
+    "vhosts": [
+        {
+            "name": "keycloak_test"
+        }
+    ],
+    "bindings": [],
+    "queues": [],
+    "exchanges": []
+}

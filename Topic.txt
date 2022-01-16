@@ -1,0 +1,7 @@
+
+
+OpenID significado
+
+vhost significado
+
+AMQP significado
