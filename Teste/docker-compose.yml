@@ -14,7 +14,7 @@ services:
       - "5672:5672"
       - "15672:15672"
     volumes:
-      - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
-      - ./rabbitmq.conf:/etc/rabbitmq/conf.d/10-default-guest-user.conf
       - ./definitions.json:/srv/definitions.json
-      # - ./enabled_plugins.txt:/etc/rabbitmq/enabled_plugins
+      # - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+      - ./rabbitmq.conf:/etc/rabbitmq/conf.d/10-default-guest-user.conf
+      - ./enabled_plugins.txt:/etc/rabbitmq/enabled_plugins
