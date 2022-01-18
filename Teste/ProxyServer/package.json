@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "@hapi/joi": "^17.1.1",
-    "express": "^4.17.2"
-  }
-}

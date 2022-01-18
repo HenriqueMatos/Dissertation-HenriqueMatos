@@ -14,7 +14,7 @@ services:
       - "5672:5672"
       - "15672:15672"
     volumes:
-      - ./definitions.json:/srv/definitions.json
+      - ./DockerComposeFiles/definitions.json:/srv/definitions.json
       # - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
-      - ./rabbitmq.conf:/etc/rabbitmq/conf.d/10-default-guest-user.conf
-      - ./enabled_plugins.txt:/etc/rabbitmq/enabled_plugins
+      - ./DockerComposeFiles/rabbitmq.conf:/etc/rabbitmq/conf.d/10-default-guest-user.conf
+      - ./DockerComposeFiles/enabled_plugins.txt:/etc/rabbitmq/enabled_plugins
