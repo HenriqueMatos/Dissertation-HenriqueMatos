@@ -1,6 +1,4 @@
-import requests
-import re
-import json
+
 
 SCOPES = {
     'vhost': {
