@@ -40,28 +40,16 @@ COCO17_HUMAN_POSE_KEYPOINTS = [(0, 1),
                                (14, 16)]
 
 MIN_SCORE_THRESH = 0.3
-NUM_POINTS_TRACKING = 20
-
-
-def centroid(vertexes):
-    _x_list = [vertex[0] for vertex in vertexes]
-    _y_list = [vertex[1] for vertex in vertexes]
-    _len = len(vertexes)
-    _x = sum(_x_list) / _len
-    _y = sum(_y_list) / _len
-    return(_x, _y)
-
-
-def get_center_box(ymin, xmin, ymax, xmax, im_width, im_height):
-    (left, right, top, bottom) = (xmin * im_width, xmax * im_width,
-                                  ymin * im_height, ymax * im_height)
-    return centroid(((left, top), (right, bottom), (left, bottom), (right, top)))
 
 
 def main():
     id_tracker = Class_ID_Association.ID_Tracker()
-    cap = cv2.VideoCapture('/dev/video0')
+    cap = cv2.VideoCapture('/dev/video2')
 
+    # cap = cv2.VideoCapture(
+    #     './London Walk from Oxford Street to Carnaby Street.mp4')
+    # cap = cv2.VideoCapture(
+    #     './GoPro - Sunny Day at Caddebostan Coast, Istanbul #İstanbul.mp4')
     # cap = cv2.VideoCapture('./y2meta.com-Walking Next to People-(480p).mp4')
     # cap = cv2.VideoCapture(
     #     './Pier Park Panama City_ Hour of Watching People Walk By.mp4')
@@ -155,14 +143,34 @@ def main():
                 (left, right, top, bottom) = (xmin * width, xmax * width,
                                               ymin * height, ymax * height)
                 ListOf_XY_BoxValues.append((left, top, right, bottom))
-                
+
         if len(ListOf_XY_BoxValues) != 0:
+            print("aqui")
             tracked_ids = id_tracker.updateData(ListOf_XY_BoxValues)
         else:
             if len(id_tracker.oldBoxDetection.keys()) > 0:
                 id_tracker.updateDisappeared(
                     list(id_tracker.oldBoxDetection.keys()))
             tracked_ids = None
+
+        # Draw Centroids
+        if tracked_ids is not None:
+            for index in tracked_ids:
+                for indexEach, (_x, _y) in enumerate(id_tracker.getCentroidListByIndex(index)):
+                    diff_color = 255-indexEach * \
+                        int(255/id_tracker.numPointsTracking)
+                    cv2.circle(image_np_with_detections,
+                               (int(_x), int(_y)), 5, (diff_color, diff_color, 255), -1)
+
+        # Intersection
+        # SQ pode ser preciso alterar a ordem do start_point, end_point
+        color = (0, 255, 0)
+        thickness = 10
+        cv2.line(image_np_with_detections, start_point,
+                 end_point, color, thickness)
+
+        # Esta função pode estar errada
+        id_tracker.verifyIntersection(start_point, end_point)
 
         ################## COLORS ##################
         # if len(List_Index_Object_IDs.keys()) == 0:
@@ -212,26 +220,7 @@ def main():
         #                 break
         ############################################
 
-        # MATCH_THRESHOLD = 0.8
-        # if len(List_Index_Object_IDs) > 0:
-        #     for Index in List_Index_Object_IDs:
-        #         (ymin, xmin, ymax, xmax) = detections['detection_boxes'][Index]
-        #         (x, y) = get_center_box(ymin, xmin, ymax, xmax, width, height)
 
-        #         if CenterPosition.get(Index) is not None:
-        #             if len(CenterPosition.get(Index)) == NUM_POINTS_TRACKING:
-        #                 CenterPosition.get(Index).pop(0)
-        #                 CenterPosition.get(Index).append((x, y))
-        #             else:
-        #                 CenterPosition.get(Index).append((x, y))
-        #         else:
-        #             CenterPosition.__setitem__(Index, [(x, y)])
-
-        #         # Draw all the points
-        #         for index, (_x, _y) in enumerate(CenterPosition.get(Index)):
-        #             diff_color = 255-index*int(255/NUM_POINTS_TRACKING)
-        #             cv2.circle(image_np_with_detections,
-        #                        (int(_x), int(_y)), 10, (diff_color, diff_color, 255), -1)
 
         #         # ####### Template Matching #######
         #         # if oldBox is not None:
@@ -272,18 +261,6 @@ def main():
         #         #                               ymin * height, ymax * height)
         #         # oldBox = image_np[int(left):int(right), int(top):int(bottom)]
 
-        #         ####### Interseta #######
-        #         (DoIntersect, orientacao) = intersect.doIntersect(CenterPosition.get(Index)[len(CenterPosition.get(
-        #             Index))-2], CenterPosition.get(Index)[len(CenterPosition.get(Index))-1], start_point, end_point)
-        #         if DoIntersect:
-        #             if orientacao == 0:
-        #                 print("Collinear", Index)
-        #             if orientacao == 1:
-        #                 print("Esquerda", Index)
-        #             if orientacao == 2:
-        #                 print("Direita", Index)
-        #         #########################
-
         viz_utils.visualize_boxes_and_labels_on_image_array(
             image_np_with_detections,
             detections['detection_boxes'],
@@ -291,9 +268,8 @@ def main():
             detections['detection_scores'],
             category_index,
             use_normalized_coordinates=True,
-            max_boxes_to_draw=5,
+            max_boxes_to_draw=None,
             min_score_thresh=MIN_SCORE_THRESH,
-            # TRACKID Fazer depois
             track_ids=tracked_ids,
             agnostic_mode=False,
             # keypoints=keypoints,
@@ -307,11 +283,6 @@ def main():
         cv2.putText(image_np_with_detections, str(int(fps)), (7, 70),
                     cv2.FONT_HERSHEY_SIMPLEX, 2, (100, 255, 0), 3, cv2.LINE_AA)
         ######################
-
-        color = (0, 255, 0)
-        thickness = 10
-        cv2.line(image_np_with_detections, start_point,
-                 end_point, color, thickness)
 
         cv2.imshow('object tracking',  cv2.resize(
             image_np_with_detections, (width, height)))
