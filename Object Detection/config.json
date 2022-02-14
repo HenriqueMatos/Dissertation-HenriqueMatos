@@ -1,0 +1,62 @@
+{
+    "camera_id": 1,
+    "camera_name": "Camera1",
+    "camera_zone": "Escola de Engenharia",
+    "timestamp_config_creation": "timestamp",
+    "object_detection_config": {
+        "threshold": 0.3,
+        "model_used": "link to tensorflow hub"
+    },
+    "output_default": [
+        "camera_id",
+        "timestamp"
+    ],
+    "output": [
+        {
+            "num_people": null
+        },
+        {
+            "num_people_zone": "name_zone"
+        }
+    ],
+    "input": {
+        "intesection_zone": [
+            {
+                "name": "123",
+                "pointA": {
+                    "x": 640,
+                    "y": 480
+                },
+                "pointB": {
+                    "x": 640,
+                    "y": 480
+                },
+                "zone_direction_1or2": 1,
+                "name_zone_before": "",
+                "name_zone_after": ""
+            }
+        ],
+        "remove_area": [
+            [
+                {
+                    "x": 640,
+                    "y": 480
+                },
+                {
+                    "x": 640,
+                    "y": 480
+                }
+            ],
+            [
+                {
+                    "x": 640,
+                    "y": 480
+                },
+                {
+                    "x": 640,
+                    "y": 480
+                }
+            ]
+        ]
+    }
+}

@@ -5,7 +5,7 @@ import time
 import numpy as np
 # from scipy import optimize
 
-import HungarianExample
+import HungarianAlgorithm
 import intersect
 from ObjectData import ObjectData
 from kalmanfilter import KalmanFilter
@@ -106,16 +106,10 @@ class ID_Tracker():
             x, y = get_center_box(*item)
             left, top, right, bottom = item
             self.oldBoxDetection.append(ObjectData(index, item, [(x, y)]))
-            # self.oldBoxDetection[index] = self.ObjectData(
-            #     item, [(x, y)], 0, KalmanFilter())
+
             self.get_object_data_index(index).kalmanfilter.correct_kalman_filter(
                 x, y, (right-left), (bottom-top), time.time())
-            print("VALUES", x, y, (right-left), (bottom-top), time.time())
-            # aux = self.oldBoxDetection[index].kalmanfilter
-            # aux.correct_kalman_filter(
-            #     x, y, (right-left), (bottom-top), time.time())
-            # self.oldBoxDetection[index] = self.oldBoxDetection[index]._replace(
-            #     kalmanfilter=aux)
+            # print("VALUES", x, y, (right-left), (bottom-top), time.time())
             Index_ID[index] = index
         return Index_ID
 
@@ -127,13 +121,7 @@ class ID_Tracker():
             ObjectData(Newindex, XY_BoxValues, [(x, y)]))
         self.get_object_data_index(Newindex).kalmanfilter.correct_kalman_filter(
             x, y, (right-left), (bottom-top), time.time())
-        # self.oldBoxDetection[Newindex] = self.ObjectData(
-        #     XY_BoxValues, [(x, y)], 0, KalmanFilter())
-        # aux = self.oldBoxDetection[Newindex].kalmanfilter
-        # aux.correct_kalman_filter(
-        #     x, y, (right-left), (bottom-top), time.time())
-        # self.oldBoxDetection[Newindex] = self.oldBoxDetection[Newindex]._replace(
-        #     kalmanfilter=aux)
+
         return Newindex
 
     def updateoldBoxDetection(self, index, XY_BoxValues):
@@ -146,9 +134,6 @@ class ID_Tracker():
                 self.get_object_data_index(index).centroid.pop(0)
                 self.get_object_data_index(index).centroid.append(
                     get_center_box(*XY_BoxValues))
-                # self.oldBoxDetection[index].centroid.pop(0)
-                # self.oldBoxDetection[index].centroid.append(
-                #     get_center_box(*XY_BoxValues))
 
             else:
                 self.get_object_data_index(index).centroid.append(
@@ -256,9 +241,9 @@ class ID_Tracker():
         max_value = np.max(profit_matrix)
         cost_matrix = max_value - profit_matrix
 
-        ans_pos = HungarianExample.hungarian_algorithm(cost_matrix.copy())
+        ans_pos = HungarianAlgorithm.hungarian_algorithm(cost_matrix.copy())
 
-        ans, ans_mat = HungarianExample.ans_calculation(profit_matrix, ans_pos)
+        ans, ans_mat = HungarianAlgorithm.ans_calculation(profit_matrix, ans_pos)
         # print(f"Linear Assignment problem result: {ans:.0f}\n{ans_mat}")
         # print("CONA", ans_mat)
         return (True, ans_mat)
@@ -307,19 +292,15 @@ class ID_Tracker():
             # print("index_of_zeros", index_of_zeros)
             # print("oldBoxDetection", self.oldBoxDetection)
             self.updateDisappeared(zeros_list)
-
+            
+            # SQ NÃO É SUPOSTO DAR SORT
             final = []
-            # print(final_index_ID)
             for item in sorted(final_index_ID.items()):
                 final.append(item[1])
-                # print(item)
-            # print("AQUI ", self.oldBoxDetection.keys())
             # print(final)
             return np.array(final)
         else:
             final = []
-            # print("Sorted", sorted(result.items()))
-
             for item in sorted(result.items()):
                 final.append(item[1])
             return np.array(final)

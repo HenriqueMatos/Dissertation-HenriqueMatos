@@ -44,9 +44,8 @@ MIN_SCORE_THRESH = 0.3
 
 def main():
     id_tracker = Class_ID_Association.ID_Tracker()
-    # cap = cv2.VideoCapture('/dev/video0')
-    cap = cv2.VideoCapture('./output.mp4')
-    
+    cap = cv2.VideoCapture('/dev/video0')
+    # cap = cv2.VideoCapture('./output.mp4')
 
     # cap = cv2.VideoCapture(
     #     './London Walk from Oxford Street to Carnaby Street.mp4')
@@ -90,7 +89,7 @@ def main():
         image_np_processing = cv2.cvtColor(
             image_np, cv2.COLOR_BGR2RGB).astype(np.float32)
 
-        # FAZER TESTE EM RELAÇÃO À CONVESÃO DE COR
+        # # FAZER TESTE EM RELAÇÃO À CONVESÃO DE COR
         # image_np = cv2.cvtColor(image_np, cv2.COLOR_RGB2YUV)
 
         # ####### Polygon Remove #######
@@ -147,7 +146,7 @@ def main():
             # print("aqui")
             tracked_ids = id_tracker.updateData(ListOf_XY_BoxValues)
         else:
-            lista=[]
+            lista = []
             for object in id_tracker.oldBoxDetection:
                 lista.append(object.id)
             if len(id_tracker.oldBoxDetection) > 0:
