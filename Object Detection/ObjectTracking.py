@@ -44,7 +44,9 @@ MIN_SCORE_THRESH = 0.3
 
 def main():
     id_tracker = Class_ID_Association.ID_Tracker()
-    cap = cv2.VideoCapture('/dev/video2')
+    # cap = cv2.VideoCapture('/dev/video0')
+    cap = cv2.VideoCapture('./output.mp4')
+    
 
     # cap = cv2.VideoCapture(
     #     './London Walk from Oxford Street to Carnaby Street.mp4')
@@ -67,21 +69,18 @@ def main():
     # }
 
     print('loading model...')
-    hub_model = hub.load(
-        "https://tfhub.dev/tensorflow/ssd_mobilenet_v2/fpnlite_320x320/1")
     # hub_model = hub.load(
-    #     "https://tfhub.dev/tensorflow/ssd_mobilenet_v2/fpnlite_640x640/1")
+    #     "https://tfhub.dev/tensorflow/ssd_mobilenet_v2/fpnlite_320x320/1")
+    hub_model = hub.load(
+        "https://tfhub.dev/tensorflow/ssd_mobilenet_v2/fpnlite_640x640/1")
     # hub_model = hub.load(
     #     "https://tfhub.dev/tensorflow/faster_rcnn/resnet101_v1_640x640/1")
     # hub_model = hub.load(
     #     "https://tfhub.dev/tensorflow/retinanet/resnet50_v1_fpn_640x640/1")
 
     print('model loaded!')
-    oldBox = None
     new_frame_time = 0
     prev_frame_time = 0
-    CenterPosition = {}
-    List_Index_Object_IDs = {}
 
     while cap.isOpened():
         ret, frame = cap.read()

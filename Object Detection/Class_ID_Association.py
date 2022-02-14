@@ -63,6 +63,7 @@ class ID_Tracker():
         self.oldBoxDetection = []
         self.maxDisappeared = maxDisappeared
         self.numPointsTracking = numPointsTracking
+        self.kalmanfilter = KalmanFilter()
 
     def get_list_used_ids(self):
         list = []
@@ -193,8 +194,8 @@ class ID_Tracker():
         iou = interArea / float(boxAArea + boxBArea - interArea)
         if iou >= self.IOU_threashold:
             # EXPERIMENTAR ALTERAR
-            return iou
-            # return 1.0
+            # return iou
+            return 1.0
         else:
             return 0.0
 
@@ -219,18 +220,21 @@ class ID_Tracker():
                 ymin = abs(cy-h/2)
                 ymax = abs(cy+h/2)
                 # print("AQUI2", (xmin, ymin, xmax, ymax), NewBox)
-                print("AQUI2", (xmin, ymin, xmax, ymax), NewBox)
-                print(self.bb_intersection_over_union(
-                    (xmin, ymin, xmax, ymax), NewBox), self.bb_intersection_over_union(
-                    OldBox.box, NewBox))
+                # print(self.bb_intersection_over_union(
+                #     (xmin, ymin, xmax, ymax), NewBox), self.bb_intersection_over_union(
+                #     OldBox.box, NewBox))
                 if xmin == 0 and ymin == 0 and xmax == 0 and ymax == 0:
                     aux.append(self.bb_intersection_over_union(
                         OldBox.box, NewBox))
-                else:
-                    # aux.append(self.bb_intersection_over_union(
-                    #     (xmin, ymin, xmax, ymax), NewBox))
+                elif self.bb_intersection_over_union(
+                        (xmin, ymin, xmax, ymax), NewBox) == 0:
                     aux.append(self.bb_intersection_over_union(
                         OldBox.box, NewBox))
+                else:
+                    aux.append(self.bb_intersection_over_union(
+                        (xmin, ymin, xmax, ymax), NewBox))
+                    # aux.append(self.bb_intersection_over_union(
+                    #     OldBox.box, NewBox))
                     # time.sleep(2000)
                     # aux.append(self.bb_intersection_over_union(
                     #     (xmin, ymin, xmax, ymax), NewBox))
@@ -282,9 +286,9 @@ class ID_Tracker():
                     final_index_ID[item] = self.addNewValue(
                         ListOf_XY_BoxValues[item])
 
-            print("Dados Guardados",  self.get_list_used_ids())
+            # print("Dados Guardados",  self.get_list_used_ids())
             # print(result)
-            print(max_index_col, max_index_row)
+            # print(max_index_col, max_index_row)
             # Add values with match
             for index_col, index_row in zip(max_index_col, max_index_row):
                 final_index_ID[index_row] = self.get_list_used_ids()[index_col]
