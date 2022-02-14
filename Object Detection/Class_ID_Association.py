@@ -7,6 +7,7 @@ import numpy as np
 
 import HungarianExample
 import intersect
+from ObjectData import ObjectData
 from kalmanfilter import KalmanFilter
 
 
@@ -63,90 +64,113 @@ class ID_Tracker():
         self.maxDisappeared = maxDisappeared
         self.numPointsTracking = numPointsTracking
 
+    def get_list_used_ids(self):
+        list = []
+        for object in self.oldBoxDetection:
+            list.append(object.id)
+        return list
+
     def get_object_data_index(self, index):
         for object in self.oldBoxDetection:
-            if object.get_id() == index:
+            if object.id == index:
                 return(object)
 
     def remove_object_data_index(self, index):
-        for object in self.oldBoxDetection:
-            if object.get_id() == index:
-                self.oldBoxDetection.pop(index)
+        for indexToPop, object in enumerate(self.oldBoxDetection):
+            if object.id == index:
+                self.oldBoxDetection.pop(indexToPop)
                 return(True)
+        print("NÃO FEZ NADA")
 
     def updateDisappeared(self, ListOfIndex):
         # print("ListOfIndex", ListOfIndex)
-        if len(ListOfIndex) > 0 and ListOfIndex is not None:
-            for index in ListOfIndex:
-                self.get_object_data_index(index).increase_disappeared()
-                # self.oldBoxDetection[index].increase_disappeared()
-                # self.oldBoxDetection[index] = self.oldBoxDetection[index]._replace(
-                #     disappeared=self.oldBoxDetection[index].disappeared+1)
-                # print("AQUI", index, self.oldBoxDetection[index].disappeared)
-                if(self.oldBoxDetection[index].get_disappeared() >= self.maxDisappeared):
-                    self.remove_object_data_index(index)
-                    # self.oldBoxDetection.pop(index)
+        for index in ListOfIndex:
+            self.get_object_data_index(index).increase_disappeared()
+            # self.oldBoxDetection[index].increase_disappeared()
+            # self.oldBoxDetection[index] = self.oldBoxDetection[index]._replace(
+            #     disappeared=self.oldBoxDetection[index].disappeared+1)
+            # print("AQUI", index, self.oldBoxDetection[index].disappeared)
+            if(self.get_object_data_index(index).disappeared >= self.maxDisappeared):
+                # print("REMOVEU")
+                self.remove_object_data_index(index)
+                # self.oldBoxDetection.pop(index)
 
     def getCentroidListByIndex(self, index):
-        return self.oldBoxDetection[index].centroid
+        # print()
+        return self.get_object_data_index(index).get_centroid()
 
     def setoldBoxDetection(self, ListOf_XY_BoxValues):
         Index_ID = {}
         for index, item in enumerate(ListOf_XY_BoxValues):
             x, y = get_center_box(*item)
             left, top, right, bottom = item
-            self.oldBoxDetection[index] = self.ObjectData(
-                item, [(x, y)], 0, KalmanFilter())
-            print("VALUES", x, y, (right-left), (bottom-top), time.time())
-            aux = self.oldBoxDetection[index].kalmanfilter
-            aux.correct_kalman_filter(
+            self.oldBoxDetection.append(ObjectData(index, item, [(x, y)]))
+            # self.oldBoxDetection[index] = self.ObjectData(
+            #     item, [(x, y)], 0, KalmanFilter())
+            self.get_object_data_index(index).kalmanfilter.correct_kalman_filter(
                 x, y, (right-left), (bottom-top), time.time())
-            self.oldBoxDetection[index] = self.oldBoxDetection[index]._replace(
-                kalmanfilter=aux)
+            print("VALUES", x, y, (right-left), (bottom-top), time.time())
+            # aux = self.oldBoxDetection[index].kalmanfilter
+            # aux.correct_kalman_filter(
+            #     x, y, (right-left), (bottom-top), time.time())
+            # self.oldBoxDetection[index] = self.oldBoxDetection[index]._replace(
+            #     kalmanfilter=aux)
             Index_ID[index] = index
         return Index_ID
 
     def addNewValue(self, XY_BoxValues):
         x, y = get_center_box(*XY_BoxValues)
         left, top, right, bottom = XY_BoxValues
-        Newindex = min_positive_integer_not_in_list(
-            list(self.oldBoxDetection.keys()))
-        self.oldBoxDetection[Newindex] = self.ObjectData(
-            XY_BoxValues, [(x, y)], 0, KalmanFilter())
-        aux = self.oldBoxDetection[Newindex].kalmanfilter
-        aux.correct_kalman_filter(
+        Newindex = min_positive_integer_not_in_list(self.get_list_used_ids())
+        self.oldBoxDetection.append(
+            ObjectData(Newindex, XY_BoxValues, [(x, y)]))
+        self.get_object_data_index(Newindex).kalmanfilter.correct_kalman_filter(
             x, y, (right-left), (bottom-top), time.time())
-        self.oldBoxDetection[Newindex] = self.oldBoxDetection[Newindex]._replace(
-            kalmanfilter=aux)
+        # self.oldBoxDetection[Newindex] = self.ObjectData(
+        #     XY_BoxValues, [(x, y)], 0, KalmanFilter())
+        # aux = self.oldBoxDetection[Newindex].kalmanfilter
+        # aux.correct_kalman_filter(
+        #     x, y, (right-left), (bottom-top), time.time())
+        # self.oldBoxDetection[Newindex] = self.oldBoxDetection[Newindex]._replace(
+        #     kalmanfilter=aux)
         return Newindex
 
     def updateoldBoxDetection(self, index, XY_BoxValues):
         # Add new centroid to list
         # print(self.oldBoxDetection[index])
-        if index in self.oldBoxDetection.keys():
-            print("AQUI", index, XY_BoxValues)
+        if index in self.get_list_used_ids():
+            # print("AQUI", index, XY_BoxValues)
             # print(index, len(self.oldBoxDetection[index].centroid))
-            if len(self.oldBoxDetection[index].centroid) == self.numPointsTracking:
-                self.oldBoxDetection[index].centroid.pop(0)
-                self.oldBoxDetection[index].centroid.append(
+            if len(self.get_object_data_index(index).centroid) == self.numPointsTracking:
+                self.get_object_data_index(index).centroid.pop(0)
+                self.get_object_data_index(index).centroid.append(
                     get_center_box(*XY_BoxValues))
+                # self.oldBoxDetection[index].centroid.pop(0)
+                # self.oldBoxDetection[index].centroid.append(
+                #     get_center_box(*XY_BoxValues))
 
             else:
-                self.oldBoxDetection[index].centroid.append(
+                self.get_object_data_index(index).centroid.append(
                     get_center_box(*XY_BoxValues))
 
             # Update Box Value
-            self.oldBoxDetection[index] = self.oldBoxDetection[index]._replace(
-                box=XY_BoxValues, disappeared=0)
+            self.get_object_data_index(index).set_box(XY_BoxValues)
+            self.get_object_data_index(index).set_disappeared()
+            # self.oldBoxDetection[index] = self.oldBoxDetection[index]._replace(
+            #     box=XY_BoxValues, disappeared=0)
 
             x, y = get_center_box(*XY_BoxValues)
             left, top, right, bottom = XY_BoxValues
-            print("CONADOCRL", x, y, (right-left), (bottom-top), time.time())
-            aux = self.oldBoxDetection[index].kalmanfilter
-            aux.correct_kalman_filter(
+            # print("CONADOCRL", x, y, (right-left), (bottom-top), time.time())
+            self.get_object_data_index(index).kalmanfilter.correct_kalman_filter(
                 x, y, (right-left), (bottom-top), time.time())
-            self.oldBoxDetection[index] = self.oldBoxDetection[index]._replace(
-                kalmanfilter=aux)
+            # print("TESTE", self.get_object_data_index(
+            #     index).kalmanfilter.predict())
+            # aux = self.oldBoxDetection[index].kalmanfilter
+            # aux.correct_kalman_filter(
+            #     x, y, (right-left), (bottom-top), time.time())
+            # self.oldBoxDetection[index] = self.oldBoxDetection[index]._replace(
+            #     kalmanfilter=aux)
 
         else:
             self.addNewValue(XY_BoxValues)
@@ -177,8 +201,8 @@ class ID_Tracker():
     def hungarian_algorithm(self, ListOf_XY_BoxValues):
         data2 = []
         cont = 0
-        print("before", self.oldBoxDetection.items())
-        if len(self.oldBoxDetection.items()) == 0:
+        # print("before", self.oldBoxDetection)
+        if len(self.oldBoxDetection) == 0:
             return (False, self.setoldBoxDetection(ListOf_XY_BoxValues))
         # print("AQUI ", len(ListOf_XY_BoxValues),
         #       len(self.oldBoxDetection.items()))
@@ -187,26 +211,41 @@ class ID_Tracker():
 
         for NewBox in ListOf_XY_BoxValues:
             aux = []
-            for OldBox in self.oldBoxDetection.values():
-                print("CONA", OldBox.kalmanfilter.predict())
+            for OldBox in self.oldBoxDetection:
+                # print("CONA", OldBox.kalmanfilter.predict())
                 cx, cy, w, h, vx, vy, vw, vh = OldBox.kalmanfilter.predict()
-                xmin = cx-w/2
-                xmax = cx+w/2
-                ymin = cy-h/2
-                ymax = cy+h/2
+                xmin = abs(cx-w/2)
+                xmax = abs(cx+w/2)
+                ymin = abs(cy-h/2)
+                ymax = abs(cy+h/2)
+                # print("AQUI2", (xmin, ymin, xmax, ymax), NewBox)
                 print("AQUI2", (xmin, ymin, xmax, ymax), NewBox)
-                aux.append(self.bb_intersection_over_union(
-                    (xmin, ymin, xmax, ymax), NewBox))
+                print(self.bb_intersection_over_union(
+                    (xmin, ymin, xmax, ymax), NewBox), self.bb_intersection_over_union(
+                    OldBox.box, NewBox))
+                if xmin == 0 and ymin == 0 and xmax == 0 and ymax == 0:
+                    aux.append(self.bb_intersection_over_union(
+                        OldBox.box, NewBox))
+                else:
+                    # aux.append(self.bb_intersection_over_union(
+                    #     (xmin, ymin, xmax, ymax), NewBox))
+                    aux.append(self.bb_intersection_over_union(
+                        OldBox.box, NewBox))
+                    # time.sleep(2000)
+                    # aux.append(self.bb_intersection_over_union(
+                    #     (xmin, ymin, xmax, ymax), NewBox))
                 # aux.append(self.bb_intersection_over_union(OldBox.box, NewBox))
-
-            while len(self.oldBoxDetection.items()) > len(aux) or len(ListOf_XY_BoxValues) > len(aux):
+            # time.sleep(2)
+            while len(self.oldBoxDetection) > len(aux) or len(ListOf_XY_BoxValues) > len(aux):
                 aux.append(0.0)
             data2.append(aux)
             cont += 1
+
             # print(aux)
         # print(len(ListOf_XY_BoxValues), len(data2))
-        while len(ListOf_XY_BoxValues) > len(data2) or len(self.oldBoxDetection.items()) > len(data2):
+        while len(ListOf_XY_BoxValues) > len(data2) or len(self.oldBoxDetection) > len(data2):
             data2.append([0.0]*len(aux))
+        # print()
         # print(len(data2), len(data2[0]))
         profit_matrix = np.array(data2)
         # print(data2)
@@ -221,7 +260,7 @@ class ID_Tracker():
         return (True, ans_mat)
 
     def updateData(self, ListOf_XY_BoxValues):
-        print(self.oldBoxDetection)
+        # print(self.oldBoxDetection)
         flag, result = self.hungarian_algorithm(ListOf_XY_BoxValues)
         # print(flag, result)
         final_index_ID = {}
@@ -243,13 +282,12 @@ class ID_Tracker():
                     final_index_ID[item] = self.addNewValue(
                         ListOf_XY_BoxValues[item])
 
-            # print("Dados Guardados", self.oldBoxDetection.keys())
+            print("Dados Guardados",  self.get_list_used_ids())
             # print(result)
-            # print(max_index_col, max_index_row)
+            print(max_index_col, max_index_row)
             # Add values with match
             for index_col, index_row in zip(max_index_col, max_index_row):
-                final_index_ID[index_row] = list(
-                    self.oldBoxDetection.keys())[index_col]
+                final_index_ID[index_row] = self.get_list_used_ids()[index_col]
                 self.updateoldBoxDetection(
                     final_index_ID[index_row], ListOf_XY_BoxValues[index_row])
 
@@ -259,9 +297,8 @@ class ID_Tracker():
             # print("index_of_zeros", index_of_zeros)
             if len(index_of_zeros) > 0:
                 for index, item in enumerate(index_of_zeros):
-                    if (len(self.oldBoxDetection.items())-len(max_index_col)) > index:
-                        zeros_list.append(
-                            list(self.oldBoxDetection.keys())[item])
+                    if (len(self.oldBoxDetection)-len(max_index_col)) > index:
+                        zeros_list.append(self.get_list_used_ids()[item])
             # print("zeros_list", zeros_list)
             # print("index_of_zeros", index_of_zeros)
             # print("oldBoxDetection", self.oldBoxDetection)
@@ -284,14 +321,14 @@ class ID_Tracker():
             return np.array(final)
 
     def verifyIntersection(self, start_point_Line, end_point_Line):
-        for index, ObjectData in self.oldBoxDetection.items():
+        for ObjectData in self.oldBoxDetection:
             if len(ObjectData.centroid) >= 2 and ObjectData.disappeared == 0:
                 DoIntersect, orientacao = intersect.doIntersect(
                     ObjectData.centroid[-2], ObjectData.centroid[-1], start_point_Line, end_point_Line)
                 if DoIntersect:
                     if orientacao == 0:
-                        print("Collinear", index)
+                        print("Collinear", ObjectData.id)
                     if orientacao == 1:
-                        print("Esquerda", index)
+                        print("Esquerda", ObjectData.id)
                     if orientacao == 2:
-                        print("Direita", index)
+                        print("Direita", ObjectData.id)

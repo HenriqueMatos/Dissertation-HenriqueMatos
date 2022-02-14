@@ -145,12 +145,14 @@ def main():
                 ListOf_XY_BoxValues.append((left, top, right, bottom))
 
         if len(ListOf_XY_BoxValues) != 0:
-            print("aqui")
+            # print("aqui")
             tracked_ids = id_tracker.updateData(ListOf_XY_BoxValues)
         else:
-            if len(id_tracker.oldBoxDetection.keys()) > 0:
-                id_tracker.updateDisappeared(
-                    list(id_tracker.oldBoxDetection.keys()))
+            lista=[]
+            for object in id_tracker.oldBoxDetection:
+                lista.append(object.id)
+            if len(id_tracker.oldBoxDetection) > 0:
+                id_tracker.updateDisappeared(lista)
             tracked_ids = None
 
         # Draw Centroids
@@ -219,8 +221,6 @@ def main():
         #                     hsl_value_dominant[0]*60))
         #                 break
         ############################################
-
-
 
         #         # ####### Template Matching #######
         #         # if oldBox is not None:
