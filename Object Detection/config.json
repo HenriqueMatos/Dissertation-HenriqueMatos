@@ -3,13 +3,21 @@
     "camera_name": "Camera1",
     "camera_zone": "Escola de Engenharia",
     "timestamp_config_creation": "timestamp",
+    "restart_count": "timestamp",
     "object_detection_config": {
         "threshold": 0.3,
-        "model_used": "link to tensorflow hub"
+        "model_used": "link to tensorflow hub",
+        "object_data_tracking": [
+            "people",
+            "backpack",
+            "handbag",
+            "suitcase"
+        ]
     },
     "output_default": [
         "camera_id",
-        "timestamp"
+        "timestamp",
+        "camera_zone"
     ],
     "output": [
         {
@@ -19,21 +27,43 @@
             "num_people_zone": "name_zone"
         }
     ],
+    "output_location_rabbit": [
+        {
+            "queues": "name"
+        }
+    ],
     "input": {
+        "zone": [
+            {
+                "name": "pátio escola de engenharia"
+            },
+            {
+                "x": 640,
+                "y": 480
+            },
+            {
+                "x": 640,
+                "y": 480
+            },
+            {
+                "x": 640,
+                "y": 480
+            }
+        ],
         "intesection_zone": [
             {
                 "name": "123",
-                "pointA": {
+                "start_point": {
                     "x": 640,
                     "y": 480
                 },
-                "pointB": {
+                "end_point": {
                     "x": 640,
                     "y": 480
                 },
                 "zone_direction_1or2": 1,
-                "name_zone_before": "",
-                "name_zone_after": ""
+                "name_zone_before": "outside",
+                "name_zone_after": "inside"
             }
         ],
         "remove_area": [

@@ -10,6 +10,7 @@ import HungarianAlgorithm
 import intersect
 from ObjectData import ObjectData
 from kalmanfilter import KalmanFilter
+import Hungarian
 
 
 def min_positive_integer_not_in_list(list):  # Our original array
@@ -154,6 +155,7 @@ class ID_Tracker():
     def updateoldBoxDetection(self, index, XY_BoxValues):
         # Add new centroid to list
         # print(self.oldBoxDetection[index])
+        indexList = []
         if index in self.get_list_used_ids():
             # print("AQUI", index, XY_BoxValues)
             # print(index, len(self.oldBoxDetection[index].centroid))
@@ -177,16 +179,9 @@ class ID_Tracker():
             # print("CONADOCRL", x, y, (right-left), (bottom-top), time.time())
             self.get_object_data_index(index).kalmanfilter.correct_kalman_filter(
                 x, y, (right-left), (bottom-top), time.time())
-            # print("TESTE", self.get_object_data_index(
-            #     index).kalmanfilter.predict())
-            # aux = self.oldBoxDetection[index].kalmanfilter
-            # aux.correct_kalman_filter(
-            #     x, y, (right-left), (bottom-top), time.time())
-            # self.oldBoxDetection[index] = self.oldBoxDetection[index]._replace(
-            #     kalmanfilter=aux)
-
+            indexList.append(index)
         else:
-            self.addNewValue(XY_BoxValues)
+            indexList.append(self.addNewValue(XY_BoxValues))
 
     def bb_intersection_over_union(self, boxA, boxB):
         # determine the (x, y)-coordinates of the intersection rectangle
@@ -214,146 +209,78 @@ class ID_Tracker():
     def hungarian_algorithm(self, ListOf_XY_BoxValues):
         data2 = []
         cont = 0
-        # print("before", self.oldBoxDetection)
+
         if len(self.oldBoxDetection) == 0:
             return (False, self.setoldBoxDetection(ListOf_XY_BoxValues))
-        # print("AQUI ", len(ListOf_XY_BoxValues),
-        #       len(self.oldBoxDetection.items()))
-        # list_predict = []
-        # for item in ListOf_XY_BoxValues:
-        ID_row = []
-        ID_column = []
-        flag = True
+        OldDetection = []
+        for index2, OldBox in enumerate(self.oldBoxDetection):
+            cx, cy, w, h, vx, vy, vw, vh = OldBox.kalmanfilter.predict()
+            xmin = abs(cx-w/2)
+            xmax = abs(cx+w/2)
+            ymin = abs(cy-h/2)
+            ymax = abs(cy+h/2)
+            if xmin == 0 and ymin == 0 and xmax == 0 and ymax == 0:
+                OldDetection.append(OldBox.box)
+            else:
+                OldDetection.append((xmin, ymin, xmax, ymax))
+            # print("AQUI2", (xmin, ymin, xmax, ymax), NewBox)
+            # print(self.bb_intersection_over_union(
+            #     (xmin, ymin, xmax, ymax), NewBox), self.bb_intersection_over_union(
+            #     OldBox.box, NewBox))
 
-        matrix_euclidian_distance = calculate_matrix_euclidian_distance(
-            ListOf_XY_BoxValues, self.get_list_centroids())
-        # print("AQUI")
-        # print(matrix_euclidian_distance)
-        for index, NewBox in enumerate(ListOf_XY_BoxValues):
-            ID_row.append(NewBox)
-            aux = []
-            for index2, OldBox in enumerate(self.oldBoxDetection):
+            #     # Teste
+            #     if self.bb_intersection_over_union(OldBox.box, NewBox) > 0:
+            #         aux.append(self.bb_intersection_over_union(
+            #             OldBox.box, NewBox))
+            #     else:
+            #         aux.append(matrix_euclidian_distance[index][index2])
 
-                if flag:
-                    ID_column.append(OldBox.id)
-                # print("CONA", OldBox.kalmanfilter.predict())
-                cx, cy, w, h, vx, vy, vw, vh = OldBox.kalmanfilter.predict()
-                xmin = abs(cx-w/2)
-                xmax = abs(cx+w/2)
-                ymin = abs(cy-h/2)
-                ymax = abs(cy+h/2)
-                # print("AQUI2", (xmin, ymin, xmax, ymax), NewBox)
-                # print(self.bb_intersection_over_union(
-                #     (xmin, ymin, xmax, ymax), NewBox), self.bb_intersection_over_union(
-                #     OldBox.box, NewBox))
-
-                if xmin == 0 and ymin == 0 and xmax == 0 and ymax == 0:
-                    # Teste
-                    if self.bb_intersection_over_union(OldBox.box, NewBox) > 0:
-                        aux.append(self.bb_intersection_over_union(
-                            OldBox.box, NewBox))
-                    else:
-                        aux.append(matrix_euclidian_distance[index][index2])
-
-                    # print("Predict=0", index, index2,
-                    #       matrix_euclidian_distance[index][index2])
-                elif self.bb_intersection_over_union(
-                        (xmin, ymin, xmax, ymax), NewBox) == 0:
-                    if self.bb_intersection_over_union(OldBox.box, NewBox) > 0:
-                        aux.append(self.bb_intersection_over_union(
-                        OldBox.box, NewBox))
-                    else:
-                        aux.append(matrix_euclidian_distance[index][index2])
-                    # print("IntersectPredict=0", index, index2,
-                    #       matrix_euclidian_distance[index][index2])
-                else:
-                    # print("Can Predict")
-                    aux.append(self.bb_intersection_over_union(
-                        (xmin, ymin, xmax, ymax), NewBox))
-                    # aux.append(self.bb_intersection_over_union(
-                    #     OldBox.box, NewBox))
-                    # time.sleep(2000)
-                    # aux.append(self.bb_intersection_over_union(
-                    #     (xmin, ymin, xmax, ymax), NewBox))
-                # aux.append(self.bb_intersection_over_union(OldBox.box, NewBox))
-            # time.sleep(2)
-            while len(self.oldBoxDetection) > len(aux) or len(ListOf_XY_BoxValues) > len(aux):
-                aux.append(0.0)
-                if flag:
-                    ID_column.append(-1)
-            data2.append(aux)
-            cont += 1
-
-            flag = False
-
-            # print(aux)
-        # print(len(ListOf_XY_BoxValues), len(data2))
-        while len(ListOf_XY_BoxValues) > len(data2) or len(self.oldBoxDetection) > len(data2):
-            data2.append([0.0]*len(aux))
-        # PRINT HUNGARIAN
-        print("New")
-        df = pd.DataFrame(data2, columns=ID_column)
-        # print(df)
-        # print(ID_row, ID_column, "\n")
-        # print()
-        # print(len(data2), len(data2[0]))
-        profit_matrix = np.array(data2)
-        # print(data2)
-        max_value = np.max(profit_matrix)
-        cost_matrix = max_value - profit_matrix
-
-        ans_pos = HungarianAlgorithm.hungarian_algorithm(cost_matrix.copy())
-
-        ans, ans_mat = HungarianAlgorithm.ans_calculation(
-            profit_matrix, ans_pos)
-        # print(f"Linear Assignment problem result: {ans:.0f}\n{ans_mat}")
-        # print("CONA", ans_mat)
-        return (True, ans_mat)
+            #     # print("Predict=0", index, index2,
+            #     #       matrix_euclidian_distance[index][index2])
+            # elif self.bb_intersection_over_union(
+            #         (xmin, ymin, xmax, ymax), NewBox) == 0:
+            #     if self.bb_intersection_over_union(OldBox.box, NewBox) > 0:
+            #         aux.append(self.bb_intersection_over_union(
+            #             OldBox.box, NewBox))
+            #     else:
+            #         aux.append(matrix_euclidian_distance[index][index2])
+            #     # print("IntersectPredict=0", index, index2,
+            #     #       matrix_euclidian_distance[index][index2])
+            # else:
+            #     # print("Can Predict")
+            #     aux.append(self.bb_intersection_over_union(
+            #         (xmin, ymin, xmax, ymax), NewBox))
+            #     # aux.append(self.bb_intersection_over_union(
+            #     #     OldBox.box, NewBox))
+            #     # time.sleep(2000)
+            #     # aux.append(self.bb_intersection_over_union(
+            #     #     (xmin, ymin, xmax, ymax), NewBox))
+            # # aux.append(self.bb_intersection_over_union(OldBox.box, NewBox))
+        (matches, unmatched_trackers, unmatched_detections) = Hungarian.get_hungarian(
+            ListOf_XY_BoxValues, OldDetection)
+        return (True, (matches, unmatched_trackers, unmatched_detections))
 
     def updateData(self, ListOf_XY_BoxValues):
         # print(self.oldBoxDetection)
         flag, result = self.hungarian_algorithm(ListOf_XY_BoxValues)
         # print(flag, result)
         final_index_ID = {}
+        FinalIndex = []
         if flag:
-            max_value_row = np.amax(result, axis=1)
-            max_value_col = np.amax(result, axis=0)
-
-            max_index_row = np.nonzero(max_value_row)[0]
-            max_index_col = np.nonzero(max_value_col)[0]
-
-            # print(max_value_row, max_value_col)
-            # Add new values with no match
-            index_of_zeros = np.where(max_value_row == 0)[0]
-            # print("index_of_zeros", index_of_zeros)
-            # print(ListOf_XY_BoxValues)
-            # print("AQUI", len(ListOf_XY_BoxValues)-len(max_index_row))
-            for index, item in enumerate(index_of_zeros):
-                if (len(ListOf_XY_BoxValues)-len(max_index_row)) > index:
-                    final_index_ID[item] = self.addNewValue(
-                        ListOf_XY_BoxValues[item])
-
-            # print("Dados Guardados",  self.get_list_used_ids())
-            # print(result)
-            # print(max_index_col, max_index_row)
-            # Add values with match
-            for index_col, index_row in zip(max_index_col, max_index_row):
-                final_index_ID[index_row] = self.get_list_used_ids()[index_col]
-                self.updateoldBoxDetection(
-                    final_index_ID[index_row], ListOf_XY_BoxValues[index_row])
+            (matches, unmatched_trackers, unmatched_detections) = result
+            first_matches = [a_tuple[0] for a_tuple in matches]
+            second_matches = [a_tuple[1] for a_tuple in matches]
+            for index, box in enumerate(ListOf_XY_BoxValues):
+                if index in first_matches:
+                    self.updateoldBoxDetection(
+                        second_matches[first_matches.index(index)], box)
+                elif index in unmatched_trackers:
+                    FinalIndex.append(self.addNewValue(box))
+                else:
+                    print("deumerda")
 
             # Update Disappeared
-            index_of_zeros = np.where(max_value_col == 0)[0]
-            zeros_list = []
-            # print("index_of_zeros", index_of_zeros)
-            if len(index_of_zeros) > 0:
-                for index, item in enumerate(index_of_zeros):
-                    if (len(self.oldBoxDetection)-len(max_index_col)) > index:
-                        zeros_list.append(self.get_list_used_ids()[item])
-            # print("zeros_list", zeros_list)
-            # print("index_of_zeros", index_of_zeros)
-            # print("oldBoxDetection", self.oldBoxDetection)
-            self.updateDisappeared(zeros_list)
+            self.updateDisappeared(unmatched_detections)
 
             # SQ NÃO É SUPOSTO DAR SORT
             final = []

@@ -1,0 +1,11 @@
+Video            Threshold     Resultado      NumPessoas     Speed e Accuracy      Modelo            
+Interior            0.3                    5             22	22.2          https://tfhub.dev/tensorflow/ssd_mobilenet_v2/fpnlite_320x320/1 
+Interior            0.3                             
+Interior            0.3
+Interior            0.3
+Interior            0.3
+Interior            0.3
+Interior            0.3
+Interior            0.3
+Interior            0.3
+Interior            0.3

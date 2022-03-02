@@ -1,4 +1,5 @@
 import colorsys
+import math
 from black import main
 import cv2
 from cv2 import matchTemplate
@@ -14,10 +15,10 @@ import PIL.ImageDraw as ImageDraw
 import PIL.Image as Image
 import time
 from tensorflow_hub import registry
+import argparse
 
 # Files
-import intersect
-import colors
+from centroidtracker import CentroidTracker
 import Class_ID_Association
 
 COCO17_HUMAN_POSE_KEYPOINTS = [(0, 1),
@@ -39,13 +40,26 @@ COCO17_HUMAN_POSE_KEYPOINTS = [(0, 1),
                                (12, 14),
                                (14, 16)]
 
-MIN_SCORE_THRESH = 0.3
+MIN_SCORE_THRESH = 0.25
 
 
 def main():
+    parser = argparse.ArgumentParser()
+    parser.set_defaults(show=False)
+    parser.add_argument("--show", dest='show', action='store_true')
+    args = parser.parse_args()
+    # print(args)
+    isShow = args.show
+
+    new_frame_time = 0
+    prev_frame_time = 0
+    fps = 0
+
     id_tracker = Class_ID_Association.ID_Tracker()
-    cap = cv2.VideoCapture('/dev/video0')
-    # cap = cv2.VideoCapture('./output.mp4')
+    tracker = CentroidTracker(maxDisappeared=80, maxDistance=90)
+    # cap = cv2.VideoCapture('/dev/video2')
+    cap = cv2.VideoCapture('./output.mp4')
+    # cap = cv2.VideoCapture('./ch01_08000000058000601.mp4')
 
     # cap = cv2.VideoCapture(
     #     './London Walk from Oxford Street to Carnaby Street.mp4')
@@ -76,18 +90,25 @@ def main():
     #     "https://tfhub.dev/tensorflow/faster_rcnn/resnet101_v1_640x640/1")
     # hub_model = hub.load(
     #     "https://tfhub.dev/tensorflow/retinanet/resnet50_v1_fpn_640x640/1")
+    # hub_model = hub.load(
+    #     "https://tfhub.dev/tensorflow/retinanet/resnet50_v1_fpn_640x640/1")
+    # hub_model = hub.load(
+    #     "https://tfhub.dev/tensorflow/ssd_mobilenet_v2/fpnlite_640x640/1")
 
     print('model loaded!')
-    new_frame_time = 0
-    prev_frame_time = 0
-
+    TotalFPS = 0
+    cont = 0
     while cap.isOpened():
+        # if cont == 4:
+        #     break
+        TotalFPS += math.ceil(fps)
+        cap.set(cv2.CAP_PROP_POS_FRAMES, TotalFPS)
         ret, frame = cap.read()
         # Capture FPS
         new_frame_time = time.time()
         image_np = np.array(frame).astype(np.uint8)
-        image_np_processing = cv2.cvtColor(
-            image_np, cv2.COLOR_BGR2RGB).astype(np.float32)
+        # image_np_processing = cv2.cvtColor(
+        #     image_np, cv2.COLOR_BGR2RGB).astype(np.float32)
 
         # # FAZER TESTE EM RELAÇÃO À CONVESÃO DE COR
         # image_np = cv2.cvtColor(image_np, cv2.COLOR_RGB2YUV)
@@ -100,6 +121,8 @@ def main():
         # image_np = cv2.bitwise_and(image_np, mask)
         # ##########################
 
+        # input_tensor = image_np.reshape(
+        #     (1, 3, width, height)).astype(np.float32)
         input_tensor = image_np.reshape(
             (1, height, width, 3)).astype(np.uint8)
 
@@ -110,8 +133,13 @@ def main():
 
         ####### Remove Unnecessary Data From detections #######
         IndexToRemove = []
-        for index, (detection_scores, detection_classes) in enumerate(zip(detections['detection_scores'], detections['detection_classes'])):
+        for index, (detection_scores, detection_classes, detection_boxes) in enumerate(zip(detections['detection_scores'], detections['detection_classes'], detections['detection_boxes'])):
+            (ymin, xmin, ymax, xmax) = detection_boxes
+            (left, right, top, bottom) = (xmin * width, xmax * width,
+                                          ymin * height, ymax * height)
             if not (detection_scores >= MIN_SCORE_THRESH and detection_classes == 1):
+                IndexToRemove.append(index)
+            elif (right-left) >= (width/4) or (bottom-top) >= 2*(height/3):
                 IndexToRemove.append(index)
         # print(IndexToRemove)
         for key, value in detections.items():
@@ -129,9 +157,6 @@ def main():
         # if 'detection_keypoints' in detections:
         #     keypoints = detections['detection_keypoints'][0]
         #     keypoint_scores = detections['detection_keypoint_scores'][0]
-
-        start_point = (200, 10)
-        end_point = (200, height-10)
 
         ListOf_XY_BoxValues = []
         for index, (detection_scores, detection_classes, detection_boxes) in enumerate(zip(detections['detection_scores'], detections['detection_classes'], detections['detection_boxes'])):
@@ -153,21 +178,25 @@ def main():
                 id_tracker.updateDisappeared(lista)
             tracked_ids = None
 
-        # Draw Centroids
-        if tracked_ids is not None:
-            for index in tracked_ids:
-                for indexEach, (_x, _y) in enumerate(id_tracker.getCentroidListByIndex(index)):
-                    diff_color = 255-indexEach * \
-                        int(255/id_tracker.numPointsTracking)
-                    cv2.circle(image_np_with_detections,
-                               (int(_x), int(_y)), 5, (diff_color, diff_color, 255), -1)
+        start_point = (200, 10)
+        end_point = (200, height-10)
 
-        # Intersection
-        # SQ pode ser preciso alterar a ordem do start_point, end_point
-        color = (0, 255, 0)
-        thickness = 10
-        cv2.line(image_np_with_detections, start_point,
-                 end_point, color, thickness)
+        if isShow:
+            # Draw Centroids
+            if tracked_ids is not None:
+                for index in tracked_ids:
+                    for indexEach, (_x, _y) in enumerate(id_tracker.getCentroidListByIndex(index)):
+                        diff_color = 255-indexEach * \
+                            int(255/id_tracker.numPointsTracking)
+                        cv2.circle(image_np_with_detections,
+                                   (int(_x), int(_y)), 5, (diff_color, diff_color, 255), -1)
+
+            # Intersection
+            # SQ pode ser preciso alterar a ordem do start_point, end_point
+            color = (0, 255, 0)
+            thickness = 10
+            cv2.line(image_np_with_detections, start_point,
+                     end_point, color, thickness)
 
         # Esta função pode estar errada
         id_tracker.verifyIntersection(start_point, end_point)
@@ -258,33 +287,39 @@ def main():
         #         # (left, right, top, bottom) = (xmin * width, xmax * width,
         #         #                               ymin * height, ymax * height)
         #         # oldBox = image_np[int(left):int(right), int(top):int(bottom)]
+        if isShow:
+            viz_utils.visualize_boxes_and_labels_on_image_array(
+                image_np_with_detections,
+                detections['detection_boxes'],
+                (detections['detection_classes'] +
+                 label_id_offset).astype(int),
+                detections['detection_scores'],
+                category_index,
+                use_normalized_coordinates=True,
+                max_boxes_to_draw=None,
+                min_score_thresh=MIN_SCORE_THRESH,
+                track_ids=tracked_ids,
+                agnostic_mode=False,
+                # keypoints=keypoints,
+                # keypoint_scores=keypoint_scores,
+                # keypoint_edges=COCO17_HUMAN_POSE_KEYPOINTS
+            )
+            cv2.putText(image_np_with_detections, "Pessoas " +
+                        str(detections['num_detections']), (7, 100), cv2.FONT_HERSHEY_SIMPLEX, 1, (100, 255, 0), 2, cv2.LINE_AA)
 
-        viz_utils.visualize_boxes_and_labels_on_image_array(
-            image_np_with_detections,
-            detections['detection_boxes'],
-            (detections['detection_classes'] + label_id_offset).astype(int),
-            detections['detection_scores'],
-            category_index,
-            use_normalized_coordinates=True,
-            max_boxes_to_draw=None,
-            min_score_thresh=MIN_SCORE_THRESH,
-            track_ids=tracked_ids,
-            agnostic_mode=False,
-            # keypoints=keypoints,
-            # keypoint_scores=keypoint_scores,
-            # keypoint_edges=COCO17_HUMAN_POSE_KEYPOINTS
-        )
         ####### Frames #######
         fps = 1/(new_frame_time-prev_frame_time)
-        # print(fps)
+        if isShow == False:
+            print(fps)
+
+        if isShow:
+            cv2.putText(image_np_with_detections, str(round(fps, 2)), (7, 70),
+                        cv2.FONT_HERSHEY_SIMPLEX, 2, (100, 255, 0), 3, cv2.LINE_AA)
+
+            cv2.imshow('object tracking',  cv2.resize(
+                image_np_with_detections, (width, height)))
         prev_frame_time = new_frame_time
-        cv2.putText(image_np_with_detections, str(int(fps)), (7, 70),
-                    cv2.FONT_HERSHEY_SIMPLEX, 2, (100, 255, 0), 3, cv2.LINE_AA)
-        ######################
-
-        cv2.imshow('object tracking',  cv2.resize(
-            image_np_with_detections, (width, height)))
-
+        cont += 1
         if cv2.waitKey(10) & 0xFF == ord('q'):
             cap.release()
             cv2.destroyAllWindows()
