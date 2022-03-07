@@ -9,21 +9,23 @@ import NewClass_ID_Association
 import newcentroidtracker
 import Data_Config_Count
 
-MIN_SCORE_THRESH = 0.5
 
-
-def load_yolo():
+def load_yolo(path_model_weights, path_model_cfg, path_yolo_coco_names, wanted_classes):
     # net = cv2.dnn.readNet("yolo/yolov3-tiny.weights", "yolo/yolov3-tiny.cfg")
-    net = cv2.dnn.readNet("yolo/yolov3.weights", "yolo/yolov3.cfg")
+    net = cv2.dnn.readNet(path_model_weights, path_model_cfg)
     classes = []
-    with open("yolo/coco.names", "r") as f:
+    with open(path_yolo_coco_names, "r") as f:
         classes = [line.strip() for line in f.readlines()]
+    ID_wanted_classes = []
+    for className in wanted_classes:
+        if className in classes:
+            ID_wanted_classes.append(classes.index(className))
 
     output_layers = [
         layer_name for layer_name in net.getUnconnectedOutLayersNames()]
     colors = np.random.uniform(0, 255, size=(len(classes), 3))
     print(classes)
-    return net, classes, colors, output_layers
+    return net, classes, colors, output_layers, ID_wanted_classes
 
 
 def detect_objects(img, net, outputLayers):
@@ -35,7 +37,7 @@ def detect_objects(img, net, outputLayers):
     return blob, outputs
 
 
-def get_box_dimensions(outputs, height, width):
+def get_box_dimensions(outputs, height, width, threshold):
     boxes = []
     confs = []
     class_ids = []
@@ -45,7 +47,7 @@ def get_box_dimensions(outputs, height, width):
             class_id = np.argmax(scores)
             conf = scores[class_id]
             # print(conf)
-            if conf > MIN_SCORE_THRESH:
+            if conf > threshold:
                 # print(conf)
                 center_x = int(detect[0] * width)
                 center_y = int(detect[1] * height)
@@ -60,15 +62,17 @@ def get_box_dimensions(outputs, height, width):
 
 
 if __name__ == '__main__':
-    with open('output/person.json', 'r') as f:
+    with open('config/config.json', 'r') as f:
         data = json.load(f)
 
     ConfigDataUpdater = Data_Config_Count.Data_Config_Count()
     ConfigDataUpdater.register(data)
+    print(ConfigDataUpdater.line_intesection_zone)
 
     ct = newcentroidtracker.CentroidTracker()
     # id_tracker = NewClass_ID_Association.ID_Tracker()
-    model, classes, colors, output_layers = load_yolo()
+    model, classes, colors, output_layers, ID_wanted_classes = load_yolo(
+        ConfigDataUpdater.path_model_weights, ConfigDataUpdater.path_model_cfg, ConfigDataUpdater.path_yolo_coco_names, ConfigDataUpdater.object_data_tracking)
     # cap = cv2.VideoCapture('/dev/video2')
     # cap = cv2.VideoCapture("./output.mp4")
     cap = cv2.VideoCapture("./ch01_08000000058000601.mp4")
@@ -83,16 +87,17 @@ if __name__ == '__main__':
         height, width, channels = frame.shape
         # print(height, width)
         blob, outputs = detect_objects(frame, model, output_layers)
-        boxes, confs, class_ids = get_box_dimensions(outputs, height, width)
+        boxes, confs, class_ids = get_box_dimensions(
+            outputs, height, width, ConfigDataUpdater.threshold)
 
         # DRAW LABELS
-        indexes = cv2.dnn.NMSBoxes(boxes, confs, MIN_SCORE_THRESH, 0.4)
-        # boxes_final = [boxes[i] for i in indexes]
-        # class_ids_final = [class_ids[i] for i in indexes]
+        indexes = cv2.dnn.NMSBoxes(
+            boxes, confs, ConfigDataUpdater.threshold, 0.4)
+
         boxes_final = []
         class_ids_final = []
         for i in indexes:
-            if class_ids[i] == 0:
+            if class_ids[i] in ID_wanted_classes:
                 boxes_final.append(boxes[i])
                 class_ids_final.append(class_ids[i])
 
@@ -106,15 +111,7 @@ if __name__ == '__main__':
             centroid_boxes.append(np.asarray((cX, cY)))
 
         value = ct.update(boxes2)
-        # print("AQUI", len(centroid_boxes))
-        # print(len(value.keys()), len(tracked_ids))
-        # Exist_indexs = []
-        # for centroid in centroid_boxes:
-        #     for key, item in value.items():
-        #         if np.array_equal(item, centroid):
-        #             Exist_indexs.append(key)
-        # print(len(boxes2), len(Exist_indexs))
-        # # print("AQUI", Exist_indexs, tracked_ids)
+
         IDs_list = list(value.keys())
         Centroids_list = []
         for item in list(value.values()):

@@ -10,7 +10,7 @@
         "path_model_cfg": "yolo/yolov3.cfg",
         "path_yolo_coco_names": "yolo/coco.names",
         "object_data_tracking": [
-            "people",
+            "person",
             "backpack",
             "handbag",
             "suitcase"
@@ -24,9 +24,6 @@
     "packet_output": [
         {
             "num_people": null
-        },
-        {
-            "num_people_zone": "name_zone"
         }
     ],
     "input_location_rabbit_queue": "name",
@@ -34,24 +31,28 @@
         "name"
     ],
     "input": {
+        "num_people": null,
         "zone": [
             {
-                "name": "pátio escola de engenharia"
-            },
-            {
-                "x": 640,
-                "y": 480
-            },
-            {
-                "x": 640,
-                "y": 480
-            },
-            {
-                "x": 640,
-                "y": 480
+                "name_inside_zone": "pátio escola de engenharia",
+                "name_outside_zone": "pátio escola de engenharia",
+                "points": [
+                    {
+                        "x": 640,
+                        "y": 480
+                    },
+                    {
+                        "x": 640,
+                        "y": 480
+                    },
+                    {
+                        "x": 640,
+                        "y": 480
+                    }
+                ]
             }
         ],
-        "intesection_zone": [
+        "line_intesection_zone": [
             {
                 "name": "123",
                 "start_point": {
