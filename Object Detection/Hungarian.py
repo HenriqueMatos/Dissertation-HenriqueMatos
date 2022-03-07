@@ -23,12 +23,12 @@ def bb_intersection_over_union(boxA, boxB):
     # area and dividing it by the sum of prediction + ground-truth
     # areas - the interesection area
     iou = interArea / float(boxAArea + boxBArea - interArea)
-    return iou
-    # if iou >= 0.1:
-    #     # EXPERIMENTAR ALTERAR
-    #     # return 1.0
-    # else:
-    #     return 0.0
+    # return iou
+    if iou >= 0.3:
+        # EXPERIMENTAR ALTERAR
+        return 1.0
+    else:
+        return 0.0
 
 
 def index_in_list(a_list, index):
@@ -39,13 +39,14 @@ def index_in_list(a_list, index):
 
 
 def get_hungarian(trackers, detections):
+    # print("len", len(trackers), len(detections))
     maxlen = max(len(trackers), len(detections))
     IOU_mat = np.zeros((maxlen, maxlen), dtype=np.float32)
     for t, trk in enumerate(trackers):
         #trk = convert_to_cv2bbox(trk)
         for d, det in enumerate(detections):
             IOU_mat[t, d] = bb_intersection_over_union(trk, det)
-    print(IOU_mat)
+    # print(IOU_mat)
     # Produces matches
     # Solve the maximizing the sum of IOU assignment problem using the
     # Hungarian algorithm (also known as Munkres algorithm)
@@ -80,25 +81,29 @@ def get_hungarian(trackers, detections):
             matches.append((row_ind, col_ind))
 
     IndexToRemove = []
+    IndexToRemoveDetections = []
     for index, ut in enumerate(unmatched_trackers):
         if index_in_list(trackers, ut) is False:
             IndexToRemove.append(index)
     for index, ud in enumerate(unmatched_detections):
         if index_in_list(detections, ud) is False:
             IndexToRemove.append(index)
+            IndexToRemoveDetections.append(index)
 
     for item in sorted(IndexToRemove, reverse=True):
         unmatched_trackers.pop(item)
         # unmatched_detections.pop(item)
+    for item in sorted(IndexToRemoveDetections, reverse=True):
+        unmatched_detections.pop(item)
 
-    print(matches)
-    print(unmatched_trackers)
-    print(unmatched_detections)
+    # print(matches)
+    # print(unmatched_trackers)
+    # print(unmatched_detections)
     return (matches, unmatched_trackers, unmatched_detections)
 
 
-trackers = [(1, 1, 5, 5), (6, 6, 7, 7), (1, 1, 2, 2),
-            (2, 2, 3, 3), (3, 3, 4, 4)]
-detections = [(1, 1, 2, 3), (1, 2, 3, 4), (8, 8, 9, 9)]  # , (6, 6, 7, 7)
+# detections = [(1, 1, 5, 5), (6, 6, 7, 7), (1, 1, 2, 2),
+#             (2, 2, 3, 3), (3, 3, 4, 4)]
+# trackers = [(1, 1, 2, 3), (1, 2, 3, 4), (8, 8, 9, 9)]  # , (6, 6, 7, 7)
 
-get_hungarian(detections, trackers)
+# get_hungarian(detections, trackers)

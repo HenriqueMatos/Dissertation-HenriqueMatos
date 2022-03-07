@@ -1,5 +1,4 @@
 import datetime
-import json
 import cv2
 from matplotlib.pyplot import flag
 import numpy as np
@@ -7,7 +6,6 @@ import imutils
 
 import NewClass_ID_Association
 import newcentroidtracker
-import Data_Config_Count
 
 MIN_SCORE_THRESH = 0.5
 
@@ -59,15 +57,27 @@ def get_box_dimensions(outputs, height, width):
     return boxes, confs, class_ids
 
 
+def draw_labels(boxes, confs, colors, class_ids, classes, img):
+    indexes = cv2.dnn.NMSBoxes(boxes, confs, 0.5, 0.4)
+    # print(indexes)
+    font = cv2.FONT_HERSHEY_PLAIN
+    for i in range(len(boxes)):
+        if i in indexes:
+            # print(i, confs[i])
+            x, y, w, h = boxes[i]
+            label = str(classes[class_ids[i]])
+            color = colors[i]
+            cv2.rectangle(img, (x, y), (x+w, y+h), color, 2)
+            cv2.putText(img, label, (x, y - 5), font, 1, color, 1)
+    cv2.imshow("Image", img)
+
+
+# def hungarianAlgorith():
+
+
 if __name__ == '__main__':
-    with open('output/person.json', 'r') as f:
-        data = json.load(f)
-
-    ConfigDataUpdater = Data_Config_Count.Data_Config_Count()
-    ConfigDataUpdater.register(data)
-
     ct = newcentroidtracker.CentroidTracker()
-    # id_tracker = NewClass_ID_Association.ID_Tracker()
+    id_tracker = NewClass_ID_Association.ID_Tracker()
     model, classes, colors, output_layers = load_yolo()
     # cap = cv2.VideoCapture('/dev/video2')
     # cap = cv2.VideoCapture("./output.mp4")
@@ -106,35 +116,63 @@ if __name__ == '__main__':
             centroid_boxes.append(np.asarray((cX, cY)))
 
         value = ct.update(boxes2)
-        # print("AQUI", len(centroid_boxes))
+        tracked_ids = id_tracker.updateData(boxes2)
+        print("AQUI", len(centroid_boxes))
         # print(len(value.keys()), len(tracked_ids))
-        # Exist_indexs = []
-        # for centroid in centroid_boxes:
-        #     for key, item in value.items():
-        #         if np.array_equal(item, centroid):
-        #             Exist_indexs.append(key)
-        # print(len(boxes2), len(Exist_indexs))
-        # # print("AQUI", Exist_indexs, tracked_ids)
-        IDs_list = list(value.keys())
-        Centroids_list = []
-        for item in list(value.values()):
-            Centroids_list.append(tuple(item))
-        for index, (box, class_id, centroid) in enumerate(zip(boxes_final, class_ids_final, centroid_boxes)):
+        Exist_indexs = []
+        for centroid in centroid_boxes:
+            for key, item in value.items():
+                if np.array_equal(item, centroid):
+                    Exist_indexs.append(key)
+        # print(len(boxes2), len(Exist_indexs), len(tracked_ids))
+        # print("AQUI", Exist_indexs, tracked_ids)
+        print("AQUI2", len(boxes2), len(value))
+        for index, (tracked_id, box, class_id, centroid) in enumerate(zip(tracked_ids, boxes_final, class_ids_final, centroid_boxes)):
             label = ""
             flag = False
+            # print(i, confs[i])
             x, y, w, h = box
+            # if (x, y, x+w, y+h) in list(value.values()):
+            # id = -1
+            if class_id == 0:
+                # cv2.putText(frame, str(tracked_id), (centroid[0] + 10, centroid[1] + 10),
+                #             cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 255, 0), 1)
+                cv2.circle(
+                    frame, (centroid[0], centroid[1]), 3, (0, 255, 0), -1)
 
-            cv2.circle(
-                frame, (centroid[0], centroid[1]), 3, (0, 255, 0), -1)
-            id = IDs_list[Centroids_list.index(tuple(centroid))]
-            cv2.putText(frame, str(id), (centroid[0] - 10, centroid[1] - 10),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 0), 1)
+                for key, item in value.items():
+                    if np.array_equal(item, centroid):
+                        # label = str(key)+" "
+                        id = key
+                        cv2.putText(frame, str(id), (centroid[0] - 10, centroid[1] - 10),
+                                    cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 0), 1)
+                        flag = True
+                        break
+                # if flag == False:
+                #     print("Deumerda",centroid)
+                #     sys.exit(0)
+                # label = str(list(value.keys())
+                #             [list(value.values()).index(centroid)])+" "
 
             label = label + str(classes[class_id])
-            color = colors[id]
+            color = colors[tracked_id]
+            print("AQUI", (x, y), (x+w, y+h))
             cv2.rectangle(frame, (x, y), (x+w, y+h), color, 2)
             # cv2.putText(frame, label, (x, y - 5),
             #             cv2.FONT_HERSHEY_PLAIN, 1, color, 1)
+
+        for OldBox in id_tracker.oldBoxDetection:
+            cx, cy, w, h, vx, vy, vw, vh = OldBox.kalmanfilter.predict()
+            xmin = int(abs(cx-w/2))
+            xmax = int(abs(cx+w/2))
+            ymin = int(abs(cy-h/2))
+            ymax = int(abs(cy+h/2))
+            color = colors[OldBox.id]
+            print((xmin, ymin), (xmax, ymax))
+            # if xmin == 0 and ymin == 0 and xmax == 0 and ymax == 0:
+            #     print("erro")
+            # else:
+            cv2.rectangle(frame, (xmin, ymin), (xmax, ymax), color, 2)
 
         fps_end_time = datetime.datetime.now()
         time_diff = fps_end_time - fps_start_time

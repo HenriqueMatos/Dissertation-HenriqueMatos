@@ -113,7 +113,10 @@ class ID_Tracker():
 
     def updateDisappeared(self, ListOfIndex):
         # print("ListOfIndex", ListOfIndex)
+        # for box in self.oldBoxDetection:
+        #     print(box.id)
         for index in ListOfIndex:
+            # print(index)
             self.get_object_data_index(index).increase_disappeared()
             # self.oldBoxDetection[index].increase_disappeared()
             # self.oldBoxDetection[index] = self.oldBoxDetection[index]._replace(
@@ -129,7 +132,7 @@ class ID_Tracker():
         return self.get_object_data_index(index).get_centroid()
 
     def setoldBoxDetection(self, ListOf_XY_BoxValues):
-        Index_ID = {}
+        Index_ID = []
         for index, item in enumerate(ListOf_XY_BoxValues):
             x, y = get_center_box(*item)
             left, top, right, bottom = item
@@ -138,7 +141,8 @@ class ID_Tracker():
             self.get_object_data_index(index).kalmanfilter.correct_kalman_filter(
                 x, y, (right-left), (bottom-top), time.time())
             # print("VALUES", x, y, (right-left), (bottom-top), time.time())
-            Index_ID[index] = index
+            # Index_ID[index] = item
+            Index_ID.append(index)
         return Index_ID
 
     def addNewValue(self, XY_BoxValues):
@@ -207,21 +211,26 @@ class ID_Tracker():
             return 0.0
 
     def hungarian_algorithm(self, ListOf_XY_BoxValues):
-        data2 = []
-        cont = 0
 
         if len(self.oldBoxDetection) == 0:
             return (False, self.setoldBoxDetection(ListOf_XY_BoxValues))
         OldDetection = []
-        for index2, OldBox in enumerate(self.oldBoxDetection):
+        OldIndexDetection = []
+        for OldBox in self.oldBoxDetection:
             cx, cy, w, h, vx, vy, vw, vh = OldBox.kalmanfilter.predict()
             xmin = abs(cx-w/2)
             xmax = abs(cx+w/2)
             ymin = abs(cy-h/2)
             ymax = abs(cy+h/2)
+            # OldDetection.append(OldBox.box)
+            OldIndexDetection.append(OldBox.id)
             if xmin == 0 and ymin == 0 and xmax == 0 and ymax == 0:
+                # OldDetection[OldBox.id]=OldBox.box
+                OldDetection.append(OldBox.box)
+            elif self.bb_intersection_over_union(OldBox.box, (xmin, ymin, xmax, ymax)) == 0:
                 OldDetection.append(OldBox.box)
             else:
+                # OldDetection[OldBox.id]=(xmin, ymin, xmax, ymax)
                 OldDetection.append((xmin, ymin, xmax, ymax))
             # print("AQUI2", (xmin, ymin, xmax, ymax), NewBox)
             # print(self.bb_intersection_over_union(
@@ -258,6 +267,15 @@ class ID_Tracker():
             # # aux.append(self.bb_intersection_over_union(OldBox.box, NewBox))
         (matches, unmatched_trackers, unmatched_detections) = Hungarian.get_hungarian(
             ListOf_XY_BoxValues, OldDetection)
+
+        for index in range(len(matches)):
+            lista = list(matches[index])
+            lista[1] = OldIndexDetection[matches[index][1]]
+            item = tuple(lista)
+            matches[index] = item
+        for index in range(len(unmatched_detections)):
+            unmatched_detections[index] = OldIndexDetection[unmatched_detections[index]]
+
         return (True, (matches, unmatched_trackers, unmatched_detections))
 
     def updateData(self, ListOf_XY_BoxValues):
@@ -270,8 +288,11 @@ class ID_Tracker():
             (matches, unmatched_trackers, unmatched_detections) = result
             first_matches = [a_tuple[0] for a_tuple in matches]
             second_matches = [a_tuple[1] for a_tuple in matches]
+            # print((first_matches, unmatched_trackers))
             for index, box in enumerate(ListOf_XY_BoxValues):
                 if index in first_matches:
+                    FinalIndex.append(
+                        second_matches[first_matches.index(index)])
                     self.updateoldBoxDetection(
                         second_matches[first_matches.index(index)], box)
                 elif index in unmatched_trackers:
@@ -282,17 +303,12 @@ class ID_Tracker():
             # Update Disappeared
             self.updateDisappeared(unmatched_detections)
 
-            # SQ NÃO É SUPOSTO DAR SORT
-            final = []
-            for item in sorted(final_index_ID.items()):
-                final.append(item[1])
-            # print(final)
-            return np.array(final)
+            return np.array(FinalIndex)
         else:
-            final = []
-            for item in sorted(result.items()):
-                final.append(item[1])
-            return np.array(final)
+            # final = []
+            # for item in sorted(result.items()):
+            #     final.append(item[1])
+            return np.array(result)
 
     def verifyIntersection(self, start_point_Line, end_point_Line):
         for ObjectData in self.oldBoxDetection:

@@ -5,8 +5,10 @@
     "timestamp_config_creation": "timestamp",
     "restart_count": "timestamp",
     "object_detection_config": {
-        "threshold": 0.3,
-        "model_used": "link to tensorflow hub",
+        "threshold": 0.5,
+        "path_model_weights": "yolo/yolov3.weights",
+        "path_model_cfg": "yolo/yolov3.cfg",
+        "path_yolo_coco_names": "yolo/coco.names",
         "object_data_tracking": [
             "people",
             "backpack",
@@ -14,12 +16,12 @@
             "suitcase"
         ]
     },
-    "output_default": [
+    "packet_default_output": [
         "camera_id",
         "timestamp",
         "camera_zone"
     ],
-    "output": [
+    "packet_output": [
         {
             "num_people": null
         },
@@ -27,10 +29,9 @@
             "num_people_zone": "name_zone"
         }
     ],
-    "output_location_rabbit": [
-        {
-            "queues": "name"
-        }
+    "input_location_rabbit_queue": "name",
+    "output_location_rabbit_queue": [
+        "name"
     ],
     "input": {
         "zone": [
