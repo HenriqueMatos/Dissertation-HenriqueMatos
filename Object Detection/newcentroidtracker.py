@@ -6,23 +6,27 @@ import numpy as np
 
 
 class CentroidTracker():
-    def __init__(self, maxDisappeared=50):
+    def __init__(self, maxDisappeared=50, maxCentroids=20):
         # initialize the next unique object ID along with two ordered
         # dictionaries used to keep track of mapping a given object
         # ID to its centroid and number of consecutive frames it has
         # been marked as "disappeared", respectively
+
         self.nextObjectID = 0
         self.objects = OrderedDict()
+        self.objectsCentroids = OrderedDict()
         self.disappeared = OrderedDict()
         # store the number of maximum consecutive frames a given
         # object is allowed to be marked as "disappeared" until we
         # need to deregister the object from tracking
         self.maxDisappeared = maxDisappeared
+        self.maxCentroids = maxCentroids
 
     def register(self, centroid):
         # when registering an object we use the next available object
         # ID to store the centroid
         self.objects[self.nextObjectID] = centroid
+        self.objectsCentroids[self.nextObjectID] = [centroid]
         self.disappeared[self.nextObjectID] = 0
         self.nextObjectID += 1
 
@@ -105,6 +109,11 @@ class CentroidTracker():
                     # counter
                 objectID = objectIDs[row]
                 self.objects[objectID] = inputCentroids[col]
+                if len(self.objectsCentroids[objectID]) == self.maxCentroids:
+                    self.objectsCentroids[objectID].pop(0)
+                    self.objectsCentroids[objectID].append(inputCentroids[col])
+                else:
+                    self.objectsCentroids[objectID].append(inputCentroids[col])
                 self.disappeared[objectID] = 0
                 # indicate that we have examined each of the row and
                 # column indexes, respectively
@@ -120,6 +129,7 @@ class CentroidTracker():
             # ADDED BY ME!!!!!!!!!!!!!!
             for unusedCol in unusedCols:
                 self.register(inputCentroids[unusedCol])
+
                 # in the event that the number of object centroids is
                 # equal or greater than the number of input centroids
                 # we need to check and see if some of these objects have

@@ -29,6 +29,7 @@ class Data_Config_Count():
 
         self.config_line_intesection_zone = False
         self.line_intesection_zone = []
+        self.data_line_intesection_zone = []
 
         self.config_remove_area = False
         self.remove_area = []

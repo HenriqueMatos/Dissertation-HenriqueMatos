@@ -81,6 +81,16 @@ if __name__ == '__main__':
     total_frames = 0
     while True:
         _, frame = cap.read()
+        for arrayPoints in ConfigDataUpdater.remove_area:
+            
+            ####### Polygon Remove #######
+            mask = np.zeros(frame.shape, dtype=np.uint8)
+            contours = np.array(arrayPoints)
+            cv2.fillPoly(mask, pts=[contours], color=(255, 255, 255))
+            # apply the mask
+            frame = cv2.bitwise_or(frame, mask)
+            ##########################
+        
         # frame = imutils.resize(frame, width=800)
         # frame = frame.resize((640,360))
         total_frames = total_frames + 1
@@ -97,7 +107,8 @@ if __name__ == '__main__':
         boxes_final = []
         class_ids_final = []
         for i in indexes:
-            if class_ids[i] in ID_wanted_classes:
+            # if class_ids[i] in ID_wanted_classes:
+            if class_ids[i] == 0:
                 boxes_final.append(boxes[i])
                 class_ids_final.append(class_ids[i])
 
@@ -121,17 +132,22 @@ if __name__ == '__main__':
             flag = False
             x, y, w, h = box
 
-            cv2.circle(
-                frame, (centroid[0], centroid[1]), 3, (0, 255, 0), -1)
-            id = IDs_list[Centroids_list.index(tuple(centroid))]
+            id = -1
+            if Centroids_list.__contains__(tuple(centroid)):
+                id = IDs_list[Centroids_list.index(tuple(centroid))]
+
+                for item in ct.objectsCentroids[id]:
+                    cv2.circle(
+                        frame, (item[0], item[1]), 3, (0, 255, 0), -1)
+
             cv2.putText(frame, str(id), (centroid[0] - 10, centroid[1] - 10),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 0), 1)
 
             label = label + str(classes[class_id])
             color = colors[id]
             cv2.rectangle(frame, (x, y), (x+w, y+h), color, 2)
-            # cv2.putText(frame, label, (x, y - 5),
-            #             cv2.FONT_HERSHEY_PLAIN, 1, color, 1)
+            cv2.putText(frame, label, (x, y - 5),
+                        cv2.FONT_HERSHEY_PLAIN, 1, color, 1)
 
         fps_end_time = datetime.datetime.now()
         time_diff = fps_end_time - fps_start_time
