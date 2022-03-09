@@ -106,11 +106,16 @@ if __name__ == '__main__':
 
         boxes_final = []
         class_ids_final = []
+        nonPersonDetections = []
+        nonPersonClass_ids = []
         for i in indexes:
             # if class_ids[i] in ID_wanted_classes:
             if class_ids[i] == 0:
                 boxes_final.append(boxes[i])
                 class_ids_final.append(class_ids[i])
+            elif class_ids[i] in ID_wanted_classes:
+                nonPersonDetections.append(boxes[i])
+                nonPersonClass_ids.append(class_ids[i])
 
         boxes2 = []
         centroid_boxes = []
@@ -139,26 +144,34 @@ if __name__ == '__main__':
 
         # Draw Line_intersection_zone
         for item in ConfigDataUpdater.line_intersection_zone:
-            cv2.line(frame, item["start_point"], item["end_point"], (0, 255, 0), 2)
+            cv2.line(frame, item["start_point"],
+                     item["end_point"], (0, 255, 0), 2)
 
         ConfigDataUpdater.updateData(UpdateValuesCentroids)
 
+        for nonPersonDetection, nonPersonClass in zip(nonPersonDetections, nonPersonClass_ids):
+            x, y, w, h = nonPersonDetection
+            label = str(classes[nonPersonClass])
+            color = colors[-1]
+            cv2.rectangle(frame, (x, y), (x+w, y+h), color, 2)
+            cv2.putText(frame, label, (x, y - 5),
+                        cv2.FONT_HERSHEY_PLAIN, 1, color, 1)
+
         for index, (box, class_id, centroid) in enumerate(zip(boxes_final, class_ids_final, centroid_boxes)):
             x, y, w, h = box
-
             id = -1
             if Centroids_list.__contains__(tuple(centroid)):
                 id = IDs_list[Centroids_list.index(tuple(centroid))]
-
+                color = colors[id]
                 for item in ct.objectsCentroids[id]:
                     cv2.circle(
-                        frame, (item[0], item[1]), 3, (0, 255, 0), -1)
+                        frame, (item[0], item[1]), 3, color, -1)
 
             cv2.putText(frame, str(id), (centroid[0] - 10, centroid[1] - 10),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 0), 1)
 
             label = str(classes[class_id])
-            color = colors[id]
+
             cv2.rectangle(frame, (x, y), (x+w, y+h), color, 2)
             cv2.putText(frame, label, (x, y - 5),
                         cv2.FONT_HERSHEY_PLAIN, 1, color, 1)

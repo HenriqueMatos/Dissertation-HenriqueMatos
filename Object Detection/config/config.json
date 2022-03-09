@@ -74,7 +74,7 @@
         ],
         "line_intersection_zone": [
             {
-                "name": "123",
+                "name": "Teste 123",
                 "start_point": [
                     640,
                     480
@@ -82,6 +82,20 @@
                 "end_point": [
                     640,
                     0
+                ],
+                "zone_direction_1or2": 1,
+                "name_zone_before": "outside",
+                "name_zone_after": "inside"
+            },
+            {
+                "name": "interior salas",
+                "start_point": [
+                    177,
+                    553
+                ],
+                "end_point": [
+                    534,
+                    425
                 ],
                 "zone_direction_1or2": 1,
                 "name_zone_before": "outside",

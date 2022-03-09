@@ -49,73 +49,73 @@ class Data_Config_Count():
         if jsonObject.__contains__("camera_id"):
             self.camera_id = int(jsonObject["camera_id"])
         else:
-            sys.exit(0)
+            sys.exit("Bad Config Data")
         # camera_name
         if jsonObject.__contains__("camera_name"):
             self.camera_name = jsonObject["camera_name"]
         else:
-            sys.exit(0)
+            sys.exit("Bad Config Data")
         # camera_zone
         if jsonObject.__contains__("camera_zone"):
             self.camera_zone = jsonObject["camera_zone"]
         else:
-            sys.exit(0)
+            sys.exit("Bad Config Data")
         # timestamp_config_creation
         if jsonObject.__contains__("timestamp_config_creation"):
             self.timestamp_config_creation = jsonObject["timestamp_config_creation"]
         else:
-            sys.exit(0)
+            sys.exit("Bad Config Data")
         # restart_count
         if jsonObject.__contains__("restart_count"):
             self.restart_count = jsonObject["restart_count"]
         else:
-            sys.exit(0)
+            sys.exit("Bad Config Data")
         if jsonObject.__contains__("object_detection_config"):
             # threshold
             if jsonObject["object_detection_config"].__contains__("threshold"):
                 self.threshold = float(
                     jsonObject["object_detection_config"]["threshold"])
             else:
-                sys.exit(0)
+                sys.exit("Bad Config Data")
             # path_model_weights
             if jsonObject["object_detection_config"].__contains__("path_model_weights"):
                 self.path_model_weights = jsonObject["object_detection_config"]["path_model_weights"]
             else:
-                sys.exit(0)
+                sys.exit("Bad Config Data")
             # path_model_cfg
             if jsonObject["object_detection_config"].__contains__("path_model_cfg"):
                 self.path_model_cfg = jsonObject["object_detection_config"]["path_model_cfg"]
             else:
-                sys.exit(0)
+                sys.exit("Bad Config Data")
             # path_yolo_coco_names
             if jsonObject["object_detection_config"].__contains__("path_yolo_coco_names"):
                 self.path_yolo_coco_names = jsonObject["object_detection_config"]["path_yolo_coco_names"]
             else:
-                sys.exit(0)
+                sys.exit("Bad Config Data")
             # object_data_tracking
             if jsonObject["object_detection_config"].__contains__("object_data_tracking"):
                 self.object_data_tracking = list(
                     jsonObject["object_detection_config"]["object_data_tracking"])
             else:
-                sys.exit(0)
+                sys.exit("Bad Config Data")
         else:
-            sys.exit(0)
+            sys.exit("Bad Config Data")
         # packet_default_output
         if jsonObject.__contains__("packet_default_output"):
             self.packet_default_output = list(
                 jsonObject["packet_default_output"])
         else:
-            sys.exit(0)
+            sys.exit("Bad Config Data")
         # input_location_rabbit_queue
         if jsonObject.__contains__("input_location_rabbit_queue"):
             self.input_location_rabbit_queue = jsonObject["input_location_rabbit_queue"]
         else:
-            sys.exit(0)
+            sys.exit("Bad Config Data")
         # output_location_rabbit_queue
         if jsonObject.__contains__("output_location_rabbit_queue"):
             self.output_location_rabbit_queue = jsonObject["output_location_rabbit_queue"]
         else:
-            sys.exit(0)
+            sys.exit("Bad Config Data")
         if jsonObject.__contains__("input"):
             if jsonObject["input"].__contains__("num_people"):
                 self.config_num_people_total = True
@@ -173,9 +173,9 @@ class Data_Config_Count():
                         (centroidList[-2][0], centroidList[-2][1]), (centroidList[-1][0], centroidList[-1][1]), tuple(item["start_point"]), tuple(item["end_point"]))
                     if DoIntersect:
                         if item["zone_direction_1or2"] == orientacao:
-                            print(item["name_zone_after"], id)
+                            print(item["name"], item["name_zone_after"], id)
                         else:
-                            print(item["name_zone_before"], id)
+                            print(item["name"], item["name_zone_before"], id)
                             # if orientacao == 0:
                             #     print("Collinear", id)
                             # if orientacao == 1:
