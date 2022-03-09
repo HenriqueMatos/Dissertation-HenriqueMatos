@@ -1,6 +1,8 @@
-
-
 import sys
+from shapely.geometry import Point
+from shapely.geometry.polygon import Polygon
+
+import intersect
 
 
 class Data_Config_Count():
@@ -26,10 +28,12 @@ class Data_Config_Count():
         ##################
         self.config_zone = False
         self.zone = []
+        self.count_inside_zone = {}
+        self.count_outside_zone = {}
 
-        self.config_line_intesection_zone = False
-        self.line_intesection_zone = []
-        self.data_line_intesection_zone = []
+        self.config_line_intersection_zone = False
+        self.line_intersection_zone = []
+        self.data_line_intersection_zone = []
 
         self.config_remove_area = False
         self.remove_area = []
@@ -122,15 +126,61 @@ class Data_Config_Count():
                 self.zone = jsonObject["input"]["zone"]
             else:
                 self.config_zone = False
-            if jsonObject["input"].__contains__("line_intesection_zone"):
-                self.config_line_intesection_zone = True
-                self.line_intesection_zone = jsonObject["input"]["line_intesection_zone"]
+            if jsonObject["input"].__contains__("line_intersection_zone"):
+                self.config_line_intersection_zone = True
+                # Verify highest point and change
+                self.line_intersection_zone = jsonObject["input"]["line_intersection_zone"]
+                # print(self.line_intersection_zone["start_point"])
+                for index, each_intersection_zone in enumerate(self.line_intersection_zone):
+                    self.line_intersection_zone[index]["start_point"], self.line_intersection_zone[index]["end_point"] = min(
+                        each_intersection_zone["start_point"], each_intersection_zone["end_point"]), max(
+                        each_intersection_zone["start_point"], each_intersection_zone["end_point"])
             else:
-                self.config_line_intesection_zone = False
+                self.config_line_intersection_zone = False
             if jsonObject["input"].__contains__("remove_area"):
                 self.config_remove_area = True
                 self.remove_area = jsonObject["input"]["remove_area"]
             else:
                 self.config_remove_area = False
 
-    # def updateData(self):
+    def updateData(self, UpdateValuesCentroids):
+        IDs_list = list(UpdateValuesCentroids.keys())
+        Values_list = list(UpdateValuesCentroids.values())
+        # print("update data")
+        self.num_people_total = len(IDs_list)
+
+        # Restart zone count data
+        for index, item in enumerate(self.zone):
+            self.count_inside_zone[index] = 0
+            self.count_outside_zone[index] = 0
+
+        for id, centroidList in zip(IDs_list, Values_list):
+
+            # ZONE
+            for index, item in enumerate(self.zone):
+                point = Point(centroidList[-1][0], centroidList[-1][1])
+                polygon = Polygon(item["points"])
+                if polygon.contains(point):
+                    self.count_inside_zone[index] += 1
+                else:
+                    self.count_outside_zone[index] += 1
+
+            # LINE_INTERSECTION
+            for item in self.line_intersection_zone:
+
+                if len(centroidList) >= 2:
+                    DoIntersect, orientacao = intersect.doIntersect(
+                        (centroidList[-2][0], centroidList[-2][1]), (centroidList[-1][0], centroidList[-1][1]), tuple(item["start_point"]), tuple(item["end_point"]))
+                    if DoIntersect:
+                        if item["zone_direction_1or2"] == orientacao:
+                            print(item["name_zone_after"], id)
+                        else:
+                            print(item["name_zone_before"], id)
+                            # if orientacao == 0:
+                            #     print("Collinear", id)
+                            # if orientacao == 1:
+                            #     print("Esquerda", id)
+                            # if orientacao == 2:
+                            #     print("Direita", id)
+        print(self.count_inside_zone, self.count_outside_zone)
+        print(self.num_people_total)

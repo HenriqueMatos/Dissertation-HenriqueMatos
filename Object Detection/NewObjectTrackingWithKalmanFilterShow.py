@@ -4,8 +4,8 @@ from matplotlib.pyplot import flag
 import numpy as np
 import imutils
 
-import NewClass_ID_Association
-import newcentroidtracker
+import TensorFlowObjectTracking.NewClass_ID_Association
+import centroidtracker
 
 MIN_SCORE_THRESH = 0.5
 
@@ -76,7 +76,7 @@ def draw_labels(boxes, confs, colors, class_ids, classes, img):
 
 
 if __name__ == '__main__':
-    ct = newcentroidtracker.CentroidTracker()
+    ct = centroidtracker.CentroidTracker()
     id_tracker = NewClass_ID_Association.ID_Tracker()
     model, classes, colors, output_layers = load_yolo()
     # cap = cv2.VideoCapture('/dev/video2')

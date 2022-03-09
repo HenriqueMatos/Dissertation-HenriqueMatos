@@ -4,9 +4,10 @@ import cv2
 from matplotlib.pyplot import flag
 import numpy as np
 import imutils
+from simplejson import OrderedDict
 
-import NewClass_ID_Association
-import newcentroidtracker
+# import NewClass_ID_Association
+import centroidtracker
 import Data_Config_Count
 
 
@@ -67,9 +68,9 @@ if __name__ == '__main__':
 
     ConfigDataUpdater = Data_Config_Count.Data_Config_Count()
     ConfigDataUpdater.register(data)
-    print(ConfigDataUpdater.line_intesection_zone)
+    # print(ConfigDataUpdater.line_intesection_zone)
 
-    ct = newcentroidtracker.CentroidTracker()
+    ct = centroidtracker.CentroidTracker()
     # id_tracker = NewClass_ID_Association.ID_Tracker()
     model, classes, colors, output_layers, ID_wanted_classes = load_yolo(
         ConfigDataUpdater.path_model_weights, ConfigDataUpdater.path_model_cfg, ConfigDataUpdater.path_yolo_coco_names, ConfigDataUpdater.object_data_tracking)
@@ -81,16 +82,15 @@ if __name__ == '__main__':
     total_frames = 0
     while True:
         _, frame = cap.read()
+        ####### Polygon Remove #######
         for arrayPoints in ConfigDataUpdater.remove_area:
-            
-            ####### Polygon Remove #######
             mask = np.zeros(frame.shape, dtype=np.uint8)
             contours = np.array(arrayPoints)
             cv2.fillPoly(mask, pts=[contours], color=(255, 255, 255))
             # apply the mask
             frame = cv2.bitwise_or(frame, mask)
-            ##########################
-        
+        ##########################
+
         # frame = imutils.resize(frame, width=800)
         # frame = frame.resize((640,360))
         total_frames = total_frames + 1
@@ -127,9 +127,23 @@ if __name__ == '__main__':
         Centroids_list = []
         for item in list(value.values()):
             Centroids_list.append(tuple(item))
+
+        UpdateValuesCentroids = OrderedDict()
+        for id in IDs_list:
+            UpdateValuesCentroids[id] = ct.objectsCentroids[id]
+
+        # Draw Zones
+        for item in ConfigDataUpdater.zone:
+            cv2.polylines(frame, [np.array(item["points"])],
+                          True, (255, 0, 0), 2)
+
+        # Draw Line_intersection_zone
+        for item in ConfigDataUpdater.line_intersection_zone:
+            cv2.line(frame, item["start_point"], item["end_point"], (0, 255, 0), 2)
+
+        ConfigDataUpdater.updateData(UpdateValuesCentroids)
+
         for index, (box, class_id, centroid) in enumerate(zip(boxes_final, class_ids_final, centroid_boxes)):
-            label = ""
-            flag = False
             x, y, w, h = box
 
             id = -1
@@ -143,7 +157,7 @@ if __name__ == '__main__':
             cv2.putText(frame, str(id), (centroid[0] - 10, centroid[1] - 10),
                         cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 0), 1)
 
-            label = label + str(classes[class_id])
+            label = str(classes[class_id])
             color = colors[id]
             cv2.rectangle(frame, (x, y), (x+w, y+h), color, 2)
             cv2.putText(frame, label, (x, y - 5),
