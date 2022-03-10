@@ -1,10 +1,12 @@
 import datetime
 import json
 import cv2
-from matplotlib.pyplot import flag
 import numpy as np
-import imutils
 from simplejson import OrderedDict
+import _thread
+import pika
+import sys
+import requests
 
 # import NewClass_ID_Association
 import centroidtracker
@@ -62,12 +64,52 @@ def get_box_dimensions(outputs, height, width, threshold):
     return boxes, confs, class_ids
 
 
-if __name__ == '__main__':
+def ThreadDataTransmitter():
+    # print("ola")
+    credentials = pika.PlainCredentials('admin', 'admin')
+
+    connection_parameters = pika.ConnectionParameters(
+        'localhost', credentials=credentials, virtual_host="keycloak_test")
+    connection = pika.BlockingConnection(
+        connection_parameters)
+    channel = connection.channel()
+
+    channel.queue_declare(queue='hello')
+
+    # request
+    url = 'http://localhost:8080/auth/realms/AppAuthenticator/protocol/openid-connect/token'
+    myobj = {"client_id": "EdgeServer1",
+             "grant_type": "password",
+             "client_secret": "LkAdC9aMnqSEpr5C8beoE81coVBkYziy",
+             "scope": "openid",
+             "username": "trackingcamera1",
+             "password": "tracking1"}
+
+    x = requests.post(url, data=myobj)
+    # json.load(x.text)
+    response = json.loads(x.text)
+    sendData = response["token_type"]+" "+response["access_token"]
+    print(sendData)
+    # print(x.text)
+
+    channel.basic_publish(
+        exchange='', routing_key='hello', body=sendData)
+    # print(" [x] Sent "+''.join(args))
+    connection.close()
+
+
+def main():
     with open('config/config.json', 'r') as f:
         data = json.load(f)
 
     ConfigDataUpdater = Data_Config_Count.Data_Config_Count()
     ConfigDataUpdater.register(data)
+
+    try:
+        _thread.start_new_thread(ThreadDataTransmitter, (ConfigDataUpdater, ))
+    except:
+        print("Error: unable to start thread")
+
     # print(ConfigDataUpdater.line_intesection_zone)
 
     ct = centroidtracker.CentroidTracker()
@@ -82,6 +124,7 @@ if __name__ == '__main__':
     total_frames = 0
     while True:
         _, frame = cap.read()
+        # frame = cv2.cvtColor(frame, cv2.COLOR_RGB2YUV)
         ####### Polygon Remove #######
         for arrayPoints in ConfigDataUpdater.remove_area:
             mask = np.zeros(frame.shape, dtype=np.uint8)
@@ -191,3 +234,8 @@ if __name__ == '__main__':
             break
     cap.release()
     cv2.destroyAllWindows()
+
+
+if __name__ == '__main__':
+    # main()
+    ThreadDataTransmitter()
