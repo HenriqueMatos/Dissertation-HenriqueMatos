@@ -64,7 +64,7 @@ def get_box_dimensions(outputs, height, width, threshold):
     return boxes, confs, class_ids
 
 
-def ThreadDataTransmitter():
+def ThreadDataTransmitter(ConfigDataUpdater):
     # print("ola")
     credentials = pika.PlainCredentials('admin', 'admin')
 
@@ -88,12 +88,15 @@ def ThreadDataTransmitter():
     x = requests.post(url, data=myobj)
     # json.load(x.text)
     response = json.loads(x.text)
-    sendData = response["token_type"]+" "+response["access_token"]
+    sendData = {}
+    sendData["Authenticate"] = response["token_type"] + \
+        " "+response["access_token"]
+    sendData["camera_id"] = ConfigDataUpdater.camera_id
     print(sendData)
     # print(x.text)
 
     channel.basic_publish(
-        exchange='', routing_key='hello', body=sendData)
+        exchange='', routing_key='hello', body=json.dumps(sendData))
     # print(" [x] Sent "+''.join(args))
     connection.close()
 
@@ -238,4 +241,10 @@ def main():
 
 if __name__ == '__main__':
     # main()
-    ThreadDataTransmitter()
+
+    with open('config/config.json', 'r') as f:
+        data = json.load(f)
+
+    ConfigDataUpdater = Data_Config_Count.Data_Config_Count()
+    ConfigDataUpdater.register(data)
+    ThreadDataTransmitter(ConfigDataUpdater)

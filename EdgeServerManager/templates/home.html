@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+
+{% block header %}
+  <h1>{% block title %}Home{% endblock %}</h1>
+{% endblock %}
+
+{% block content %}
+Welcome home!
+<div id="protected_content" style="color:red;padding-top:20px;"></div>
+{% endblock %}
+{% block js %}
+{% if g.username %}
+<script>
+jQuery( document ).ready(function() {
+    var token = jQuery.cookie("access_token");
+    console.log(token);
+    jQuery('#protected').click(function(){
+        console.log('Click!');
+        jQuery.ajaxSetup({
+            headers: {
+                'Authorization': 'Bearer ' + token
+            }
+        });
+        jQuery.ajax({
+            url: '/protected',
+        }).done(function(msg){
+             alert(JSON.stringify(msg));
+            //jQuery('#protected_content').html(JSON.stringify(msg));
+        });
+    });
+});
+</script>
+{% endif %}
+{% endblock %}
