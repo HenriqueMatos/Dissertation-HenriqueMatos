@@ -1,0 +1,39 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+{% block header %}
+<h1>{% block title %}Config {{config}}{% endblock %}</h1>
+{% endblock %}
+{{data}}
+
+<p id="coord">X: , Y:</p>
+<script>
+  window.onload = function () {};
+
+  $(document).ready(function () {
+    var c = document.getElementById("myCanvas");
+    var ctx = c.getContext("2d");
+    var image = new Image();
+    image.src = "data:image/jpg;base64,{{ image }}";
+    ctx.canvas.width = image.width;
+    ctx.canvas.height = image.height;
+    ctx.drawImage(image, 0, 0);
+
+    $("#myCanvas").on("mousemove", function (e) {
+      var offset = $(this).offset();
+      var X = e.pageX - offset.left;
+      var Y = e.pageY - offset.top;
+      $("#coord").text("X: " + X + ", Y: " + Y);
+    });
+  });
+</script>
+<canvas id="myCanvas"> </canvas>
+<!--width="1280px" height="720px"-->
+
+<img
+  hidden
+  id="scream"
+  src="data:image/jpg;base64,{{ image }}"
+  alt="dragon"
+  ismap
+/>

@@ -1,7 +1,11 @@
+import base64
+import codecs
 import datetime
 import json
+import time
 import cv2
 import numpy as np
+from json import JSONEncoder
 from simplejson import OrderedDict
 import _thread
 import pika
@@ -11,6 +15,13 @@ import requests
 # import NewClass_ID_Association
 import centroidtracker
 import Data_Config_Count
+
+
+class NumpyEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, np.ndarray):
+            return obj.tolist()
+        return json.JSONEncoder.default(self, obj)
 
 
 def load_yolo(path_model_weights, path_model_cfg, path_yolo_coco_names, wanted_classes):
@@ -64,7 +75,7 @@ def get_box_dimensions(outputs, height, width, threshold):
     return boxes, confs, class_ids
 
 
-def ThreadDataTransmitter(ConfigDataUpdater):
+def ThreadDataTransmitter(ConfigDataUpdater, frame):
     # print("ola")
     credentials = pika.PlainCredentials('admin', 'admin')
 
@@ -80,19 +91,24 @@ def ThreadDataTransmitter(ConfigDataUpdater):
     url = 'http://localhost:8080/auth/realms/AppAuthenticator/protocol/openid-connect/token'
     myobj = {"client_id": "EdgeServer1",
              "grant_type": "password",
-             "client_secret": "LkAdC9aMnqSEpr5C8beoE81coVBkYziy",
+             "client_secret": "deCGEfmNbxFkC5z32UnwxtyQThTx4Evy",
              "scope": "openid",
              "username": "trackingcamera1",
-             "password": "tracking1"}
+             "password": "trackingcamera1"}
 
     x = requests.post(url, data=myobj)
     # json.load(x.text)
     response = json.loads(x.text)
+    # print(response)
     sendData = {}
-    sendData["Authenticate"] = response["token_type"] + \
-        " "+response["access_token"]
+    sendData["frame"] = frame
+    sendData["type"] = "login"
+    sendData["config"] = ConfigDataUpdater.JsonObjectString
+    # sendData["Authenticate"] = response["token_type"] + \
+    #     " "+response["access_token"]
+    sendData["Authenticate"] = response["access_token"]
     sendData["camera_id"] = ConfigDataUpdater.camera_id
-    print(sendData)
+    # print(sendData)
     # print(x.text)
 
     channel.basic_publish(
@@ -108,8 +124,20 @@ def main():
     ConfigDataUpdater = Data_Config_Count.Data_Config_Count()
     ConfigDataUpdater.register(data)
 
+    cap = cv2.VideoCapture("./ch01_08000000058000601.mp4")
+    # cap = cv2.VideoCapture('/dev/video2')
+    # cap = cv2.VideoCapture("./output.mp4")
+    _, frame = cap.read()
+    # frame=cv2.cvtColor(frame,cv2.COLOR_BGR2RGB)
+    # frame = frame.astype('float64')
+
+    cv2.imwrite("frame.jpg", frame)
+    
+    with open("frame.jpg", "rb") as image_file:
+        encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
     try:
-        _thread.start_new_thread(ThreadDataTransmitter, (ConfigDataUpdater, ))
+        _thread.start_new_thread(
+            ThreadDataTransmitter, (ConfigDataUpdater, encoded_string, ))
     except:
         print("Error: unable to start thread")
 
@@ -119,9 +147,8 @@ def main():
     # id_tracker = NewClass_ID_Association.ID_Tracker()
     model, classes, colors, output_layers, ID_wanted_classes = load_yolo(
         ConfigDataUpdater.path_model_weights, ConfigDataUpdater.path_model_cfg, ConfigDataUpdater.path_yolo_coco_names, ConfigDataUpdater.object_data_tracking)
-    # cap = cv2.VideoCapture('/dev/video2')
-    # cap = cv2.VideoCapture("./output.mp4")
-    cap = cv2.VideoCapture("./ch01_08000000058000601.mp4")
+    
+
     fps_start_time = datetime.datetime.now()
     fps = 0
     total_frames = 0
@@ -240,11 +267,11 @@ def main():
 
 
 if __name__ == '__main__':
-    # main()
+    main()
 
-    with open('config/config.json', 'r') as f:
-        data = json.load(f)
+    # with open('config/config.json', 'r') as f:
+    #     data = json.load(f)
 
-    ConfigDataUpdater = Data_Config_Count.Data_Config_Count()
-    ConfigDataUpdater.register(data)
-    ThreadDataTransmitter(ConfigDataUpdater)
+    # ConfigDataUpdater = Data_Config_Count.Data_Config_Count()
+    # ConfigDataUpdater.register(data)
+    # ThreadDataTransmitter(ConfigDataUpdater)

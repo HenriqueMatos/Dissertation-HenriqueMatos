@@ -2,6 +2,26 @@ from keycloak import KeycloakAdmin, KeycloakOpenID
 from flask import current_app
 
 
+def verifyToken(oidc_obj, Authentication):
+    try:
+        userinfo = oidc_obj.userinfo(Authentication)
+    except:
+        return False,False
+    # print(userinfo)
+    return True,userinfo
+
+    return userinfo
+
+
+def get_oidc2(SERVER_URL, CLIENT_ID, REALM_NAME, CLIENT_SECRET):
+    keycloak_openid = KeycloakOpenID(server_url=SERVER_URL,
+                                     client_id=CLIENT_ID,
+                                     realm_name=REALM_NAME,
+                                     client_secret_key=CLIENT_SECRET)
+    # print(keycloak_openid.well_know())
+
+    return keycloak_openid
+
 
 def get_oidc():
     keycloak_openid = KeycloakOpenID(server_url=current_app.config.get('SERVER_URL'),
@@ -11,6 +31,7 @@ def get_oidc():
                                          'REALM_NAME'),
                                      client_secret_key=current_app.config.get(
         'CLIENT_SECRET'))
+    # print(keycloak_openid.well_know())
     return keycloak_openid
 
 

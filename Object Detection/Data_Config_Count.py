@@ -1,3 +1,4 @@
+import json
 import sys
 from shapely.geometry import Point
 from shapely.geometry.polygon import Polygon
@@ -7,6 +8,7 @@ import intersect
 
 class Data_Config_Count():
     def __init__(self):
+        self.JsonObjectString = None
         # Config
         self.camera_id = None
         self.camera_name = None
@@ -45,6 +47,7 @@ class Data_Config_Count():
         self.last_reset = None
 
     def register(self, jsonObject):
+        self.JsonObjectString = json.dumps(jsonObject)
         # camera_id
         if jsonObject.__contains__("camera_id"):
             self.camera_id = int(jsonObject["camera_id"])

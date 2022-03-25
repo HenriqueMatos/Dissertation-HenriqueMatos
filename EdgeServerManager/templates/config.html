@@ -1,0 +1,35 @@
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+{% block header %}
+<h1>{% block title %}Config Sensor{% endblock %}</h1>
+{% endblock %} {% block content %}Username: {{data.preferred_username}}<br />SensorID:
+{{data.sensorid}}
+<div id="protected_content" style="color: red; padding-top: 20px"></div>
+{% endblock %}
+  {% for item in config %} {% if config[item]==None %}
+  <label>{{item}}</label>
+  <input
+    type="text"
+    id="fname"
+    name="fname"
+    placeholder="{{data.config[item]}}"
+  /><br /><br />
+  {% elif config[item]=="list" %}
+  <label>{{item}}{{data.config[item]}}</label><br /><br />
+  {% else %}
+  <label>{{item}}</label><br />
+  {% for item2 in config[item] %} {% if item2=="zone" or item2=="remove_area" or
+  item2=="line_intersection_zone"%}
+  <label>{{data.config[item][item2]}}</label><br>
+  <form action="config_points" method="POST">
+    <input hidden name="preferred_username" value={{data.preferred_username}}>
+    <input hidden name="config" value={{item}}>
+    <input hidden name="config1" value={{item2}}>
+    <input type="submit" value={{item2}}>
+  </form>
+  {% endif %} {% endfor %}
+  <br /><br />
+  {% endif %} {% endfor %}
+  <input type="submit" value="Submit" />
+
