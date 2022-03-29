@@ -87,8 +87,25 @@ def configObject():
     return render_template('config.html', config=config, data=data, image=base64.b64encode(base64.decodebytes(imageData.encode('utf-8'))).decode('utf-8'))
 
 
-@app.route('/config_points', methods=['POST'])
+KEYS_line_intersection_zone = {
+    'name': 'Teste 123',
+    'start_point':  ([],"list"),
+    'end_point':  ([],"list"),
+    'zone_direction_1or2': 1,
+    'name_zone_before': 'outside',
+    'name_zone_after': 'inside'
+}
+KEYS_zone = {
+    'name_inside_zone': 'pátio escola de engenharia',
+    'name_outside_zone': 'pátio escola de engenharia',
+    'points': ([],"listoflist")
+}
+KEYS_remove_area = [([],"listoflist")]
+
+
+@ app.route('/config_points', methods=['POST'])
 def configPoints():
+    keys = None
     if request.method == "POST":
         print(request.form)
         preferred_username = request.form["preferred_username"]
@@ -99,9 +116,31 @@ def configPoints():
                 imageData = x["frame"]
                 Config = json.loads(x["config"])
                 data = Config[configString][configString1]
+                data2 = []
+                if configString1 == "line_intersection_zone":
+                    keys = KEYS_line_intersection_zone
+                elif configString1 == "zone":
+                    keys = KEYS_zone
+                elif configString1 == "remove_area":
+                    keys = KEYS_remove_area
+                # for each_data in data:
+                #     if type(each_data) != list:
+                #         aux = {}
+                #         for item in each_data:
+                #             if type(each_data[item]) == list:
+                #                 if type(each_data[item][0]) == list:
+                #                     aux[item] = (each_data[item], "listoflist")
+                #                 else:   
+                #                     aux[item] = (each_data[item], "list")
+                #             else:
+                #                 aux[item] = (each_data[item], "not")
+                #         data2.append(aux)
+                #     else:
+                #         data2.append(each_data)
+                
                 break
 
-    return render_template('config_points.html', config=configString1, data=data, image=base64.b64encode(base64.decodebytes(imageData.encode('utf-8'))).decode('utf-8'))
+    return render_template('config_points.html', keys=keys, config=configString1, data=data, image=base64.b64encode(base64.decodebytes(imageData.encode('utf-8'))).decode('utf-8'))
 
 
 def web():
