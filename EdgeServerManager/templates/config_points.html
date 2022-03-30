@@ -64,8 +64,49 @@
       <div class="accordion-body">
         <div class="card text-center" style="width: 30%">
           <ul class="list-group list-group-flush">
-            {% for eachData in ExistingData %} {% if
-            keys[eachData][1]=="listoflist" %}
+
+
+            {% if config=="line_intersection_zone" %}
+            
+            {% for eachData in
+            ExistingData %} {% if keys[eachData][1]=="list" %}
+            <div id="content-{{actualIndex}}" class="card-header">
+              {{eachData}} <i class="bi bi-pencil-square"></i>
+            </div>
+            <li class="list-group-item">
+              X:
+              <input
+                style="width: 30%"
+                type="number"
+                id="{{ExistingData[eachData][0]}}"
+                name="{{ExistingData[eachData][0]}}"
+                value="{{ExistingData[eachData][0]}}"
+              />
+              Y:
+              <input
+                style="width: 30%"
+                type="number"
+                id="{{ExistingData[eachData][1]}}"
+                name="{{ExistingData[eachData][1]}}"
+                value="{{ExistingData[eachData][1]}}"
+              />
+            </li>
+            {% else %}
+            <div class="card-header">{{eachData}}</div>
+
+            <li class="list-group-item">
+              <input
+                type="text"
+                id="fname"
+                name="fname"
+                placeholder="{{ExistingData[eachData]}}"
+              />
+            </li>
+            {% endif %} {% endfor %} 
+            
+            {% elif config=="zone" %} 
+
+            {% for eachData in ExistingData %} {% if keys[eachData][1]=="listoflist" %}
             <div id="content-{{actualIndex}}" class="card-header">
               {{eachData}} <i class="bi bi-plus-circle"></i>
             </div>
@@ -90,12 +131,7 @@
               <i class="bi bi-pencil-square"></i>
               <i class="bi bi-trash"></i>
             </li>
-            {% endfor %} {% elif keys[eachData][1]=="list" %}
-            <div id="content-{{actualIndex}}" class="card-header">
-              {{eachData}}
-            </div>
-            <label>{{ExistingData[eachData]}}</label>
-            {% else %}
+            {% endfor %} {% else %}
             <div class="card-header">{{eachData}}</div>
 
             <li class="list-group-item">
@@ -106,7 +142,19 @@
                 placeholder="{{ExistingData[eachData]}}"
               />
             </li>
-            {% endif %} {% endfor %}
+            {% endif %}
+             {% endfor %} 
+            
+            
+            {% elif config=="remove_area" %} 
+            
+            
+            {% endif%} 
+            
+            
+            
+            
+            
           </ul>
         </div>
       </div>
@@ -135,6 +183,29 @@
         <div class="accordion-body">
           <div class="card text-center" style="width: 30%">
             <ul class="list-group list-group-flush">
+
+              {% if config=="line_intersection_zone" %}
+
+              {% for eachData in keys %} 
+              {% if keys[eachData][1]=="list" %}
+              <div id="content-{{actualIndex}}" class="card-header">
+                {{eachData}} <i class="bi bi-pencil-square"></i>
+              </div>
+              <li class="list-group-item">
+                X: <input style="width: 30%" type="number" id="0" name="0" /> Y:
+                <input style="width: 30%" type="number" id="1" name="1" />
+              </li>
+
+              {% else %}
+              <div class="card-header">{{eachData}}</div>
+
+              <li class="list-group-item">
+                <input type="text" id="fname" name="fname" />
+              </li>
+              {% endif %} {% endfor %}
+
+
+              {% elif config=="zone" %}
               {% for eachData in keys %} {% if keys[eachData][1]=="listoflist"
               %}
               <div id="content-{{actualIndex}}" class="card-header">
@@ -142,21 +213,52 @@
               </div>
               <li class="list-group-item">
                 X: <input style="width: 30%" type="number" id="0" name="0" /> Y:
-                <input style="width: 30%" type="number" id="1" name="0" />
+                <input style="width: 30%" type="number" id="1" name="1" />
                 <i class="bi bi-pencil-square"></i>
                 <i class="bi bi-trash"></i>
               </li>
-              {% elif keys[eachData][1]=="list" %}
-              <div id="content-{{actualIndex}}" class="card-header">
-                {{eachData}}
-              </div>
-              ARRAY {% else %}
+              {% else %}
               <div class="card-header">{{eachData}}</div>
 
               <li class="list-group-item">
                 <input type="text" id="fname" name="fname" />
               </li>
               {% endif %} {% endfor %}
+
+
+              {% elif config=="remove_area" %}
+
+
+
+              {% endif %} 
+              
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+              
+
+
+
+
             </ul>
           </div>
         </div>
@@ -166,7 +268,6 @@
 </div>
 
 <script>
-
   function drawImage() {
     var c = document.getElementById("myCanvas");
     var ctx = c.getContext("2d");
@@ -208,55 +309,59 @@
     var oldType = null;
 
     $(".accordion-header").click(function () {
+      var config = "{{config}}";
       var index = this.id.split("-")[1];
-      var element = document
-        .getElementById("content-" + index)
-        .textContent.replace(/\s/g, "");
-      if (oldIndex == null && oldType == null) {
-        oldIndex = index;
-        oldType = element;
-
-        console.log(jsonData[parseInt(index) - 1][element]);
-        arrayData = jsonData[parseInt(index) - 1][element];
-        ctx.fillStyle = "#000000";
-        ctx.beginPath();
-        arrayData.forEach(function (value, i, array) {
-          if (i == 0) {
-            ctx.moveTo(value[0], value[1]);
-          } else {
-            ctx.lineTo(value[0], value[1]);
-          }
-          if (i + 1 === array.length) {
-            ctx.closePath();
-            if(element=="remove_area"){
-              ctx.fill();
-            }else{
-              ctx.stroke();
-            }
-          }
-        });
-      } else if (oldIndex == index && oldType == element) {
+      var IntIndex = parseInt(index) - 1;
+      if (IntIndex >= jsonData.length) {
+        // Para uma nova configuração
         drawImage();
-        oldIndex=null
-        oldType=null
+        oldIndex = null;
+        oldType = null;
+      } else if (oldIndex === index && oldType === config) {
+        // Reset na imagem
+        drawImage();
+        oldIndex = null;
+        oldType = null;
       } else {
-        console.log(jsonData[parseInt(index) - 1][element]);
-        arrayData = jsonData[parseInt(index) - 1][element];
-        ctx.fillStyle = "#000000";
-        ctx.beginPath();
-        arrayData.forEach(function (value, i, array) {
-          if (i == 0) {
-            ctx.moveTo(value[0], value[1]);
-          } else {
-            ctx.lineTo(value[0], value[1]);
-          }
-          if (i + 1 === array.length) {
+        // Mostrar
+        switch (config) {
+          case "zone":
+            var element = document
+              .getElementById("content-" + index)
+              .textContent.replace(/\s/g, "");
+            console.log(jsonData[IntIndex][element]);
+            arrayData = jsonData[IntIndex][element];
+            ctx.fillStyle = "#000000";
+            ctx.beginPath();
+            arrayData.forEach(function (value, i, array) {
+              if (i == 0) {
+                ctx.moveTo(value[0], value[1]);
+              } else {
+                ctx.lineTo(value[0], value[1]);
+              }
+              if (i === array.length - 1) {
+                ctx.closePath();
+                ctx.stroke();
+              }
+            });
+            break;
+          case "line_intersection_zone":
+            console.log(config);
+            arrayData = jsonData[IntIndex]["start_point"];
+            arrayData2 = jsonData[IntIndex]["end_point"];
+            ctx.fillStyle = "#000000";
+            ctx.beginPath();
+            ctx.moveTo(arrayData[0], arrayData[1]);
+            ctx.lineTo(arrayData2[0], arrayData2[1]);
             ctx.closePath();
-            if(element=="remove_area"){
-              ctx.fill();
-            }
-          }
-        });
+            ctx.stroke();
+            break;
+          case "remove_area":
+            break;
+        }
+
+        oldIndex = index;
+        oldType = config;
       }
     });
   });
