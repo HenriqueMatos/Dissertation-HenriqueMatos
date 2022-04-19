@@ -1,35 +1,73 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-
+<link
+  href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css"
+  rel="stylesheet"
+  integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC"
+  crossorigin="anonymous"
+/>
+<script
+  src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js"
+  integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM"
+  crossorigin="anonymous"
+></script>
+<link
+  rel="stylesheet"
+  href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css"
+/>
 {% block header %}
 <h1>{% block title %}Config Sensor{% endblock %}</h1>
-{% endblock %} {% block content %}Username: {{data.preferred_username}}<br />SensorID:
-{{data.sensorid}}
-<div id="protected_content" style="color: red; padding-top: 20px"></div>
-{% endblock %}
-  {% for item in config %} {% if config[item]==None %}
-  <label>{{item}}</label>
-  <input
-    type="text"
-    id="fname"
-    name="fname"
-    placeholder="{{data.config[item]}}"
-  /><br /><br />
-  {% elif config[item]=="list" %}
-  <label>{{item}}{{data.config[item]}}</label><br /><br />
-  {% else %}
-  <label>{{item}}</label><br />
-  {% for item2 in config[item] %} {% if item2=="zone" or item2=="remove_area" or
-  item2=="line_intersection_zone"%}
-  <label>{{data.config[item][item2]}}</label><br>
-  <form action="config_points" method="POST">
-    <input hidden name="preferred_username" value={{data.preferred_username}}>
-    <input hidden name="config" value={{item}}>
-    <input hidden name="config1" value={{item2}}>
-    <input type="submit" value={{item2}}>
-  </form>
-  {% endif %} {% endfor %}
-  <br /><br />
-  {% endif %} {% endfor %}
-  <input type="submit" value="Submit" />
-
+{% endblock %} {% block content %}
+<div style="text-align: center">
+  <div class="container">
+    <div class="row">
+      <div class="col"><b>Username: </b> {{data.preferred_username}}</div>
+      <div class="col"><b>SensorID: </b> {{data.sensorid}}</div>
+    </div>
+    <br>
+    {% for item in config %} {% if config[item]==None %}
+    <div class="row">
+      <div class="col"><b>{{item}}</b></div>
+      <div class="col">
+        <input
+          type="text"
+          id="fname"
+          name="fname"
+          placeholder="{{data.config[item]}}"
+        />
+      </div>
+    </div>
+    </br>
+    {% elif config[item]=="list" %}
+    <div class="row">
+      <div class="col"><b>{{item}}</b></div>
+      <div class="col">{{data.config[item]}}</div>
+    </div>
+    <br>
+      {% else %}
+      {% for item2 in config[item] %} {% if item2=="zone" or
+      item2=="remove_area" or item2=="line_intersection_zone"%}
+      <div class="row">
+        <div class="col">
+        <form action="config_points" method="POST">
+        <input
+          hidden
+          name="preferred_username"
+          value="{{data.preferred_username}}"
+        />
+        <input hidden name="config" value="{{item}}" />
+        <input hidden name="config1" value="{{item2}}" />
+        <input type="submit" value="{{item2}}" />
+        </form>
+      </div>
+    </br>
+    </div>
+      {% endif %} {% endfor %} 
+      {% endif %} {% endfor %}
+    </div>
+    <div class="row">
+      <div class="col">
+    <input type="submit" value="Submit" /></div></div>
+  </div>
+  {% endblock %} 
+</div>
