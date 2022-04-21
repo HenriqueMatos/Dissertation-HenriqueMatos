@@ -37,8 +37,8 @@
 
 <div class="accordion" id="accordionExample">
   {% for ExistingData in data %} {% set actualIndex = loop.index%}
-  <div class="accordion-item">
-    <h2 class="accordion-header" id="heading-{{actualIndex}}">
+  <div class="accordion-item" id="accordion-actualIndex">
+    <h2 class="accordion-header" id="heading-{{loop.index}}">
       <button
         class="accordion-button collapsed"
         type="button"
@@ -111,7 +111,7 @@
                 min="0"
                 style="width: 30%"
                 type="number"
-                id="{{actualIndex}}-{{ loop.index}}"
+                id="{{actualIndex}}-{{ loop.index}}-0"
                 name="{{eachPoint[0]}}"
                 value="{{eachPoint[0]}}"
               />
@@ -121,12 +121,15 @@
                 min="0"
                 style="width: 30%"
                 type="number"
-                id="{{actualIndex}}-{{ loop.index}}"
+                id="{{actualIndex}}-{{ loop.index}}-1"
                 name="{{eachPoint[1]}}"
                 value="{{eachPoint[1]}}"
               />
-              <i class="bi bi-pencil-square"></i>
-              <i class="bi bi-trash"></i>
+              <i
+                class="bi bi-pencil-square"
+                id="{{actualIndex}}-{{ loop.index}}"
+              ></i>
+              <i class="bi bi-trash" id="{{actualIndex}}-{{ loop.index}}"></i>
             </li>
             {% endfor %} {% else %}
             <div class="card-header">{{eachData}}</div>
@@ -299,6 +302,15 @@
     ctx.drawImage(image, 0, 0);
   }
 
+  function scrollToCanvas() {
+    $("html,body").animate(
+      {
+        scrollTop: $("#myCanvas").offset().top,
+      },
+      "fast"
+    );
+  }
+
   $(document).ready(function () {
     var c = document.getElementById("myCanvas");
     var ctx = c.getContext("2d");
@@ -381,11 +393,11 @@
       var config = "{{config}}";
       switch (config) {
         case "zone":
-          drawImage();
           jsonData[parseInt(indexes[0] - 1)]["points"][
             parseInt(indexes[1]) - 1
           ][1] = valor;
           arrayData = jsonData[parseInt(indexes[0] - 1)]["points"];
+          drawImage();
           ctx.fillStyle = "#000000";
           ctx.beginPath();
           arrayData.forEach(function (value, i, array) {
@@ -407,7 +419,6 @@
       }
     });
 
-
     $("#myCanvas").on("mousemove", function (e) {
       var offset = $(this).offset();
       var X = e.pageX - offset.left;
@@ -420,12 +431,140 @@
 
     $(".bi-pencil-square").click(function () {
       //Scroll to top
-      $("html,body").animate(
-        {
-          scrollTop: $("#myCanvas").offset().top,
-        },
-        "fast"
-      );
+      scrollToCanvas();
+      var StringID = this.id;
+      var indexes = StringID.split("-");
+      var config = "{{config}}";
+      switch (config) {
+        case "zone":
+          $("#myCanvas").one("click", function (e) {
+            var offset = $(this).offset();
+            X = e.pageX - offset.left;
+            Y = e.pageY - offset.top;
+            console.log(X, Y);
+            console.log(indexes);
+            jsonData[parseInt(indexes[0] - 1)]["points"][
+              parseInt(indexes[1]) - 1
+            ][0] = parseInt(X);
+            jsonData[parseInt(indexes[0] - 1)]["points"][
+              parseInt(indexes[1]) - 1
+            ][1] = parseInt(Y);
+
+            document.getElementById(StringID + "-0").value = parseInt(X);
+            document.getElementById(StringID + "-1").value = parseInt(Y);
+
+            arrayData = jsonData[parseInt(indexes[0] - 1)]["points"];
+            console.log(arrayData);
+            drawImage();
+            ctx.fillStyle = "#000000";
+            ctx.beginPath();
+            arrayData.forEach(function (value, i, array) {
+              if (i == 0) {
+                ctx.moveTo(value[0], value[1]);
+              } else {
+                ctx.lineTo(value[0], value[1]);
+              }
+              if (i === array.length - 1) {
+                ctx.closePath();
+                ctx.stroke();
+              }
+            });
+          });
+
+          break;
+        case "line_intersection_zone":
+          break;
+        case "remove_area":
+          break;
+      }
+    });
+
+    //REMOVE BUTTON
+    $(".bi-trash").click(function () {
+      scrollToCanvas();
+      console.log("AQUI", this.id);
+      var StringID = this.id;
+      var indexes = StringID.split("-");
+      var config = "{{config}}";
+
+      switch (config) {
+        case "zone":
+          this.parentElement.remove();
+          jsonData[parseInt(indexes[0] - 1)]["points"].splice(
+            indexes[1] - 1,
+            1
+          );
+          arrayData = jsonData[parseInt(indexes[0] - 1)]["points"];
+          var ARRAY_X_inputMAX = document
+            .getElementById("collapse" + indexes[0])
+            .getElementsByClassName("X_inputMAX");
+          var ARRAY_Y_inputMAX = document
+            .getElementById("collapse" + indexes[0])
+            .getElementsByClassName("Y_inputMAX");
+          var ARRAY_bi_pencil_square = document
+            .getElementById("collapse" + indexes[0])
+            .getElementsByClassName("bi-pencil-square");
+          var ARRAY_bi_trash = document
+            .getElementById("collapse" + indexes[0])
+            .getElementsByClassName("bi-trash");
+          console.log("NUMBER", indexes[indexes.length - 1], arrayData.length);
+          for (let i = 0; i < arrayData.length; i++) {
+            if (i >= indexes[1] - 1) {
+              console.log(i);
+              ARRAY_X_inputMAX[i].setAttribute(
+                "id",
+                indexes[0] + "-" + (i + 1) + "-0"
+              );
+              ARRAY_Y_inputMAX[i].setAttribute(
+                "id",
+                indexes[0] + "-" + (i + 1) + "-1"
+              );
+              ARRAY_bi_pencil_square[i].setAttribute(
+                "id",
+                indexes[0] + "-" + (i + 1)
+              );
+              ARRAY_bi_trash[i].setAttribute("id", indexes[0] + "-" + (i + 1));
+              //document.getElementById('test').setAttribute('id', 'nextstep');
+            }
+            arrayData = jsonData[parseInt(indexes[0] - 1)]["points"];
+            console.log(arrayData);
+            drawImage();
+            ctx.fillStyle = "#000000";
+            ctx.beginPath();
+            arrayData.forEach(function (value, i, array) {
+              if (i == 0) {
+                ctx.moveTo(value[0], value[1]);
+              } else {
+                ctx.lineTo(value[0], value[1]);
+              }
+              if (i === array.length - 1) {
+                ctx.closePath();
+                ctx.stroke();
+              }
+            });
+          }
+          break;
+        case "line_intersection_zone":
+          break;
+        case "remove_area":
+          break;
+      }
+    });
+
+    $(".bi-plus-circle").click(function () {
+      console.log("AQUI", this.id);
+      var StringID = this.id;
+      var indexes = StringID.split("-");
+      var config = "{{config}}";
+
+      switch (config) {
+        case "zone":
+          break;
+        case "line_intersection_zone":
+          break;
+        case "remove_area":
+          break;
+      }
     });
 
     $(".accordion-header").click(function () {
@@ -446,6 +585,7 @@
         // Mostrar
         switch (config) {
           case "zone":
+            console.log(jsonData, IntIndex);
             console.log(jsonData[IntIndex]["points"]);
             arrayData = jsonData[IntIndex]["points"];
             ctx.fillStyle = "#000000";
