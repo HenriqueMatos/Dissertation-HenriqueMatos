@@ -24,10 +24,43 @@
     margin-bottom: 10px; /* Added */
   }
 </style>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="#">Config {{config}}</a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#navbarSupportedContent"
+      aria-controls="navbarSupportedContent"
+      aria-expanded="false"
+      aria-label="Toggle navigation"
+    >
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/">Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" href="javascript:history.back()">Config</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="coord">X: , Y:</a>
+        </li>
+      </ul>
+      <form class="d-flex">
+        
+        <button class="btn btn-outline-dark" type="submit">Submit</button>
+      </form>
+    </div>
+    
+  </div>
+</nav>
 
-<h1>{% block title %}Config {{config}}{% endblock %}</h1>
 {% endblock %}
-<p id="coord">X: , Y:</p>
+
 <div style="text-align: center">
   <canvas id="myCanvas"> </canvas>
 </div>
@@ -576,6 +609,7 @@
           break;
       }
     });
+
     //ADD BUTTON
     $(".bi-plus-circle").on("click", function () {
       scrollToCanvas();
@@ -701,7 +735,8 @@
       var config = "{{config}}";
       var index = this.id.split("-")[1];
       var IntIndex = parseInt(index) - 1;
-      if (IntIndex >= jsonData.length) {
+      console.log(IntIndex, jsonData.length);
+      if (IntIndex > jsonData.length) {
         // Para uma nova configuração
         drawImage();
         oldIndex = null;
@@ -713,11 +748,15 @@
         oldType = null;
       } else {
         // Mostrar
+        drawImage();
         switch (config) {
           case "zone":
-            console.log(jsonData, IntIndex);
-            console.log(jsonData[IntIndex]["points"]);
-            arrayData = jsonData[IntIndex]["points"];
+            if (IntIndex >= jsonData.length) {
+              arrayData = NewConfigZone["points"];
+            } else {
+              arrayData = jsonData[IntIndex]["points"];
+            }
+
             ctx.fillStyle = "#000000";
             ctx.beginPath();
             arrayData.forEach(function (value, i, array) {
