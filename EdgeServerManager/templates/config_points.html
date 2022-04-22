@@ -59,7 +59,7 @@
     >
       <div class="accordion-body">
         <div class="card text-center" style="width: 30%">
-          <ul class="list-group list-group-flush">
+          <ul class="list-group list-group-flush" id="ul-{{actualIndex}}">
             {% if config=="line_intersection_zone" %} {% for eachData in
             ExistingData %} {% if keys[eachData][1]=="list" %}
             <div id="content-{{actualIndex}}" class="card-header">
@@ -101,7 +101,8 @@
             {% endif %} {% endfor %} {% elif config=="zone" %} {% for eachData
             in ExistingData %} {% if keys[eachData][1]=="listoflist" %}
             <div id="content-{{actualIndex}}" class="card-header">
-              {{eachData}} <i class="bi bi-plus-circle"></i>
+              {{eachData}}
+              <i class="bi bi-plus-circle" id="{{actualIndex}}"></i>
             </div>
             {% for eachPoint in ExistingData[eachData] %}
             <li class="list-group-item">
@@ -112,7 +113,6 @@
                 style="width: 30%"
                 type="number"
                 id="{{actualIndex}}-{{ loop.index}}-0"
-                name="{{eachPoint[0]}}"
                 value="{{eachPoint[0]}}"
               />
               Y:
@@ -122,7 +122,6 @@
                 style="width: 30%"
                 type="number"
                 id="{{actualIndex}}-{{ loop.index}}-1"
-                name="{{eachPoint[1]}}"
                 value="{{eachPoint[1]}}"
               />
               <i
@@ -200,7 +199,7 @@
       >
         <div class="accordion-body">
           <div class="card text-center" style="width: 30%">
-            <ul class="list-group list-group-flush">
+            <ul id="ul-{{actualIndex}}" class="list-group list-group-flush">
               {% if config=="line_intersection_zone" %} {% for eachData in keys
               %} {% if keys[eachData][1]=="list" %}
               <div id="content-{{actualIndex}}" class="card-header">
@@ -232,8 +231,10 @@
               {% endif %} {% endfor %} {% elif config=="zone" %} {% for eachData
               in keys %} {% if keys[eachData][1]=="listoflist" %}
               <div id="content-{{actualIndex}}" class="card-header">
-                {{eachData}} <i class="bi bi-plus-circle"></i>
+                {{eachData}}
+                <i class="bi bi-plus-circle" id="{{actualIndex}}"></i>
               </div>
+              <!--
               <li class="list-group-item">
                 X:
                 <input
@@ -252,6 +253,7 @@
                 <i class="bi bi-pencil-square"></i>
                 <i class="bi bi-trash"></i>
               </li>
+              -->
               {% else %}
               <div class="card-header">{{eachData}}</div>
 
@@ -260,7 +262,8 @@
               </li>
               {% endif %} {% endfor %} {% elif config=="remove_area" %}
               <div id="content-{{actualIndex}}" class="card-header">
-                {{config}} <i class="bi bi-plus-circle"></i>
+                {{config}}
+                <i class="bi bi-plus-circle" id="{{actualIndex}}"></i>
               </div>
               <li class="list-group-item">
                 X:
@@ -291,6 +294,12 @@
 </div>
 
 <script>
+  var NewConfigZone = {
+    name_inside_zone: "",
+    name_outside_zone: "",
+    points: [],
+  };
+
   function drawImage() {
     var c = document.getElementById("myCanvas");
     var ctx = c.getContext("2d");
@@ -429,7 +438,8 @@
     var oldIndex = null;
     var oldType = null;
 
-    $(".bi-pencil-square").click(function () {
+    //EDIT BUTTON
+    $(document).on("click", ".bi-pencil-square", function () {
       //Scroll to top
       scrollToCanvas();
       var StringID = this.id;
@@ -442,19 +452,31 @@
             X = e.pageX - offset.left;
             Y = e.pageY - offset.top;
             console.log(X, Y);
-            console.log(indexes);
-            jsonData[parseInt(indexes[0] - 1)]["points"][
-              parseInt(indexes[1]) - 1
-            ][0] = parseInt(X);
-            jsonData[parseInt(indexes[0] - 1)]["points"][
-              parseInt(indexes[1]) - 1
-            ][1] = parseInt(Y);
+            console.log(indexes, jsonData.length);
+            // Check if is new config
+            if (indexes[0] > jsonData.length) {
+              NewConfigZone["points"][parseInt(indexes[1]) - 1][0] =
+                parseInt(X);
+              NewConfigZone["points"][parseInt(indexes[1]) - 1][1] =
+                parseInt(Y);
+              document.getElementById(StringID + "-0").value = parseInt(X);
+              document.getElementById(StringID + "-1").value = parseInt(Y);
+              arrayData = NewConfigZone["points"];
+            } else {
+              jsonData[parseInt(indexes[0] - 1)]["points"][
+                parseInt(indexes[1]) - 1
+              ][0] = parseInt(X);
+              jsonData[parseInt(indexes[0] - 1)]["points"][
+                parseInt(indexes[1]) - 1
+              ][1] = parseInt(Y);
 
-            document.getElementById(StringID + "-0").value = parseInt(X);
-            document.getElementById(StringID + "-1").value = parseInt(Y);
+              document.getElementById(StringID + "-0").value = parseInt(X);
+              document.getElementById(StringID + "-1").value = parseInt(Y);
 
-            arrayData = jsonData[parseInt(indexes[0] - 1)]["points"];
+              arrayData = jsonData[parseInt(indexes[0] - 1)]["points"];
+            }
             console.log(arrayData);
+
             drawImage();
             ctx.fillStyle = "#000000";
             ctx.beginPath();
@@ -480,9 +502,9 @@
     });
 
     //REMOVE BUTTON
-    $(".bi-trash").click(function () {
+    $(document).on("click", ".bi-trash", function () {
       scrollToCanvas();
-      console.log("AQUI", this.id);
+      console.log("AQUI", this.id, jsonData.length);
       var StringID = this.id;
       var indexes = StringID.split("-");
       var config = "{{config}}";
@@ -490,11 +512,17 @@
       switch (config) {
         case "zone":
           this.parentElement.remove();
-          jsonData[parseInt(indexes[0] - 1)]["points"].splice(
-            indexes[1] - 1,
-            1
-          );
-          arrayData = jsonData[parseInt(indexes[0] - 1)]["points"];
+          if (indexes[0] > jsonData.length) {
+            NewConfigZone["points"].splice(indexes[1] - 1, 1);
+            arrayData = NewConfigZone["points"];
+          } else {
+            jsonData[parseInt(indexes[0] - 1)]["points"].splice(
+              indexes[1] - 1,
+              1
+            );
+            arrayData = jsonData[parseInt(indexes[0] - 1)]["points"];
+          }
+
           var ARRAY_X_inputMAX = document
             .getElementById("collapse" + indexes[0])
             .getElementsByClassName("X_inputMAX");
@@ -507,10 +535,8 @@
           var ARRAY_bi_trash = document
             .getElementById("collapse" + indexes[0])
             .getElementsByClassName("bi-trash");
-          console.log("NUMBER", indexes[indexes.length - 1], arrayData.length);
           for (let i = 0; i < arrayData.length; i++) {
             if (i >= indexes[1] - 1) {
-              console.log(i);
               ARRAY_X_inputMAX[i].setAttribute(
                 "id",
                 indexes[0] + "-" + (i + 1) + "-0"
@@ -524,9 +550,129 @@
                 indexes[0] + "-" + (i + 1)
               );
               ARRAY_bi_trash[i].setAttribute("id", indexes[0] + "-" + (i + 1));
-              //document.getElementById('test').setAttribute('id', 'nextstep');
             }
-            arrayData = jsonData[parseInt(indexes[0] - 1)]["points"];
+          }
+
+          console.log(arrayData);
+          drawImage();
+          ctx.fillStyle = "#000000";
+          ctx.beginPath();
+          arrayData.forEach(function (value, i, array) {
+            if (i == 0) {
+              ctx.moveTo(value[0], value[1]);
+            } else {
+              ctx.lineTo(value[0], value[1]);
+            }
+            if (i === array.length - 1) {
+              ctx.closePath();
+              ctx.stroke();
+            }
+          });
+
+          break;
+        case "line_intersection_zone":
+          break;
+        case "remove_area":
+          break;
+      }
+    });
+    //ADD BUTTON
+    $(".bi-plus-circle").on("click", function () {
+      scrollToCanvas();
+      console.log("AQUI", this.id);
+      var StringID = this.id;
+      var indexes = StringID.split("-");
+      var config = "{{config}}";
+      console.log(indexes[0]);
+
+      switch (config) {
+        case "zone":
+          $("#myCanvas").one("click", function (e) {
+            var offset = $(this).offset();
+            X = e.pageX - offset.left;
+            Y = e.pageY - offset.top;
+            console.log(X, Y);
+            console.log(indexes);
+            //Check if is new config
+
+            if (indexes[0] > jsonData.length) {
+              NewConfigZone["points"].push([parseInt(X), parseInt(Y)]);
+
+              var AddValue = `
+              <li class="list-group-item">
+                X:
+                <input
+                  class="X_inputMAX"
+                  min="0"
+                  style="width: 30%"
+                  type="number"
+                  id="${indexes[0]}-${NewConfigZone["points"].length}-0"
+                  value="${parseInt(X)}"
+                />
+                Y:
+                <input
+                  class="Y_inputMAX"
+                  min="0"
+                  style="width: 30%"
+                  type="number"
+                  id="${indexes[0]}-${NewConfigZone["points"].length}-1"
+                  value="${parseInt(Y)}"
+                />
+                <i class="bi bi-pencil-square" id="${indexes[0]}-${
+                NewConfigZone["points"].length
+              }"></i>
+                <i class="bi bi-trash"id="${indexes[0]}-${
+                NewConfigZone["points"].length
+              }"></i>
+              </li>
+              `;
+              arrayData = NewConfigZone["points"];
+            } else {
+              jsonData[parseInt(indexes[0] - 1)]["points"].push([
+                parseInt(X),
+                parseInt(Y),
+              ]);
+
+              var AddValue = `
+              <li class="list-group-item">
+                X:
+                <input
+                  class="X_inputMAX"
+                  min="0"
+                  style="width: 30%"
+                  type="number"
+                  id="${indexes[0]}-${
+                jsonData[parseInt(indexes[0] - 1)]["points"].length
+              }-0"
+                  value="${parseInt(X)}"
+                />
+                Y:
+                <input
+                  class="Y_inputMAX"
+                  min="0"
+                  style="width: 30%"
+                  type="number"
+                  id="${indexes[0]}-${
+                jsonData[parseInt(indexes[0] - 1)]["points"].length
+              }-1"
+                  value="${parseInt(Y)}"
+                />
+                <i class="bi bi-pencil-square" id="${indexes[0]}-${
+                jsonData[parseInt(indexes[0] - 1)]["points"].length
+              }"></i>
+                <i class="bi bi-trash"id="${indexes[0]}-${
+                jsonData[parseInt(indexes[0] - 1)]["points"].length
+              }"></i>
+              </li>
+              `;
+              arrayData = jsonData[parseInt(indexes[0] - 1)]["points"];
+            }
+
+            var ul = document.getElementById("ul-" + indexes[0]);
+            var mango = ul.children[ul.children.length - 1].insertAdjacentHTML(
+              "afterend",
+              AddValue
+            );
             console.log(arrayData);
             drawImage();
             ctx.fillStyle = "#000000";
@@ -542,7 +688,7 @@
                 ctx.stroke();
               }
             });
-          }
+          });
           break;
         case "line_intersection_zone":
           break;
@@ -551,23 +697,7 @@
       }
     });
 
-    $(".bi-plus-circle").click(function () {
-      console.log("AQUI", this.id);
-      var StringID = this.id;
-      var indexes = StringID.split("-");
-      var config = "{{config}}";
-
-      switch (config) {
-        case "zone":
-          break;
-        case "line_intersection_zone":
-          break;
-        case "remove_area":
-          break;
-      }
-    });
-
-    $(".accordion-header").click(function () {
+    $(".accordion-header").on("click", function () {
       var config = "{{config}}";
       var index = this.id.split("-")[1];
       var IntIndex = parseInt(index) - 1;
