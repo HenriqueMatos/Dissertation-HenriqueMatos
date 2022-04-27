@@ -51,11 +51,9 @@
         </li>
       </ul>
       <form class="d-flex">
-        
         <button class="btn btn-outline-dark" type="submit">Submit</button>
       </form>
     </div>
-    
   </div>
 </nav>
 
@@ -81,7 +79,7 @@
         aria-controls="collapse{{actualIndex}}"
       >
         Config #{{actualIndex}}
-        <i class="bi bi-trash"></i>
+        <i class="bi bi-trash" id="config-{{actualIndex}}"></i>
       </button>
     </h2>
     <div
@@ -96,7 +94,11 @@
             {% if config=="line_intersection_zone" %} {% for eachData in
             ExistingData %} {% if keys[eachData][1]=="list" %}
             <div id="content-{{actualIndex}}" class="card-header">
-              {{eachData}} <i class="bi bi-pencil-square"></i>
+              {{eachData}}
+              <i
+                class="bi bi-pencil-square"
+                id="{{actualIndex}}-{{eachData}}"
+              ></i>
             </div>
             <li class="list-group-item">
               X:
@@ -105,8 +107,7 @@
                 min="0"
                 style="width: 30%"
                 type="number"
-                id="{{ExistingData[eachData][0]}}"
-                name="{{ExistingData[eachData][0]}}"
+                id="{{actualIndex}}-{{eachData}}-0"
                 value="{{ExistingData[eachData][0]}}"
               />
               Y:
@@ -115,8 +116,7 @@
                 min="0"
                 style="width: 30%"
                 type="number"
-                id="{{actualIndex}}-points-{{ExistingData[eachData][1]}}"
-                name="{{ExistingData[eachData][1]}}"
+                id="{{actualIndex}}-{{eachData}}-1"
                 value="{{ExistingData[eachData][1]}}"
               />
             </li>
@@ -126,7 +126,8 @@
             <li class="list-group-item">
               <input
                 type="text"
-                id="fname"
+                class="form-control"
+                id="{{actualIndex}}-{{eachData}}"
                 name="fname"
                 placeholder="{{ExistingData[eachData]}}"
               />
@@ -169,7 +170,8 @@
             <li class="list-group-item">
               <input
                 type="text"
-                id="fname"
+                class="form-control"
+                id="{{actualIndex}}-{{eachData}}"
                 name="fname"
                 placeholder="{{ExistingData[eachData]}}"
               />
@@ -177,6 +179,7 @@
             {% endif %} {% endfor %} {% elif config=="remove_area" %}
             <div id="content-{{actualIndex}}" class="card-header">
               {{config}}
+              <i class="bi bi-plus-circle" id="{{actualIndex}}"></i>
             </div>
             {% for eachData in ExistingData%}
             <li class="list-group-item">
@@ -186,8 +189,7 @@
                 min="0"
                 style="width: 30%"
                 type="number"
-                id="{{eachData[0]}}"
-                name="{{eachData[0]}}"
+                id="{{actualIndex}}-{{ loop.index}}-0"
                 value="{{eachData[0]}}"
               />
               Y:
@@ -196,12 +198,14 @@
                 min="0"
                 style="width: 30%"
                 type="number"
-                id="{{eachData[1]}}"
-                name="{{eachData[1]}}"
+                id="{{actualIndex}}-{{ loop.index}}-1"
                 value="{{eachData[1]}}"
               />
-              <i class="bi bi-pencil-square"></i>
-              <i class="bi bi-trash"></i>
+              <i
+                class="bi bi-pencil-square"
+                id="{{actualIndex}}-{{ loop.index}}"
+              ></i>
+              <i class="bi bi-trash" id="{{actualIndex}}-{{ loop.index}}"></i>
             </li>
 
             {% endfor %} {% endif%}
@@ -221,7 +225,7 @@
           aria-controls="collapse{{actualIndex}}"
         >
           New Config #{{actualIndex}}
-          <i class="bi bi-trash"></i>
+          <i class="bi bi-trash" id="config-{{actualIndex}}"></i>
         </button>
       </h2>
       <div
@@ -236,7 +240,11 @@
               {% if config=="line_intersection_zone" %} {% for eachData in keys
               %} {% if keys[eachData][1]=="list" %}
               <div id="content-{{actualIndex}}" class="card-header">
-                {{eachData}} <i class="bi bi-pencil-square"></i>
+                {{eachData}}
+                <i
+                  class="bi bi-pencil-square"
+                  id="{{actualIndex}}-{{eachData}}"
+                ></i>
               </div>
               <li class="list-group-item">
                 X:
@@ -245,6 +253,7 @@
                   min="0"
                   style="width: 30%"
                   type="number"
+                  id="{{actualIndex}}-{{eachData}}-0"
                 />
                 Y:
                 <input
@@ -252,6 +261,7 @@
                   min="0"
                   style="width: 30%"
                   type="number"
+                  id="{{actualIndex}}-{{eachData}}-1"
                 />
               </li>
 
@@ -259,7 +269,12 @@
               <div class="card-header">{{eachData}}</div>
 
               <li class="list-group-item">
-                <input type="text" id="fname" name="fname" />
+                <input
+                  class="form-control"
+                  type="text"
+                  id="{{actualIndex}}-{{eachData}}"
+                  name="fname"
+                />
               </li>
               {% endif %} {% endfor %} {% elif config=="zone" %} {% for eachData
               in keys %} {% if keys[eachData][1]=="listoflist" %}
@@ -267,55 +282,22 @@
                 {{eachData}}
                 <i class="bi bi-plus-circle" id="{{actualIndex}}"></i>
               </div>
-              <!--
-              <li class="list-group-item">
-                X:
-                <input
-                  class="X_inputMAX"
-                  min="0"
-                  style="width: 30%"
-                  type="number"
-                />
-                Y:
-                <input
-                  class="Y_inputMAX"
-                  min="0"
-                  style="width: 30%"
-                  type="number"
-                />
-                <i class="bi bi-pencil-square"></i>
-                <i class="bi bi-trash"></i>
-              </li>
-              -->
               {% else %}
               <div class="card-header">{{eachData}}</div>
 
               <li class="list-group-item">
-                <input type="text" id="fname" name="fname" />
+                <input
+                  class="form-control"
+                  type="text"
+                  id="{{actualIndex}}-{{eachData}}"
+                  name="fname"
+                />
               </li>
               {% endif %} {% endfor %} {% elif config=="remove_area" %}
               <div id="content-{{actualIndex}}" class="card-header">
                 {{config}}
                 <i class="bi bi-plus-circle" id="{{actualIndex}}"></i>
               </div>
-              <li class="list-group-item">
-                X:
-                <input
-                  class="X_inputMAX"
-                  min="0"
-                  style="width: 30%"
-                  type="number"
-                />
-                Y:
-                <input
-                  class="Y_inputMAX"
-                  min="0"
-                  style="width: 30%"
-                  type="number"
-                />
-                <i class="bi bi-pencil-square"></i>
-                <i class="bi bi-trash"></i>
-              </li>
 
               {% endif %}
             </ul>
@@ -327,11 +309,20 @@
 </div>
 
 <script>
-  var NewConfigZone = {
+  var NewConfig_zone = {
     name_inside_zone: "",
     name_outside_zone: "",
     points: [],
   };
+  var NewConfig_line_intersection_zone = {
+    name: "",
+    start_point: [],
+    end_point: [],
+    zone_direction_1or2: "",
+    name_zone_before: "",
+    name_zone_after: "",
+  };
+  var NewConfig_remove_area = [];
 
   function drawImage() {
     var c = document.getElementById("myCanvas");
@@ -386,7 +377,45 @@
     ctx.canvas.height = image.height;
     ctx.drawImage(image, 0, 0);
 
-    $(".X_inputMAX").on("input", function (e) {
+    function draw_zone(arrayData) {
+      ctx.fillStyle = "#000000";
+      ctx.beginPath();
+      arrayData.forEach(function (value, i, array) {
+        if (i == 0) {
+          ctx.moveTo(value[0], value[1]);
+        } else {
+          ctx.lineTo(value[0], value[1]);
+        }
+        if (i === array.length - 1) {
+          ctx.closePath();
+          ctx.stroke();
+        }
+      });
+    }
+    function draw_line_intersection_zone(arrayData, arrayData2) {
+      ctx.fillStyle = "#000000";
+      ctx.beginPath();
+      ctx.moveTo(arrayData[0], arrayData[1]);
+      ctx.lineTo(arrayData2[0], arrayData2[1]);
+      ctx.closePath();
+      ctx.stroke();
+    }
+    function draw_remove_area(arrayData) {
+      ctx.fillStyle = "#FFFFFF";
+      ctx.beginPath();
+      arrayData.forEach(function (value, i, array) {
+        if (i == 0) {
+          ctx.moveTo(value[0], value[1]);
+        } else {
+          ctx.lineTo(value[0], value[1]);
+        }
+        if (i === array.length - 1) {
+          ctx.closePath();
+          ctx.fill();
+        }
+      });
+    }
+    $(document).on("input", ".X_inputMAX", function () {
       valor = $(this).val();
       if ($(this).val() >= ctx.canvas.width) {
         valor = ctx.canvas.width;
@@ -398,32 +427,56 @@
       var config = "{{config}}";
       switch (config) {
         case "zone":
+          if (indexes[0] > jsonData.length) {
+            NewConfig_zone["points"][parseInt(indexes[1]) - 1][0] = valor;
+            arrayData = NewConfig_zone["points"];
+          } else {
+            jsonData[parseInt(indexes[0] - 1)]["points"][
+              parseInt(indexes[1]) - 1
+            ][0] = valor;
+            arrayData = jsonData[parseInt(indexes[0] - 1)]["points"];
+          }
           drawImage();
-          jsonData[parseInt(indexes[0] - 1)]["points"][
-            parseInt(indexes[1]) - 1
-          ][0] = valor;
-          arrayData = jsonData[parseInt(indexes[0] - 1)]["points"];
-          ctx.fillStyle = "#000000";
-          ctx.beginPath();
-          arrayData.forEach(function (value, i, array) {
-            if (i == 0) {
-              ctx.moveTo(value[0], value[1]);
-            } else {
-              ctx.lineTo(value[0], value[1]);
-            }
-            if (i === array.length - 1) {
-              ctx.closePath();
-              ctx.stroke();
-            }
-          });
+          draw_zone(arrayData);
           break;
         case "line_intersection_zone":
+          if (indexes[0] > jsonData.length) {
+            NewConfig_line_intersection_zone[indexes[1]][0] = valor;
+            if ([indexes[1]] == "start_point") {
+              arrayData = NewConfig_line_intersection_zone[indexes[1]];
+              arrayData2 = NewConfig_line_intersection_zone["end_point"];
+            } else {
+              arrayData = NewConfig_line_intersection_zone["start_point"];
+              arrayData2 = NewConfig_line_intersection_zone[indexes[1]];
+            }
+          } else {
+            jsonData[parseInt(indexes[0] - 1)][indexes[1]][0] = valor;
+            if ([indexes[1]] == "start_point") {
+              arrayData = jsonData[parseInt(indexes[0] - 1)][indexes[1]];
+              arrayData2 = jsonData[parseInt(indexes[0] - 1)]["end_point"];
+            } else {
+              arrayData = jsonData[parseInt(indexes[0] - 1)]["start_point"];
+              arrayData2 = jsonData[parseInt(indexes[0] - 1)][indexes[1]];
+            }
+          }
+          drawImage();
+          draw_line_intersection_zone(arrayData, arrayData2);
           break;
         case "remove_area":
+          if (indexes[0] > jsonData.length) {
+            NewConfig_remove_area[parseInt(indexes[1]) - 1][0] = valor;
+            arrayData = NewConfig_remove_area;
+          } else {
+            jsonData[parseInt(indexes[0] - 1)][parseInt(indexes[1]) - 1][0] =
+              valor;
+            arrayData = jsonData[parseInt(indexes[0] - 1)];
+          }
+          drawImage();
+          draw_remove_area(arrayData);
           break;
       }
     });
-    $(".Y_inputMAX").on("input", function (e) {
+    $(document).on("input", ".Y_inputMAX", function () {
       valor = $(this).val();
       if ($(this).val() >= ctx.canvas.height) {
         valor = ctx.canvas.height;
@@ -435,29 +488,73 @@
       var config = "{{config}}";
       switch (config) {
         case "zone":
-          jsonData[parseInt(indexes[0] - 1)]["points"][
-            parseInt(indexes[1]) - 1
-          ][1] = valor;
-          arrayData = jsonData[parseInt(indexes[0] - 1)]["points"];
+          if (indexes[0] > jsonData.length) {
+            NewConfig_zone["points"][parseInt(indexes[1]) - 1][1] = valor;
+            arrayData = NewConfig_zone["points"];
+          } else {
+            jsonData[parseInt(indexes[0] - 1)]["points"][
+              parseInt(indexes[1]) - 1
+            ][1] = valor;
+            arrayData = jsonData[parseInt(indexes[0] - 1)]["points"];
+          }
           drawImage();
-          ctx.fillStyle = "#000000";
-          ctx.beginPath();
-          arrayData.forEach(function (value, i, array) {
-            if (i == 0) {
-              ctx.moveTo(value[0], value[1]);
-            } else {
-              ctx.lineTo(value[0], value[1]);
-            }
-            if (i === array.length - 1) {
-              ctx.closePath();
-              ctx.stroke();
-            }
-          });
+          draw_zone(arrayData);
           break;
         case "line_intersection_zone":
+          if (indexes[0] > jsonData.length) {
+            NewConfig_line_intersection_zone[indexes[1]][1] = valor;
+            if ([indexes[1]] == "start_point") {
+              arrayData = NewConfig_line_intersection_zone[indexes[1]];
+              arrayData2 = NewConfig_line_intersection_zone["end_point"];
+            } else {
+              arrayData = NewConfig_line_intersection_zone["start_point"];
+              arrayData2 = NewConfig_line_intersection_zone[indexes[1]];
+            }
+          } else {
+            jsonData[parseInt(indexes[0] - 1)][indexes[1]][1] = valor;
+            if ([indexes[1]] == "start_point") {
+              arrayData = jsonData[parseInt(indexes[0] - 1)][indexes[1]];
+              arrayData2 = jsonData[parseInt(indexes[0] - 1)]["end_point"];
+            } else {
+              arrayData = jsonData[parseInt(indexes[0] - 1)]["start_point"];
+              arrayData2 = jsonData[parseInt(indexes[0] - 1)][indexes[1]];
+            }
+          }
+          drawImage();
+          draw_line_intersection_zone(arrayData, arrayData2);
           break;
         case "remove_area":
+          if (indexes[0] > jsonData.length) {
+            NewConfig_remove_area[parseInt(indexes[1]) - 1][1] = valor;
+            arrayData = NewConfig_remove_area;
+          } else {
+            jsonData[parseInt(indexes[0] - 1)][parseInt(indexes[1]) - 1][1] =
+              valor;
+            arrayData = jsonData[parseInt(indexes[0] - 1)];
+          }
+          drawImage();
+          draw_remove_area(arrayData);
           break;
+      }
+    });
+
+    $(document).on("input", ".form-control", function () {
+      valor = $(this).val();
+      var config = "{{config}}";
+      console.log(this.id,valor);
+      var indexes = this.id.split("-");
+      if (indexes[0] > jsonData.length) {
+        switch (config) {
+          case "zone":
+            NewConfig_Zone[indexes[1]] = valor;
+            break;
+          case "line_intersection_zone":
+            NewConfig_line_intersection_zone[indexes[1]] = valor;
+
+            break;
+        }
+      } else {
+        jsonData[parseInt(indexes[0] - 1)][indexes[1]] = valor;
       }
     });
 
@@ -478,6 +575,7 @@
       var StringID = this.id;
       var indexes = StringID.split("-");
       var config = "{{config}}";
+      console.log(config);
       switch (config) {
         case "zone":
           $("#myCanvas").one("click", function (e) {
@@ -488,13 +586,13 @@
             console.log(indexes, jsonData.length);
             // Check if is new config
             if (indexes[0] > jsonData.length) {
-              NewConfigZone["points"][parseInt(indexes[1]) - 1][0] =
+              NewConfig_zone["points"][parseInt(indexes[1]) - 1][0] =
                 parseInt(X);
-              NewConfigZone["points"][parseInt(indexes[1]) - 1][1] =
+              NewConfig_zone["points"][parseInt(indexes[1]) - 1][1] =
                 parseInt(Y);
               document.getElementById(StringID + "-0").value = parseInt(X);
               document.getElementById(StringID + "-1").value = parseInt(Y);
-              arrayData = NewConfigZone["points"];
+              arrayData = NewConfig_zone["points"];
             } else {
               jsonData[parseInt(indexes[0] - 1)]["points"][
                 parseInt(indexes[1]) - 1
@@ -511,25 +609,84 @@
             console.log(arrayData);
 
             drawImage();
-            ctx.fillStyle = "#000000";
-            ctx.beginPath();
-            arrayData.forEach(function (value, i, array) {
-              if (i == 0) {
-                ctx.moveTo(value[0], value[1]);
-              } else {
-                ctx.lineTo(value[0], value[1]);
-              }
-              if (i === array.length - 1) {
-                ctx.closePath();
-                ctx.stroke();
-              }
-            });
+            draw_zone(arrayData);
           });
 
           break;
         case "line_intersection_zone":
+          $("#myCanvas").one("click", function (e) {
+            var offset = $(this).offset();
+            X = e.pageX - offset.left;
+            Y = e.pageY - offset.top;
+            console.log(X, Y);
+            console.log(indexes, jsonData.length);
+            // Check if is new config
+            if (indexes[0] > jsonData.length) {
+              NewConfig_line_intersection_zone[indexes[1]][0] = parseInt(X);
+              NewConfig_line_intersection_zone[indexes[1]][1] = parseInt(Y);
+              document.getElementById(StringID + "-0").value = parseInt(X);
+              document.getElementById(StringID + "-1").value = parseInt(Y);
+              if ([indexes[1]] == "start_point") {
+                arrayData = NewConfig_line_intersection_zone[indexes[1]];
+                arrayData2 = NewConfig_line_intersection_zone["end_point"];
+              } else {
+                arrayData = NewConfig_line_intersection_zone["start_point"];
+                arrayData2 = NewConfig_line_intersection_zone[indexes[1]];
+              }
+            } else {
+              jsonData[parseInt(indexes[0] - 1)][indexes[1]][0] = parseInt(X);
+              jsonData[parseInt(indexes[0] - 1)][indexes[1]][1] = parseInt(Y);
+
+              document.getElementById(StringID + "-0").value = parseInt(X);
+              document.getElementById(StringID + "-1").value = parseInt(Y);
+
+              arrayData = jsonData[parseInt(indexes[0] - 1)]["points"];
+              if ([indexes[1]] == "start_point") {
+                arrayData = jsonData[parseInt(indexes[0] - 1)][indexes[1]];
+                arrayData2 = jsonData[parseInt(indexes[0] - 1)]["end_point"];
+              } else {
+                arrayData = jsonData[parseInt(indexes[0] - 1)]["start_point"];
+                arrayData2 = jsonData[parseInt(indexes[0] - 1)][indexes[1]];
+              }
+            }
+            console.log(arrayData);
+
+            drawImage();
+            draw_line_intersection_zone(arrayData, arrayData2);
+          });
+
           break;
         case "remove_area":
+          $("#myCanvas").one("click", function (e) {
+            var offset = $(this).offset();
+            X = e.pageX - offset.left;
+            Y = e.pageY - offset.top;
+            console.log(X, Y);
+            console.log(indexes, jsonData.length);
+            // Check if is new config
+            if (indexes[0] > jsonData.length) {
+              NewConfig_remove_area[parseInt(indexes[1]) - 1][0] = parseInt(X);
+              NewConfig_remove_area[parseInt(indexes[1]) - 1][1] = parseInt(Y);
+              document.getElementById(StringID + "-0").value = parseInt(X);
+              document.getElementById(StringID + "-1").value = parseInt(Y);
+              arrayData = NewConfig_remove_area;
+            } else {
+              jsonData[parseInt(indexes[0] - 1)][parseInt(indexes[1]) - 1][0] =
+                parseInt(X);
+              jsonData[parseInt(indexes[0] - 1)][parseInt(indexes[1]) - 1][1] =
+                parseInt(Y);
+
+              document.getElementById(StringID + "-0").value = parseInt(X);
+              document.getElementById(StringID + "-1").value = parseInt(Y);
+
+              arrayData = jsonData[parseInt(indexes[0] - 1)];
+            }
+            console.log("CONA", arrayData);
+
+            drawImage();
+            draw_remove_area(arrayData);
+          });
+
           break;
       }
     });
@@ -541,72 +698,117 @@
       var StringID = this.id;
       var indexes = StringID.split("-");
       var config = "{{config}}";
+      if (indexes[0] == "config") {
+        console.log(StringID);
+        $(this).closest(".accordion-header").remove();
+        //this.parentElement.remove();
 
-      switch (config) {
-        case "zone":
-          this.parentElement.remove();
-          if (indexes[0] > jsonData.length) {
-            NewConfigZone["points"].splice(indexes[1] - 1, 1);
-            arrayData = NewConfigZone["points"];
-          } else {
-            jsonData[parseInt(indexes[0] - 1)]["points"].splice(
-              indexes[1] - 1,
-              1
-            );
-            arrayData = jsonData[parseInt(indexes[0] - 1)]["points"];
-          }
-
-          var ARRAY_X_inputMAX = document
-            .getElementById("collapse" + indexes[0])
-            .getElementsByClassName("X_inputMAX");
-          var ARRAY_Y_inputMAX = document
-            .getElementById("collapse" + indexes[0])
-            .getElementsByClassName("Y_inputMAX");
-          var ARRAY_bi_pencil_square = document
-            .getElementById("collapse" + indexes[0])
-            .getElementsByClassName("bi-pencil-square");
-          var ARRAY_bi_trash = document
-            .getElementById("collapse" + indexes[0])
-            .getElementsByClassName("bi-trash");
-          for (let i = 0; i < arrayData.length; i++) {
-            if (i >= indexes[1] - 1) {
-              ARRAY_X_inputMAX[i].setAttribute(
-                "id",
-                indexes[0] + "-" + (i + 1) + "-0"
-              );
-              ARRAY_Y_inputMAX[i].setAttribute(
-                "id",
-                indexes[0] + "-" + (i + 1) + "-1"
-              );
-              ARRAY_bi_pencil_square[i].setAttribute(
-                "id",
-                indexes[0] + "-" + (i + 1)
-              );
-              ARRAY_bi_trash[i].setAttribute("id", indexes[0] + "-" + (i + 1));
-            }
-          }
-
-          console.log(arrayData);
-          drawImage();
-          ctx.fillStyle = "#000000";
-          ctx.beginPath();
-          arrayData.forEach(function (value, i, array) {
-            if (i == 0) {
-              ctx.moveTo(value[0], value[1]);
+        if (indexes[0] > jsonData.length) {
+        } else {
+        }
+      } else {
+        switch (config) {
+          case "zone":
+            this.parentElement.remove();
+            if (indexes[0] > jsonData.length) {
+              NewConfig_zone["points"].splice(indexes[1] - 1, 1);
+              arrayData = NewConfig_zone["points"];
             } else {
-              ctx.lineTo(value[0], value[1]);
+              jsonData[parseInt(indexes[0] - 1)]["points"].splice(
+                indexes[1] - 1,
+                1
+              );
+              arrayData = jsonData[parseInt(indexes[0] - 1)]["points"];
             }
-            if (i === array.length - 1) {
-              ctx.closePath();
-              ctx.stroke();
-            }
-          });
 
-          break;
-        case "line_intersection_zone":
-          break;
-        case "remove_area":
-          break;
+            var ARRAY_X_inputMAX = document
+              .getElementById("collapse" + indexes[0])
+              .getElementsByClassName("X_inputMAX");
+            var ARRAY_Y_inputMAX = document
+              .getElementById("collapse" + indexes[0])
+              .getElementsByClassName("Y_inputMAX");
+            var ARRAY_bi_pencil_square = document
+              .getElementById("collapse" + indexes[0])
+              .getElementsByClassName("bi-pencil-square");
+            var ARRAY_bi_trash = document
+              .getElementById("collapse" + indexes[0])
+              .getElementsByClassName("bi-trash");
+            for (let i = 0; i < arrayData.length; i++) {
+              if (i >= indexes[1] - 1) {
+                ARRAY_X_inputMAX[i].setAttribute(
+                  "id",
+                  indexes[0] + "-" + (i + 1) + "-0"
+                );
+                ARRAY_Y_inputMAX[i].setAttribute(
+                  "id",
+                  indexes[0] + "-" + (i + 1) + "-1"
+                );
+                ARRAY_bi_pencil_square[i].setAttribute(
+                  "id",
+                  indexes[0] + "-" + (i + 1)
+                );
+                ARRAY_bi_trash[i].setAttribute(
+                  "id",
+                  indexes[0] + "-" + (i + 1)
+                );
+              }
+            }
+
+            console.log(arrayData);
+            drawImage();
+            draw_zone(arrayData);
+
+            break;
+          case "line_intersection_zone":
+            break;
+          case "remove_area":
+            this.parentElement.remove();
+            if (indexes[0] > jsonData.length) {
+              NewConfig_remove_area.splice(indexes[1] - 1, 1);
+              arrayData = NewConfig_remove_area;
+            } else {
+              jsonData[parseInt(indexes[0] - 1)].splice(indexes[1] - 1, 1);
+              arrayData = jsonData[parseInt(indexes[0] - 1)];
+            }
+
+            var ARRAY_X_inputMAX = document
+              .getElementById("collapse" + indexes[0])
+              .getElementsByClassName("X_inputMAX");
+            var ARRAY_Y_inputMAX = document
+              .getElementById("collapse" + indexes[0])
+              .getElementsByClassName("Y_inputMAX");
+            var ARRAY_bi_pencil_square = document
+              .getElementById("collapse" + indexes[0])
+              .getElementsByClassName("bi-pencil-square");
+            var ARRAY_bi_trash = document
+              .getElementById("collapse" + indexes[0])
+              .getElementsByClassName("bi-trash");
+            for (let i = 0; i < arrayData.length; i++) {
+              if (i >= indexes[1] - 1) {
+                ARRAY_X_inputMAX[i].setAttribute(
+                  "id",
+                  indexes[0] + "-" + (i + 1) + "-0"
+                );
+                ARRAY_Y_inputMAX[i].setAttribute(
+                  "id",
+                  indexes[0] + "-" + (i + 1) + "-1"
+                );
+                ARRAY_bi_pencil_square[i].setAttribute(
+                  "id",
+                  indexes[0] + "-" + (i + 1)
+                );
+                ARRAY_bi_trash[i].setAttribute(
+                  "id",
+                  indexes[0] + "-" + (i + 1)
+                );
+              }
+            }
+
+            console.log(arrayData);
+            drawImage();
+            draw_remove_area(arrayData);
+            break;
+        }
       }
     });
 
@@ -630,7 +832,7 @@
             //Check if is new config
 
             if (indexes[0] > jsonData.length) {
-              NewConfigZone["points"].push([parseInt(X), parseInt(Y)]);
+              NewConfig_zone["points"].push([parseInt(X), parseInt(Y)]);
 
               var AddValue = `
               <li class="list-group-item">
@@ -640,7 +842,7 @@
                   min="0"
                   style="width: 30%"
                   type="number"
-                  id="${indexes[0]}-${NewConfigZone["points"].length}-0"
+                  id="${indexes[0]}-${NewConfig_zone["points"].length}-0"
                   value="${parseInt(X)}"
                 />
                 Y:
@@ -649,18 +851,18 @@
                   min="0"
                   style="width: 30%"
                   type="number"
-                  id="${indexes[0]}-${NewConfigZone["points"].length}-1"
+                  id="${indexes[0]}-${NewConfig_zone["points"].length}-1"
                   value="${parseInt(Y)}"
                 />
                 <i class="bi bi-pencil-square" id="${indexes[0]}-${
-                NewConfigZone["points"].length
+                NewConfig_zone["points"].length
               }"></i>
                 <i class="bi bi-trash"id="${indexes[0]}-${
-                NewConfigZone["points"].length
+                NewConfig_zone["points"].length
               }"></i>
               </li>
               `;
-              arrayData = NewConfigZone["points"];
+              arrayData = NewConfig_zone["points"];
             } else {
               jsonData[parseInt(indexes[0] - 1)]["points"].push([
                 parseInt(X),
@@ -709,24 +911,102 @@
             );
             console.log(arrayData);
             drawImage();
-            ctx.fillStyle = "#000000";
-            ctx.beginPath();
-            arrayData.forEach(function (value, i, array) {
-              if (i == 0) {
-                ctx.moveTo(value[0], value[1]);
-              } else {
-                ctx.lineTo(value[0], value[1]);
-              }
-              if (i === array.length - 1) {
-                ctx.closePath();
-                ctx.stroke();
-              }
-            });
+            draw_zone(arrayData);
           });
           break;
         case "line_intersection_zone":
           break;
         case "remove_area":
+          $("#myCanvas").one("click", function (e) {
+            var offset = $(this).offset();
+            X = e.pageX - offset.left;
+            Y = e.pageY - offset.top;
+            console.log(X, Y);
+            console.log(indexes);
+            //Check if is new config
+
+            if (indexes[0] > jsonData.length) {
+              NewConfig_remove_area.push([parseInt(X), parseInt(Y)]);
+
+              var AddValue = `
+            <li class="list-group-item">
+              X:
+              <input
+                class="X_inputMAX"
+                min="0"
+                style="width: 30%"
+                type="number"
+                id="${indexes[0]}-${NewConfig_remove_area.length}-0"
+                value="${parseInt(X)}"
+              />
+              Y:
+              <input
+                class="Y_inputMAX"
+                min="0"
+                style="width: 30%"
+                type="number"
+                id="${indexes[0]}-${NewConfig_remove_area.length}-1"
+                value="${parseInt(Y)}"
+              />
+              <i class="bi bi-pencil-square" id="${indexes[0]}-${
+                NewConfig_remove_area.length
+              }"></i>
+              <i class="bi bi-trash"id="${indexes[0]}-${
+                NewConfig_remove_area.length
+              }"></i>
+            </li>
+            `;
+              arrayData = NewConfig_remove_area;
+            } else {
+              jsonData[parseInt(indexes[0] - 1)].push([
+                parseInt(X),
+                parseInt(Y),
+              ]);
+
+              var AddValue = `
+            <li class="list-group-item">
+              X:
+              <input
+                class="X_inputMAX"
+                min="0"
+                style="width: 30%"
+                type="number"
+                id="${indexes[0]}-${
+                jsonData[parseInt(indexes[0] - 1)].length
+              }-0"
+                value="${parseInt(X)}"
+              />
+              Y:
+              <input
+                class="Y_inputMAX"
+                min="0"
+                style="width: 30%"
+                type="number"
+                id="${indexes[0]}-${
+                jsonData[parseInt(indexes[0] - 1)].length
+              }-1"
+                value="${parseInt(Y)}"
+              />
+              <i class="bi bi-pencil-square" id="${indexes[0]}-${
+                jsonData[parseInt(indexes[0] - 1)].length
+              }"></i>
+              <i class="bi bi-trash"id="${indexes[0]}-${
+                jsonData[parseInt(indexes[0] - 1)].length
+              }"></i>
+            </li>
+            `;
+              arrayData = jsonData[parseInt(indexes[0] - 1)];
+            }
+
+            var ul = document.getElementById("ul-" + indexes[0]);
+            var mango = ul.children[ul.children.length - 1].insertAdjacentHTML(
+              "afterend",
+              AddValue
+            );
+            console.log(arrayData);
+            drawImage();
+            draw_remove_area(arrayData);
+          });
           break;
       }
     });
@@ -752,52 +1032,32 @@
         switch (config) {
           case "zone":
             if (IntIndex >= jsonData.length) {
-              arrayData = NewConfigZone["points"];
+              arrayData = NewConfig_zone["points"];
             } else {
               arrayData = jsonData[IntIndex]["points"];
             }
 
-            ctx.fillStyle = "#000000";
-            ctx.beginPath();
-            arrayData.forEach(function (value, i, array) {
-              if (i == 0) {
-                ctx.moveTo(value[0], value[1]);
-              } else {
-                ctx.lineTo(value[0], value[1]);
-              }
-              if (i === array.length - 1) {
-                ctx.closePath();
-                ctx.stroke();
-              }
-            });
+            draw_zone(arrayData);
             break;
           case "line_intersection_zone":
+            if (IntIndex >= jsonData.length) {
+              arrayData = NewConfig_line_intersection_zone["start_point"];
+              arrayData2 = NewConfig_line_intersection_zone["end_point"];
+            } else {
+              arrayData = jsonData[IntIndex]["start_point"];
+              arrayData2 = jsonData[IntIndex]["end_point"];
+            }
             console.log(config);
-            arrayData = jsonData[IntIndex]["start_point"];
-            arrayData2 = jsonData[IntIndex]["end_point"];
-            ctx.fillStyle = "#000000";
-            ctx.beginPath();
-            ctx.moveTo(arrayData[0], arrayData[1]);
-            ctx.lineTo(arrayData2[0], arrayData2[1]);
-            ctx.closePath();
-            ctx.stroke();
+            draw_line_intersection_zone(arrayData, arrayData2);
             break;
           case "remove_area":
-            arrayData = jsonData[IntIndex];
+            if (IntIndex >= jsonData.length) {
+              arrayData = NewConfig_remove_area;
+            } else {
+              arrayData = jsonData[IntIndex];
+            }
             console.log(arrayData);
-            ctx.fillStyle = "#FFFFFF";
-            ctx.beginPath();
-            arrayData.forEach(function (value, i, array) {
-              if (i == 0) {
-                ctx.moveTo(value[0], value[1]);
-              } else {
-                ctx.lineTo(value[0], value[1]);
-              }
-              if (i === array.length - 1) {
-                ctx.closePath();
-                ctx.fill();
-              }
-            });
+            draw_remove_area(arrayData);
 
             break;
         }

@@ -103,7 +103,7 @@ KEYS_zone = {
 KEYS_remove_area = [([],"listoflist")]
 
 
-@ app.route('/config_points', methods=['POST'])
+@app.route('/config_points', methods=['POST'])
 def configPoints():
     keys = None
     if request.method == "POST":
