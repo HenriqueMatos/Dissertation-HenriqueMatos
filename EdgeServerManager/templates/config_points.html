@@ -50,9 +50,7 @@
           <a class="nav-link" id="coord">X: , Y:</a>
         </li>
       </ul>
-      <form class="d-flex">
-        <button class="btn btn-outline-dark" type="submit">Submit</button>
-      </form>
+      <input class="btn btn-outline-dark" type="submit" value="Submit" />
     </div>
   </div>
 </nav>
@@ -249,7 +247,7 @@
               <li class="list-group-item">
                 X:
                 <input
-                  class="X_inputMAX"
+                  class="X_inputMAX CleanInput"
                   min="0"
                   style="width: 30%"
                   type="number"
@@ -257,7 +255,7 @@
                 />
                 Y:
                 <input
-                  class="Y_inputMAX"
+                  class="Y_inputMAX CleanInput"
                   min="0"
                   style="width: 30%"
                   type="number"
@@ -309,6 +307,7 @@
 </div>
 
 <script>
+  var NewConfig_FLAG = false;
   var NewConfig_zone = {
     name_inside_zone: "",
     name_outside_zone: "",
@@ -323,6 +322,20 @@
     name_zone_after: "",
   };
   var NewConfig_remove_area = [];
+  var Default_Config_zone = {
+    name_inside_zone: "",
+    name_outside_zone: "",
+    points: [],
+  };
+  var Default_Config_line_intersection_zone = {
+    name: "",
+    start_point: [],
+    end_point: [],
+    zone_direction_1or2: "",
+    name_zone_before: "",
+    name_zone_after: "",
+  };
+  var Default_Config_remove_area = [];
 
   function drawImage() {
     var c = document.getElementById("myCanvas");
@@ -428,6 +441,7 @@
       switch (config) {
         case "zone":
           if (indexes[0] > jsonData.length) {
+            NewConfig_FLAG = true;
             NewConfig_zone["points"][parseInt(indexes[1]) - 1][0] = valor;
             arrayData = NewConfig_zone["points"];
           } else {
@@ -441,6 +455,7 @@
           break;
         case "line_intersection_zone":
           if (indexes[0] > jsonData.length) {
+            NewConfig_FLAG = true;
             NewConfig_line_intersection_zone[indexes[1]][0] = valor;
             if ([indexes[1]] == "start_point") {
               arrayData = NewConfig_line_intersection_zone[indexes[1]];
@@ -464,6 +479,7 @@
           break;
         case "remove_area":
           if (indexes[0] > jsonData.length) {
+            NewConfig_FLAG = true;
             NewConfig_remove_area[parseInt(indexes[1]) - 1][0] = valor;
             arrayData = NewConfig_remove_area;
           } else {
@@ -489,6 +505,7 @@
       switch (config) {
         case "zone":
           if (indexes[0] > jsonData.length) {
+            NewConfig_FLAG = true;
             NewConfig_zone["points"][parseInt(indexes[1]) - 1][1] = valor;
             arrayData = NewConfig_zone["points"];
           } else {
@@ -502,6 +519,7 @@
           break;
         case "line_intersection_zone":
           if (indexes[0] > jsonData.length) {
+            NewConfig_FLAG = true;
             NewConfig_line_intersection_zone[indexes[1]][1] = valor;
             if ([indexes[1]] == "start_point") {
               arrayData = NewConfig_line_intersection_zone[indexes[1]];
@@ -525,6 +543,7 @@
           break;
         case "remove_area":
           if (indexes[0] > jsonData.length) {
+            NewConfig_FLAG = true;
             NewConfig_remove_area[parseInt(indexes[1]) - 1][1] = valor;
             arrayData = NewConfig_remove_area;
           } else {
@@ -537,16 +556,16 @@
           break;
       }
     });
-
     $(document).on("input", ".form-control", function () {
       valor = $(this).val();
       var config = "{{config}}";
-      console.log(this.id,valor);
+      console.log(this.id, valor);
       var indexes = this.id.split("-");
       if (indexes[0] > jsonData.length) {
+        NewConfig_FLAG = true;
         switch (config) {
           case "zone":
-            NewConfig_Zone[indexes[1]] = valor;
+            NewConfig_zone[indexes[1]] = valor;
             break;
           case "line_intersection_zone":
             NewConfig_line_intersection_zone[indexes[1]] = valor;
@@ -563,6 +582,63 @@
       var X = e.pageX - offset.left;
       var Y = e.pageY - offset.top;
       $("#coord").text("X: " + X + ", Y: " + Y);
+    });
+
+    $(".btn").on("click", function () {
+      console.log("OLA MUNDO");
+      var config = "{{config}}";
+      if (NewConfig_FLAG) {
+        switch (config) {
+          case "zone":
+            jsonData.push(NewConfig_zone);
+            break;
+          case "line_intersection_zone":
+            jsonData.push(NewConfig_line_intersection_zone);
+            break;
+          case "remove_area":
+            jsonData.push(NewConfig_remove_area);
+            break;
+        }
+      }
+      console.log(jsonData);
+      /*
+      let xhr = new XMLHttpRequest();
+      xhr.open("POST", window.location.href + "_set");
+
+      //xhr.setRequestHeader("Accept", "application/json");
+      xhr.setRequestHeader("Content-Type", "application/json");
+
+      xhr.onload = () => console.log(xhr.responseText);
+
+
+      console.log("{{configBefore}}","{{config}}","{{preferred_username}}")
+      console.log(jsonData)
+      xhr.send(JSON.stringify(jsonData));*/
+      /*if (NewConfig_FLAG) {
+        switch ("{{config}}") {
+          case "zone":
+            jsonData.push(Default_Config_zone);
+            break;
+          case "line_intersection_zone":
+            jsonData.push(Default_Config_line_intersection_zone);
+            break;
+          case "remove_area":
+            jsonData.push(Default_Config_remove_area);
+            break;
+        }
+      }*/
+      let DataSend = {
+        data: jsonData,
+        configBefore: "{{configBefore}}",
+        config: "{{config}}",
+        preferred_username: "{{preferred_username}}",
+      };
+      $.post(window.location.href + "_set", {
+        data: JSON.stringify(DataSend),
+      }).done(function (data) {
+        console.log(data);
+        
+      });
     });
 
     var oldIndex = null;
@@ -586,6 +662,7 @@
             console.log(indexes, jsonData.length);
             // Check if is new config
             if (indexes[0] > jsonData.length) {
+              NewConfig_FLAG = true;
               NewConfig_zone["points"][parseInt(indexes[1]) - 1][0] =
                 parseInt(X);
               NewConfig_zone["points"][parseInt(indexes[1]) - 1][1] =
@@ -622,6 +699,7 @@
             console.log(indexes, jsonData.length);
             // Check if is new config
             if (indexes[0] > jsonData.length) {
+              NewConfig_FLAG = true;
               NewConfig_line_intersection_zone[indexes[1]][0] = parseInt(X);
               NewConfig_line_intersection_zone[indexes[1]][1] = parseInt(Y);
               document.getElementById(StringID + "-0").value = parseInt(X);
@@ -665,6 +743,7 @@
             console.log(indexes, jsonData.length);
             // Check if is new config
             if (indexes[0] > jsonData.length) {
+              NewConfig_FLAG = true;
               NewConfig_remove_area[parseInt(indexes[1]) - 1][0] = parseInt(X);
               NewConfig_remove_area[parseInt(indexes[1]) - 1][1] = parseInt(Y);
               document.getElementById(StringID + "-0").value = parseInt(X);
@@ -699,12 +778,58 @@
       var indexes = StringID.split("-");
       var config = "{{config}}";
       if (indexes[0] == "config") {
-        console.log(StringID);
-        $(this).closest(".accordion-header").remove();
+        console.log(StringID, indexes[1]);
+
         //this.parentElement.remove();
 
-        if (indexes[0] > jsonData.length) {
+        if (indexes[1] > jsonData.length) {
+          //atualizar os valores default e remover os dados dos inputs
+          NewConfig_FLAG = false;
+          var RemoveInputs = document
+            .getElementById("ul-" + indexes[1])
+            .getElementsByClassName("form-control");
+          for (let i = 0; i < RemoveInputs.length; i++) {
+            console.log(RemoveInputs[i].id);
+            RemoveInputs[i].value = "";
+          }
+          NewConfig_FLAG = false;
+          var RemoveInputs = document
+            .getElementById("ul-" + indexes[1])
+            .getElementsByClassName("CleanInput");
+          for (let i = 0; i < RemoveInputs.length; i++) {
+            console.log(RemoveInputs[i].id);
+            RemoveInputs[i].value = "";
+          }
+
+          switch (config) {
+            case "zone":
+              NewConfig_zone = Default_Config_zone;
+
+              var galimg = document.getElementById("content-" + indexes[1]);
+              var node;
+
+              while ((node = galimg.nextSibling)) {
+                node.parentNode.removeChild(node);
+              }
+              break;
+            case "line_intersection_zone":
+              NewConfig_line_intersection_zone =
+                Default_Config_line_intersection_zone;
+              break;
+            case "remove_area":
+              NewConfig_remove_area = Default_Config_remove_area;
+              var galimg = document.getElementById("content-" + indexes[1]);
+              var node;
+
+              while ((node = galimg.nextSibling)) {
+                node.parentNode.removeChild(node);
+              }
+              break;
+          }
         } else {
+          document.getElementById("heading-" + indexes[1]).remove();
+          document.getElementById("collapse" + indexes[1]).remove();
+          jsonData.splice(indexes[1] - 1, 1);
         }
       } else {
         switch (config) {
@@ -759,8 +884,6 @@
             draw_zone(arrayData);
 
             break;
-          case "line_intersection_zone":
-            break;
           case "remove_area":
             this.parentElement.remove();
             if (indexes[0] > jsonData.length) {
@@ -803,7 +926,6 @@
                 );
               }
             }
-
             console.log(arrayData);
             drawImage();
             draw_remove_area(arrayData);
@@ -832,6 +954,7 @@
             //Check if is new config
 
             if (indexes[0] > jsonData.length) {
+              NewConfig_FLAG = true;
               NewConfig_zone["points"].push([parseInt(X), parseInt(Y)]);
 
               var AddValue = `
@@ -914,8 +1037,6 @@
             draw_zone(arrayData);
           });
           break;
-        case "line_intersection_zone":
-          break;
         case "remove_area":
           $("#myCanvas").one("click", function (e) {
             var offset = $(this).offset();
@@ -926,6 +1047,7 @@
             //Check if is new config
 
             if (indexes[0] > jsonData.length) {
+              NewConfig_FLAG = true;
               NewConfig_remove_area.push([parseInt(X), parseInt(Y)]);
 
               var AddValue = `

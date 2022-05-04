@@ -99,7 +99,7 @@ def ThreadDataTransmitter(ConfigDataUpdater, frame):
     x = requests.post(url, data=myobj)
     # json.load(x.text)
     response = json.loads(x.text)
-    # print(response)
+    print(response)
     sendData = {}
     sendData["frame"] = frame
     sendData["type"] = "login"
@@ -125,7 +125,7 @@ def main():
     ConfigDataUpdater.register(data)
 
     cap = cv2.VideoCapture("./ch01_08000000058000601.mp4")
-    # cap = cv2.VideoCapture('/dev/video2')
+    # cap = cv2.VideoCapture('/dev/video0')
     # cap = cv2.VideoCapture("./output.mp4")
     _, frame = cap.read()
     # frame=cv2.cvtColor(frame,cv2.COLOR_BGR2RGB)
@@ -255,7 +255,7 @@ def main():
             fps = 0.0
         else:
             fps = (total_frames / time_diff.seconds)
-
+        #print(time_diff.seconds,"Seconds")
         fps_text = "FPS: {:.2f}".format(fps)
         cv2.putText(frame, fps_text, (5, 30),
                     cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (0, 0, 255), 1)
