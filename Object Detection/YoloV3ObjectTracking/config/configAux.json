@@ -1,0 +1,154 @@
+{
+    "camera_id": 1,
+    "camera_name": "Camera1",
+    "camera_zone": "Escola de Engenharia",
+    "timestamp_config_creation": "timestamp",
+    "restart_count": "timestamp",
+    "object_detection_config": {
+        "threshold": 0.5,
+        "path_model_weights": "yolo/yolov3.weights",
+        "path_model_cfg": "yolo/yolov3.cfg",
+        "path_yolo_coco_names": "yolo/coco.names",
+        "object_data_tracking": [
+            "person",
+            "backpack",
+            "handbag",
+            "suitcase"
+        ]
+    },
+    "packet_default_output": [
+        "camera_id",
+        "timestamp",
+        "camera_zone"
+    ],
+    "packet_output": [
+        {
+            "num_people": null
+        }
+    ],
+    "input_location_rabbit_queue": "name",
+    "output_location_rabbit_queue": [
+        "name"
+    ],
+    "input": {
+        "num_people": null,
+        "zone": [
+            {
+                "name_inside_zone": "pátio escola de engenharia",
+                "name_outside_zone": "pátio escola de engenharia",
+                "points": [
+                    [
+                        30,
+                        344
+                    ],
+                    [
+                        33,
+                        40
+                    ],
+                    [
+                        263,
+                        19
+                    ],
+                    [
+                        430,
+                        20
+                    ],
+                    [
+                        529,
+                        40
+                    ],
+                    [
+                        553,
+                        124
+                    ],
+                    [
+                        537,
+                        293
+                    ],
+                    [
+                        564,
+                        343
+                    ]
+                ]
+            }
+        ],
+        "line_intersection_zone": [
+            {
+                "name": "123",
+                "start_point": [
+                    640,
+                    480
+                ],
+                "end_point": [
+                    640,
+                    0
+                ],
+                "zone_direction_1or2": 1,
+                "name_zone_before": "outside",
+                "name_zone_after": "inside"
+            }
+        ],
+        "remove_area": [
+            [
+                [
+                    30,
+                    344
+                ],
+                [
+                    33,
+                    40
+                ],
+                [
+                    263,
+                    19
+                ],
+                [
+                    430,
+                    20
+                ],
+                [
+                    529,
+                    40
+                ],
+                [
+                    553,
+                    124
+                ],
+                [
+                    537,
+                    293
+                ],
+                [
+                    564,
+                    343
+                ]
+            ],
+            [
+                [
+                    1278,
+                    0
+                ],
+                [
+                    1278,
+                    720
+                ],
+                [
+                    1027,
+                    720
+                ],
+                [
+                    700,
+                    362
+                ],
+                [
+                    980,
+                    258
+                ],
+                [
+                    704,
+                    0
+                ]
+            ]
+        ]
+    }
+}
