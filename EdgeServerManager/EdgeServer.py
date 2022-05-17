@@ -1,6 +1,7 @@
 import codecs
 import json
 import re
+import paho.mqtt.client as mqtt
 from traceback import print_tb
 from flask import Flask, request, render_template, redirect, flash, url_for
 from flask import session, make_response, g, jsonify
@@ -164,20 +165,57 @@ def web():
 
 
 def runningWorker():
-    credentials = pika.PlainCredentials('admin', 'admin')
+    
+    # credentials = pika.PlainCredentials('admin', 'admin')
 
-    connection_parameters = pika.ConnectionParameters(
-        'localhost', credentials=credentials, virtual_host="keycloak_test")
-    connection = pika.BlockingConnection(
-        connection_parameters)
-    channel = connection.channel()
+    # connection_parameters = pika.ConnectionParameters(
+    #     'localhost', credentials=credentials, virtual_host="keycloak_test")
+    # connection = pika.BlockingConnection(
+    #     connection_parameters)
+    # channel = connection.channel()
 
-    channel.queue_declare(queue='hello')
+    # channel.queue_declare(queue='hello')
 
-    def callback(ch, method, properties, body):
-        # print(" [x] Received %r" % body)
+    # def callback(ch, method, properties, body):
+    #     # print(" [x] Received %r" % body)
 
-        receivedObject = json.loads(body)
+    #     receivedObject = json.loads(body)
+    #     if receivedObject.__contains__("type"):
+    #         if receivedObject["type"] == "login":
+    #             check, data = verifyToken(
+    #                 oidc_obj, receivedObject["Authenticate"])
+    #             print(check,data)
+    #             if check:
+    #                 flag = True
+    #                 Findindex = -1
+    #                 for i, d in enumerate(DataServer):
+    #                     if d['preferred_username'] == data["preferred_username"]:
+    #                         flag = False
+    #                         Findindex = i
+    #                         break
+    #                 else:
+    #                     i = -1
+    #                 if flag is False:
+    #                     DataServer.pop(Findindex)
+    #                 receivedObject["preferred_username"] = data["preferred_username"]
+    #                 for key in receivedObject:
+    #                     # print(key)
+    #                     if key == "config":
+    #                         # print(receivedObject[key])
+    #                         receivedObject[key] = json.loads(
+    #                             receivedObject[key])
+
+    #                 DataServer.append(receivedObject)
+    # channel.basic_consume(
+    #     queue='hello', on_message_callback=callback, auto_ack=True)
+
+    # print(' [*] Waiting for messages. To exit press CTRL+C')
+    # channel.start_consuming()
+    
+    def on_message(client, userdata, message):
+        # print("Received message: ", str(message.payload.decode("utf-8")),
+        #   " From: ", message.topic, " ")
+        receivedObject = json.loads(message.payload)
         if receivedObject.__contains__("type"):
             if receivedObject["type"] == "login":
                 check, data = verifyToken(
@@ -204,11 +242,18 @@ def runningWorker():
                                 receivedObject[key])
 
                     DataServer.append(receivedObject)
-    channel.basic_consume(
-        queue='hello', on_message_callback=callback, auto_ack=True)
 
-    print(' [*] Waiting for messages. To exit press CTRL+C')
-    channel.start_consuming()
+
+    mqttBroker = "localhost"
+    client = mqtt.Client("EdgeServer1")
+    client.connect(mqttBroker)
+
+    client.loop_start()
+    client.subscribe("camera_config")
+    client.on_message = on_message
+    time.sleep(30)
+    client.loop_start()
+    
 
 
 if __name__ == '__main__':

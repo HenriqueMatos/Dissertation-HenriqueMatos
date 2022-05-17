@@ -11,6 +11,7 @@ import _thread
 import pika
 import sys
 import requests
+import paho.mqtt.client as mqtt
 
 # import NewClass_ID_Association
 import centroidtracker
@@ -75,17 +76,22 @@ def get_box_dimensions(outputs, height, width, threshold):
     return boxes, confs, class_ids
 
 
+def on_message(client, userdata, message):
+    print("Received message: ", str(message.payload.decode("utf-8")),
+            " From: ", message.topic, " ")
+
 def ThreadDataTransmitter(ConfigDataUpdater, frame):
-    # print("ola")
-    credentials = pika.PlainCredentials('admin', 'admin')
 
-    connection_parameters = pika.ConnectionParameters(
-        'localhost', credentials=credentials, virtual_host="keycloak_test")
-    connection = pika.BlockingConnection(
-        connection_parameters)
-    channel = connection.channel()
+    ################ RABBIT MQ ################
+    # credentials = pika.PlainCredentials('admin', 'admin')
 
-    channel.queue_declare(queue='hello')
+    # connection_parameters = pika.ConnectionParameters(
+    #     'localhost', credentials=credentials, virtual_host="keycloak_test")
+    # connection = pika.BlockingConnection(
+    #     connection_parameters)
+    # channel = connection.channel()
+
+    # channel.queue_declare(queue='hello')
 
     # request
     url = 'http://localhost:8080/auth/realms/AppAuthenticator/protocol/openid-connect/token'
@@ -104,17 +110,25 @@ def ThreadDataTransmitter(ConfigDataUpdater, frame):
     sendData["frame"] = frame
     sendData["type"] = "login"
     sendData["config"] = ConfigDataUpdater.JsonObjectString
-    # sendData["Authenticate"] = response["token_type"] + \
-    #     " "+response["access_token"]
     sendData["Authenticate"] = response["access_token"]
     sendData["camera_id"] = ConfigDataUpdater.camera_id
-    # print(sendData)
-    # print(x.text)
 
-    channel.basic_publish(
-        exchange='', routing_key='hello', body=json.dumps(sendData))
-    # print(" [x] Sent "+''.join(args))
-    connection.close()
+    mqttBroker = "localhost"
+    client = mqtt.Client(str(ConfigDataUpdater.camera_id))
+    client.connect(mqttBroker)
+
+    client.publish("camera_config", json.dumps(sendData))
+
+    client.subscribe("edge_config/"+str(ConfigDataUpdater.camera_id))
+    client.on_message = on_message
+    client.loop_start()
+
+   
+
+    # channel.basic_publish(
+    #     exchange='', routing_key='hello', body=json.dumps(sendData))
+    # # print(" [x] Sent "+''.join(args))
+    # connection.close()
 
 
 def main():
@@ -132,7 +146,7 @@ def main():
     # frame = frame.astype('float64')
 
     cv2.imwrite("frame.jpg", frame)
-    
+
     with open("frame.jpg", "rb") as image_file:
         encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
     try:
@@ -147,7 +161,6 @@ def main():
     # id_tracker = NewClass_ID_Association.ID_Tracker()
     model, classes, colors, output_layers, ID_wanted_classes = load_yolo(
         ConfigDataUpdater.path_model_weights, ConfigDataUpdater.path_model_cfg, ConfigDataUpdater.path_yolo_coco_names, ConfigDataUpdater.object_data_tracking)
-    
 
     fps_start_time = datetime.datetime.now()
     fps = 0
@@ -255,7 +268,7 @@ def main():
             fps = 0.0
         else:
             fps = (total_frames / time_diff.seconds)
-        #print(time_diff.seconds,"Seconds")
+        # print(time_diff.seconds,"Seconds")
         fps_text = "FPS: {:.2f}".format(fps)
         cv2.putText(frame, fps_text, (5, 30),
                     cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (0, 0, 255), 1)

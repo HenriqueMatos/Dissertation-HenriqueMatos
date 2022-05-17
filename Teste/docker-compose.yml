@@ -10,18 +10,17 @@ services:
       - PROXY_ADDRESS_FORWARDING=true
     volumes:
       - ./keycloak/data/:/opt/jboss/keycloak/standalone/data/
-  rabbitmq:
-    image: rabbitmq:3.9-management
-    ports:
-      - "5672:5672"
-      - "15672:15672"
-    volumes:
-      - ./DockerComposeFiles/definitions.json:/srv/definitions.json
-      # - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
-      - ./DockerComposeFiles/rabbitmq.conf:/etc/rabbitmq/conf.d/10-default-guest-user.conf
-      - ./DockerComposeFiles/enabled_plugins.txt:/etc/rabbitmq/enabled_plugins
+  # rabbitmq:
+  #   image: rabbitmq:3.9-management
+  #   ports:
+  #     - "5672:5672"
+  #     - "15672:15672"
+  #   volumes:
+  #     - ./DockerComposeFiles/definitions.json:/srv/definitions.json
+  #     # - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
+  #     - ./DockerComposeFiles/rabbitmq.conf:/etc/rabbitmq/conf.d/10-default-guest-user.conf
+  #     - ./DockerComposeFiles/enabled_plugins.txt:/etc/rabbitmq/enabled_plugins
   mosquitto:
-    # constainer_name: mqtt
     image: eclipse-mosquitto
     restart: always
     volumes:
