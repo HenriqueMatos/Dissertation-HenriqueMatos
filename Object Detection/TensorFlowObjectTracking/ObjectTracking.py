@@ -59,7 +59,7 @@ def main():
     # tracker = CentroidTracker(maxDisappeared=80, maxDistance=90)
     # cap = cv2.VideoCapture('/dev/video2')
     # cap = cv2.VideoCapture('./output.mp4')
-    cap = cv2.VideoCapture('./ch01_08000000058000601.mp4')
+    cap = cv2.VideoCapture('../ch01_08000000058000601.mp4')
 
     # cap = cv2.VideoCapture(
     #     './London Walk from Oxford Street to Carnaby Street.mp4')
@@ -85,8 +85,10 @@ def main():
     print('loading model...')
     # hub_model = hub.load(
     #     "https://tfhub.dev/tensorflow/ssd_mobilenet_v2/fpnlite_320x320/1")
+    # hub_model = hub.load(
+    #     "https://tfhub.dev/tensorflow/ssd_mobilenet_v2/fpnlite_640x640/1")
     hub_model = hub.load(
-        "https://tfhub.dev/tensorflow/ssd_mobilenet_v2/fpnlite_640x640/1")
+        "https://tfhub.dev/tensorflow/faster_rcnn/resnet50_v1_640x640/1")
     # hub_model = hub.load(
     #     "https://tfhub.dev/tensorflow/faster_rcnn/resnet101_v1_640x640/1")
     # hub_model = hub.load(

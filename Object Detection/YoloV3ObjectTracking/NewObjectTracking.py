@@ -44,8 +44,10 @@ def load_yolo(path_model_weights, path_model_cfg, path_yolo_coco_names, wanted_c
 
 
 def detect_objects(img, net, outputLayers):
-    blob = cv2.dnn.blobFromImage(img, scalefactor=0.00392, size=(
-        320, 320), mean=(0, 0, 0), swapRB=True, crop=False)
+    # (640,384)
+    # (320, 320)
+    blob = cv2.dnn.blobFromImage(img, scalefactor=0.00392, size=(1280, 736), mean=(0, 0, 0), swapRB=True, crop=False)
+
     net.setInput(blob)
     outputs = net.forward(outputLayers)
     # print(outputs)
@@ -78,7 +80,8 @@ def get_box_dimensions(outputs, height, width, threshold):
 
 def on_message(client, userdata, message):
     print("Received message: ", str(message.payload.decode("utf-8")),
-            " From: ", message.topic, " ")
+          " From: ", message.topic, " ")
+
 
 def ThreadDataTransmitter(ConfigDataUpdater, frame):
 
@@ -123,8 +126,6 @@ def ThreadDataTransmitter(ConfigDataUpdater, frame):
     client.on_message = on_message
     client.loop_start()
 
-   
-
     # channel.basic_publish(
     #     exchange='', routing_key='hello', body=json.dumps(sendData))
     # # print(" [x] Sent "+''.join(args))
@@ -138,7 +139,7 @@ def main():
     ConfigDataUpdater = Data_Config_Count.Data_Config_Count()
     ConfigDataUpdater.register(data)
 
-    cap = cv2.VideoCapture("./ch01_08000000058000601.mp4")
+    cap = cv2.VideoCapture("../ch01_08000000058000601.mp4")
     # cap = cv2.VideoCapture('/dev/video0')
     # cap = cv2.VideoCapture("./output.mp4")
     _, frame = cap.read()
@@ -176,11 +177,11 @@ def main():
             # apply the mask
             frame = cv2.bitwise_or(frame, mask)
         ##########################
-
-        # frame = imutils.resize(frame, width=800)
+        # frame = cv2.resize(frame, (640, 360))
+        # frame = imutils.resize(frame, width=640)
+        height, width, channels = frame.shape
         # frame = frame.resize((640,360))
         total_frames = total_frames + 1
-        height, width, channels = frame.shape
         # print(height, width)
         blob, outputs = detect_objects(frame, model, output_layers)
         boxes, confs, class_ids = get_box_dimensions(
