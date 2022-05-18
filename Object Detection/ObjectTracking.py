@@ -18,6 +18,21 @@ import centroidtracker
 import Data_Config_Count
 
 
+from utils.torch_utils import select_device, time_sync
+from utils.plots import Annotator, colors, save_one_box
+from utils.general import (LOGGER, check_file, check_img_size, check_imshow, check_requirements, colorstr, cv2,
+                           increment_path, non_max_suppression, print_args, scale_coords, strip_optimizer, xyxy2xywh)
+from utils.datasets import IMG_FORMATS, VID_FORMATS, LoadImages, LoadStreams
+from models.common import DetectMultiBackend
+import argparse
+import os
+import sys
+from pathlib import Path
+
+import torch
+import torch.backends.cudnn as cudnn
+
+
 class NumpyEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, np.ndarray):
@@ -78,7 +93,8 @@ def get_box_dimensions(outputs, height, width, threshold):
 
 def on_message(client, userdata, message):
     print("Received message: ", str(message.payload.decode("utf-8")),
-            " From: ", message.topic, " ")
+          " From: ", message.topic, " ")
+
 
 def ThreadDataTransmitter(ConfigDataUpdater, frame):
 
@@ -123,8 +139,6 @@ def ThreadDataTransmitter(ConfigDataUpdater, frame):
     client.on_message = on_message
     client.loop_start()
 
-   
-
     # channel.basic_publish(
     #     exchange='', routing_key='hello', body=json.dumps(sendData))
     # # print(" [x] Sent "+''.join(args))
@@ -144,6 +158,7 @@ def main():
     _, frame = cap.read()
     # frame=cv2.cvtColor(frame,cv2.COLOR_BGR2RGB)
     # frame = frame.astype('float64')
+    height, width, channels = frame.shape
 
     cv2.imwrite("frame.jpg", frame)
 
@@ -158,125 +173,171 @@ def main():
     # print(ConfigDataUpdater.line_intesection_zone)
 
     ct = centroidtracker.CentroidTracker()
-    # id_tracker = NewClass_ID_Association.ID_Tracker()
-    model, classes, colors, output_layers, ID_wanted_classes = load_yolo(
-        ConfigDataUpdater.path_model_weights, ConfigDataUpdater.path_model_cfg, ConfigDataUpdater.path_yolo_coco_names, ConfigDataUpdater.object_data_tracking)
+    weights = './yolov5s.pt'  # model.pt path(s)
+    source = './ch01_08000000058000601.mp4'  # file/dir/URL/glob, 0 for webcam
+    data = './data/coco128.yaml'  # dataset.yaml path
+    # imgsz = (height, width)  # inference size (height, width)
+    
+    imgsz = (640, 640)  # inference size (height, width)
+    conf_thres = 0.25  # confidence threshold
+    iou_thres = 0.45  # NMS IOU threshold
+    max_det = 1000  # maximum detections per image
+    device = ''  # cuda device, i.e. 0 or 0,1,2,3 or cpu
+    view_img = True  # show results
+    classes = 0  # filter by class: --class 0, or --class 0 2 3
+    agnostic_nms = True  # class-agnostic NMS
+    augment = False  # augmented inference
+    visualize = False  # visualize features
+    update = False  # update all models
+    line_thickness = 2  # bounding box thickness (pixels)
+    hide_labels = False  # hide labels
+    hide_conf = False  # hide confidences
+    half = False  # use FP16 half-precision inference
+    dnn = False  # use OpenCV DNN for ONNX inference
 
-    fps_start_time = datetime.datetime.now()
-    fps = 0
-    total_frames = 0
-    while True:
-        _, frame = cap.read()
-        # frame = cv2.cvtColor(frame, cv2.COLOR_RGB2YUV)
-        ####### Polygon Remove #######
-        for arrayPoints in ConfigDataUpdater.remove_area:
-            mask = np.zeros(frame.shape, dtype=np.uint8)
-            contours = np.array(arrayPoints)
-            cv2.fillPoly(mask, pts=[contours], color=(255, 255, 255))
-            # apply the mask
-            frame = cv2.bitwise_or(frame, mask)
-        ##########################
+    source = str(source)
 
-        # frame = imutils.resize(frame, width=800)
-        # frame = frame.resize((640,360))
-        total_frames = total_frames + 1
-        height, width, channels = frame.shape
-        # print(height, width)
-        blob, outputs = detect_objects(frame, model, output_layers)
-        boxes, confs, class_ids = get_box_dimensions(
-            outputs, height, width, ConfigDataUpdater.threshold)
+    is_file = Path(source).suffix[1:] in (IMG_FORMATS + VID_FORMATS)
+    is_url = source.lower().startswith(('rtsp://', 'rtmp://', 'http://', 'https://'))
+    webcam = source.isnumeric() or source.endswith(
+        '.txt') or (is_url and not is_file)
+    if is_url and is_file:
+        source = check_file(source)  # download
 
-        # DRAW LABELS
-        indexes = cv2.dnn.NMSBoxes(
-            boxes, confs, ConfigDataUpdater.threshold, 0.4)
+    # Load model
+    device = select_device(device)
+    model = DetectMultiBackend(
+        weights, device=device, dnn=dnn, data=data, fp16=half)
+    stride, names, pt = model.stride, model.names, model.pt
+    imgsz = check_img_size(imgsz, s=stride)  # check image size
+    colors = np.random.uniform(0, 255, size=(len(names), 3))
+    # Dataloader
+    if webcam:
+        view_img = check_imshow()
+        cudnn.benchmark = True  # set True to speed up constant image size inference
+        dataset = LoadStreams(source, img_size=imgsz, stride=stride, auto=pt)
+        bs = len(dataset)  # batch_size
+    else:
+        dataset = LoadImages(source, img_size=imgsz, stride=stride, auto=pt)
+        bs = 1  # batch_size
 
-        boxes_final = []
-        class_ids_final = []
-        nonPersonDetections = []
-        nonPersonClass_ids = []
-        for i in indexes:
-            # if class_ids[i] in ID_wanted_classes:
-            if class_ids[i] == 0:
-                boxes_final.append(boxes[i])
-                class_ids_final.append(class_ids[i])
-            elif class_ids[i] in ID_wanted_classes:
-                nonPersonDetections.append(boxes[i])
-                nonPersonClass_ids.append(class_ids[i])
+    # Run inference
+    model.warmup(imgsz=(1 if pt else bs, 3, *imgsz))  # warmup
+    dt, seen = [0.0, 0.0, 0.0], 0
+    for path, im, im0s, vid_cap, s in dataset:
+        t1 = time_sync()
+        im = torch.from_numpy(im).to(device)
+        im = im.half() if model.fp16 else im.float()  # uint8 to fp16/32
+        im /= 255  # 0 - 255 to 0.0 - 1.0
+        if len(im.shape) == 3:
+            im = im[None]  # expand for batch dim
+        t2 = time_sync()
+        dt[0] += t2 - t1
 
-        boxes2 = []
-        centroid_boxes = []
-        for item in boxes_final:
-            x, y, w, h = item
-            boxes2.append((x, y, x+w, y+h))
-            cX = int((x + x+w) / 2.0)
-            cY = int((y + y+h) / 2.0)
-            centroid_boxes.append(np.asarray((cX, cY)))
+        # Inference
+        visualize = False
 
-        value = ct.update(boxes2)
+        pred = model(im, augment=augment, visualize=visualize)
+        t3 = time_sync()
+        dt[1] += t3 - t2
 
-        IDs_list = list(value.keys())
-        Centroids_list = []
-        for item in list(value.values()):
-            Centroids_list.append(tuple(item))
+        # NMS
+        pred = non_max_suppression(
+            pred, conf_thres, iou_thres, classes, agnostic_nms, max_det=max_det)
+        dt[2] += time_sync() - t3
 
-        UpdateValuesCentroids = OrderedDict()
-        for id in IDs_list:
-            UpdateValuesCentroids[id] = ct.objectsCentroids[id]
+        # Second-stage classifier (optional)
+        # pred = utils.general.apply_classifier(pred, classifier_model, im, im0s)
 
-        # Draw Zones
-        for item in ConfigDataUpdater.zone:
-            cv2.polylines(frame, [np.array(item["points"])],
-                          True, (255, 0, 0), 2)
+        # Process predictions
+        for i, det in enumerate(pred):  # per image
+            seen += 1
+            if webcam:  # batch_size >= 1
+                p, im0, frame = path[i], im0s[i].copy(), dataset.count
+                s += f'{i}: '
+            else:
+                p, im0, frame = path, im0s.copy(), getattr(dataset, 'frame', 0)
 
-        # Draw Line_intersection_zone
-        for item in ConfigDataUpdater.line_intersection_zone:
-            cv2.line(frame, item["start_point"],
-                     item["end_point"], (0, 255, 0), 2)
+            p = Path(p)  # to Path
 
-        ConfigDataUpdater.updateData(UpdateValuesCentroids)
+            s += '%gx%g ' % im.shape[2:]  # print string
+            # normalization gain whwh
+            annotator = Annotator(
+                im0, line_width=line_thickness, example=str(names))
+            if len(det):
+                # Rescale boxes from img_size to im0 size
+                det[:, :4] = scale_coords(
+                    im.shape[2:], det[:, :4], im0.shape).round()
 
-        for nonPersonDetection, nonPersonClass in zip(nonPersonDetections, nonPersonClass_ids):
-            x, y, w, h = nonPersonDetection
-            label = str(classes[nonPersonClass])
-            color = colors[-1]
-            cv2.rectangle(frame, (x, y), (x+w, y+h), color, 2)
-            cv2.putText(frame, label, (x, y - 5),
-                        cv2.FONT_HERSHEY_PLAIN, 1, color, 1)
+                # Print results
+                for c in det[:, -1].unique():
+                    n = (det[:, -1] == c).sum()  # detections per class
+                    # add to string
+                    s += f"{n} {names[int(c)]}{'s' * (n > 1)}, "
 
-        for index, (box, class_id, centroid) in enumerate(zip(boxes_final, class_ids_final, centroid_boxes)):
-            x, y, w, h = box
-            id = -1
-            if Centroids_list.__contains__(tuple(centroid)):
-                id = IDs_list[Centroids_list.index(tuple(centroid))]
-                color = colors[id]
-                for item in ct.objectsCentroids[id]:
-                    cv2.circle(
-                        frame, (item[0], item[1]), 3, color, -1)
+                # Write results
 
-            cv2.putText(frame, str(id), (centroid[0] - 10, centroid[1] - 10),
-                        cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 0), 1)
+                im0 = annotator.result()
 
-            label = str(classes[class_id])
+                boxes2 = []
+                centroid_boxes = []
+                class_ids_final = []
+                for *xyxy, conf, cls in reversed(det):
+                    class_ids_final.append(int(cls))
+                    boxes2.append(
+                        (int(xyxy[0]), int(xyxy[1]), int(xyxy[2]), int(xyxy[3])))
+                    cX = int((int(xyxy[0]) + int(
+                        xyxy[2])) / 2.0)
+                    cY = int((int(xyxy[1]) + int(
+                        xyxy[3])) / 2.0)
+                    centroid_boxes.append(np.asarray((cX, cY)))
 
-            cv2.rectangle(frame, (x, y), (x+w, y+h), color, 2)
-            cv2.putText(frame, label, (x, y - 5),
-                        cv2.FONT_HERSHEY_PLAIN, 1, color, 1)
+                value = ct.update(boxes2)
 
-        fps_end_time = datetime.datetime.now()
-        time_diff = fps_end_time - fps_start_time
-        if time_diff.seconds == 0:
-            fps = 0.0
-        else:
-            fps = (total_frames / time_diff.seconds)
-        # print(time_diff.seconds,"Seconds")
-        fps_text = "FPS: {:.2f}".format(fps)
-        cv2.putText(frame, fps_text, (5, 30),
-                    cv2.FONT_HERSHEY_COMPLEX_SMALL, 1, (0, 0, 255), 1)
-        cv2.imshow("Image", frame)
-        if cv2.waitKey(1) == 27:
-            break
-    cap.release()
-    cv2.destroyAllWindows()
+                IDs_list = list(value.keys())
+                Centroids_list = []
+                for item in list(value.values()):
+                    Centroids_list.append(tuple(item))
+
+                UpdateValuesCentroids = OrderedDict()
+                for id in IDs_list:
+                    UpdateValuesCentroids[id] = ct.objectsCentroids[id]
+
+                ConfigDataUpdater.updateData(UpdateValuesCentroids)
+
+                for index, (box, class_id, centroid) in enumerate(zip(boxes2, class_ids_final, centroid_boxes)):
+                    x, y, w, h = box
+                    id = -1
+                    if Centroids_list.__contains__(tuple(centroid)):
+                        id = IDs_list[Centroids_list.index(tuple(centroid))]
+                        color = colors[id]
+                        for item in ct.objectsCentroids[id]:
+                            cv2.circle(
+                                im0, (item[0], item[1]), 3, color, -1)
+
+                    cv2.putText(im0, str(id), (centroid[0] - 10, centroid[1] - 10),
+                                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 0), 1)
+                    label = str(names[class_id])
+
+                    cv2.rectangle(im0, (x, y), (w, h), color, 2)
+                    cv2.putText(im0, label, (x, y - 5),
+                                cv2.FONT_HERSHEY_PLAIN, 1, color, 1)
+
+            # Stream results
+            if view_img:
+                cv2.imshow(str(p), im0)
+                cv2.waitKey(1)  # 1 millisecond
+
+        # Print time (inference-only)
+        LOGGER.info(f'{s}Done. ({t3 - t2:.3f}s)')
+
+    # Print results
+    t = tuple(x / seen * 1E3 for x in dt)  # speeds per image
+    LOGGER.info(
+        f'Speed: %.1fms pre-process, %.1fms inference, %.1fms NMS per image at shape {(1, 3, *imgsz)}' % t)
+
+    if update:
+        strip_optimizer(weights)  # update model (to fix SourceChangeWarning)
 
 
 if __name__ == '__main__':

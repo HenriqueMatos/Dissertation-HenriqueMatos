@@ -56,10 +56,10 @@ def main():
     fps = 0
 
     id_tracker = Class_ID_Association.ID_Tracker()
-    tracker = CentroidTracker(maxDisappeared=80, maxDistance=90)
+    # tracker = CentroidTracker(maxDisappeared=80, maxDistance=90)
     # cap = cv2.VideoCapture('/dev/video2')
-    cap = cv2.VideoCapture('./output.mp4')
-    # cap = cv2.VideoCapture('./ch01_08000000058000601.mp4')
+    # cap = cv2.VideoCapture('./output.mp4')
+    cap = cv2.VideoCapture('./ch01_08000000058000601.mp4')
 
     # cap = cv2.VideoCapture(
     #     './London Walk from Oxford Street to Carnaby Street.mp4')
@@ -72,6 +72,7 @@ def main():
     width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
     height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
     print(width, height)
+
 
     PATH_TO_LABELS = './models/research/object_detection/data/mscoco_label_map.pbtxt'
     category_index = label_map_util.create_category_index_from_labelmap(

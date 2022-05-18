@@ -106,10 +106,10 @@ class Annotator:
                 cv2.putText(self.im,
                             label, (p1[0], p1[1] - 2 if outside else p1[1] + h + 2),
                             0,
-                            self.lw / 3,
+                            1,
                             txt_color,
-                            thickness=tf,
-                            lineType=cv2.LINE_AA)
+                            thickness=1,
+                            lineType=cv2.FONT_HERSHEY_PLAIN)
 
     def rectangle(self, xy, fill=None, outline=None, width=1):
         # Add rectangle to image (PIL-only)
