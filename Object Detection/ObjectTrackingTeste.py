@@ -155,7 +155,6 @@ def main():
 
     max_cosine_distance = 0.4
     nn_budget = None
-    nms_max_overlap = 1.0
     metric = nn_matching.NearestNeighborDistanceMetric(
         "cosine", max_cosine_distance, nn_budget)
 
@@ -190,18 +189,18 @@ def main():
 
     # print(ConfigDataUpdater.line_intesection_zone)
     weights = './yolov5s.pt'  # model.pt path(s)
-    source = '0'  # file/dir/URL/glob, 0 for webcam
-    # source = './ch01_08000000058000601.mp4'  # file/dir/URL/glob, 0 for webcam
+    # source = '0'  # file/dir/URL/glob, 0 for webcam
+    source = './ch01_08000000058000601.mp4'  # file/dir/URL/glob, 0 for webcam
     data = './data/coco128.yaml'  # dataset.yaml path
     imgsz = (height, width)  # inference size (height, width)
-
     # imgsz = (640, 640)  # inference size (height, width)
     conf_thres = 0.25  # confidence threshold
     iou_thres = 0.45  # NMS IOU threshold
     max_det = 1000  # maximum detections per image
     device = ''  # cuda device, i.e. 0 or 0,1,2,3 or cpu
-    view_img = True  # show results
-    classes = 0  # filter by class: --class 0, or --class 0 2 3
+    view_img = True  # show
+    # classes = 0  # filter by class: --class 0, or --class 0 2 3
+    classes = None  # filter by class: --class 0, or --class 0 2 3
     agnostic_nms = True  # class-agnostic NMS
     augment = False  # augmented inference
     visualize = False  # visualize features
@@ -235,7 +234,10 @@ def main():
         dataset = LoadStreams(source, img_size=imgsz, stride=stride, auto=pt)
         bs = len(dataset)  # batch_size
     else:
+        # Foi adicionado para passar os frames à frente
+        cudnn.benchmark = True
         dataset = LoadImages(source, img_size=imgsz, stride=stride, auto=pt)
+        # bs = len(dataset)
         bs = 1  # batch_size
 
     # Run inference
@@ -266,7 +268,6 @@ def main():
         # Second-stage classifier (optional)
         # pred = utils.general.apply_classifier(pred, classifier_model, im, im0s)
 
-        # colors = np.random.uniform(0, 255, size=(len(names), 3))
         # Process predictions
         for i, det in enumerate(pred):  # per image
             seen += 1
@@ -294,60 +295,41 @@ def main():
                     s += f"{n} {names[int(c)]}{'s' * (n > 1)}, "
 
                 # Write results
-
                 im0 = annotator.result()
 
-                # boxes2 = []
-                # centroid_boxes = []
-                # class_ids_final = []
                 bboxes = []
                 scores = []
                 names2 = []
 
-                box = []
                 for *xyxy, conf, cls in reversed(det):
-                    # box.append()
-                    # box.append(int(xyxy[1]))
-                    # box.append(int(xyxy[2]))
-                    # box.append(int(xyxy[3]))
-                    # bboxes.append([int(xyxy[0]),int(xyxy[1]),int(xyxy[2]),int(xyxy[3])])
                     bboxes.append([int(xyxy[0]), int(xyxy[1]), int(
                         xyxy[2]-xyxy[0]), int(xyxy[3]-xyxy[1])])
-                    # box.clear()
-                    # print(f'{conf:.4f}')
-
                     scores.append(f'{conf:.4f}')
                     names2.append(names[int(cls)])
                 features = [None] * len(scores)
-                # print(bboxes)
-                # # bboxes = utils.format_boxes(bboxes, height, width)
-                # print(bboxes)
+
                 features = encoder(im0, bboxes)
-                # for bbox, score, class_name, feature in zip(bboxes, scores, names2, features):
-                    # print(bbox, score, class_name, feature)
+
                 detections = [Detection(bbox, score, class_name, feature) for bbox,
                               score, class_name, feature in zip(bboxes, scores, names2, features)]
+
                 tracker.predict()
                 tracker.update(detections)
+
                 # update tracks
                 for track in tracker.tracks:
                     if not track.is_confirmed() or track.time_since_update > 1:
                         continue
                     bbox = track.to_tlbr()
                     class_name = track.get_class()
-                    # print(bbox)
-                # draw bbox on screen
-                    # color = colors[int(track.track_id) % len(colors)]
-                    # color = [i * 255 for i in color]
-                    # color = (255, 255, 0)
+                    
+                    # draw bbox on screen
                     color = colors[int(track.track_id) % len(colors)]
                     cv2.rectangle(im0, (int(bbox[0]), int(
                         bbox[1])), (int(bbox[2]), int(bbox[3])), color, 2)
-                    # cv2.rectangle(im0, (int(bbox[0]), int(bbox[1]-30)), (int(bbox[0])+(
-                    #     len(class_name)+len(str(track.track_id)))*17, int(bbox[1])), color, -1)
-                    #  class_name + "-" +
-                    cv2.putText(im0, str(track.track_id),
-                                (int(bbox[0]), int(bbox[1]-10)), 0, 0.75, color, 2)
+                    
+                    cv2.putText(im0, class_name + "-" + str(track.track_id),
+                                (int(bbox[0]), int(bbox[1]-10)), 0, 0.6, color, 1)
 
             # Stream results
             if view_img:
