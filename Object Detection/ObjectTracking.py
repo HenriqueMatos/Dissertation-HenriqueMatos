@@ -17,6 +17,12 @@ import paho.mqtt.client as mqtt
 import centroidtracker
 import Data_Config_Count
 
+from deep_sort.detection import Detection
+from deep_sort.tracker import Tracker
+from deep_sort import preprocessing, nn_matching
+import core.utils as utils
+from tools import generate_detections as gdet
+
 
 from utils.torch_utils import select_device, time_sync
 from utils.plots import Annotator, colors, save_one_box
@@ -146,6 +152,17 @@ def ThreadDataTransmitter(ConfigDataUpdater, frame):
 
 
 def main():
+
+    max_cosine_distance = 0.4
+    nn_budget = None
+    metric = nn_matching.NearestNeighborDistanceMetric(
+        "cosine", max_cosine_distance, nn_budget)
+
+    model_filename = 'model_data/mars-small128.pb'
+    encoder = gdet.create_box_encoder(model_filename, batch_size=1)
+    # initialize tracker
+    tracker = Tracker(metric)
+
     with open('config/config.json', 'r') as f:
         data = json.load(f)
 
@@ -171,29 +188,26 @@ def main():
         print("Error: unable to start thread")
 
     # print(ConfigDataUpdater.line_intesection_zone)
-
-    ct = centroidtracker.CentroidTracker()
     weights = './yolov5s.pt'  # model.pt path(s)
+    # source = '0'  # file/dir/URL/glob, 0 for webcam
     source = './ch01_08000000058000601.mp4'  # file/dir/URL/glob, 0 for webcam
     data = './data/coco128.yaml'  # dataset.yaml path
-    # imgsz = (height, width)  # inference size (height, width)
-    
-    imgsz = (640, 640)  # inference size (height, width)
+    imgsz = (height, width)  # inference size (height, width)
+    # imgsz = (640, 640)  # inference size (height, width)
     conf_thres = 0.25  # confidence threshold
     iou_thres = 0.45  # NMS IOU threshold
     max_det = 1000  # maximum detections per image
     device = ''  # cuda device, i.e. 0 or 0,1,2,3 or cpu
-    view_img = True  # show results
-    classes = 0  # filter by class: --class 0, or --class 0 2 3
+    view_img = True  # show
+    # classes = 0  # filter by class: --class 0, or --class 0 2 3
+    classes = None  # filter by class: --class 0, or --class 0 2 3
     agnostic_nms = True  # class-agnostic NMS
     augment = False  # augmented inference
     visualize = False  # visualize features
     update = False  # update all models
     line_thickness = 2  # bounding box thickness (pixels)
-    hide_labels = False  # hide labels
-    hide_conf = False  # hide confidences
     half = False  # use FP16 half-precision inference
-    dnn = False  # use OpenCV DNN for ONNX inference
+    dnn = True  # use OpenCV DNN for ONNX inference
 
     source = str(source)
 
@@ -210,7 +224,7 @@ def main():
         weights, device=device, dnn=dnn, data=data, fp16=half)
     stride, names, pt = model.stride, model.names, model.pt
     imgsz = check_img_size(imgsz, s=stride)  # check image size
-    colors = np.random.uniform(0, 255, size=(len(names), 3))
+    colors = np.random.uniform(0, 255, size=(max_det, 3))
     # Dataloader
     if webcam:
         view_img = check_imshow()
@@ -218,15 +232,41 @@ def main():
         dataset = LoadStreams(source, img_size=imgsz, stride=stride, auto=pt)
         bs = len(dataset)  # batch_size
     else:
+        # Foi adicionado para passar os frames à frente
+        cudnn.benchmark = True
         dataset = LoadImages(source, img_size=imgsz, stride=stride, auto=pt)
+        # bs = len(dataset)
         bs = 1  # batch_size
 
     # Run inference
     model.warmup(imgsz=(1 if pt else bs, 3, *imgsz))  # warmup
     dt, seen = [0.0, 0.0, 0.0], 0
     for path, im, im0s, vid_cap, s in dataset:
+
+        ####### Polygon Remove #######
+        for arrayPoints in ConfigDataUpdater.remove_area:
+            mask = np.zeros(im0s.shape, dtype=np.uint8)
+            contours = np.array(arrayPoints)
+            cv2.fillPoly(mask, pts=[contours], color=(255, 255, 255))
+            # apply the mask
+            im0s = cv2.bitwise_or(im0s, mask)
+            
+        ############## REMOVE ALL POINTS FROM POLYGON
+
+        # Draw Line_intersection_zone
+        for item in ConfigDataUpdater.line_intersection_zone:
+            cv2.line(im0s, tuple(item["start_point"]),
+                     tuple(item["end_point"]), (0, 255, 0), 2)
+
+        # Draw Zones
+        for item in ConfigDataUpdater.zone:
+            cv2.polylines(im0s, [np.array(item["points"])],
+                          True, (255, 0, 0), 2)
+
         t1 = time_sync()
+
         im = torch.from_numpy(im).to(device)
+
         im = im.half() if model.fp16 else im.float()  # uint8 to fp16/32
         im /= 255  # 0 - 255 to 0.0 - 1.0
         if len(im.shape) == 3:
@@ -276,53 +316,56 @@ def main():
                     s += f"{n} {names[int(c)]}{'s' * (n > 1)}, "
 
                 # Write results
-
                 im0 = annotator.result()
 
-                boxes2 = []
-                centroid_boxes = []
-                class_ids_final = []
+                bboxes = []
+                scores = []
+                names2 = []
+
                 for *xyxy, conf, cls in reversed(det):
-                    class_ids_final.append(int(cls))
-                    boxes2.append(
-                        (int(xyxy[0]), int(xyxy[1]), int(xyxy[2]), int(xyxy[3])))
-                    cX = int((int(xyxy[0]) + int(
-                        xyxy[2])) / 2.0)
-                    cY = int((int(xyxy[1]) + int(
-                        xyxy[3])) / 2.0)
-                    centroid_boxes.append(np.asarray((cX, cY)))
+                    bboxes.append([int(xyxy[0]), int(xyxy[1]), int(
+                        xyxy[2]-xyxy[0]), int(xyxy[3]-xyxy[1])])
+                    scores.append(f'{conf:.4f}')
+                    names2.append(names[int(cls)])
 
-                value = ct.update(boxes2)
+                features = encoder(im0, bboxes)
 
-                IDs_list = list(value.keys())
-                Centroids_list = []
-                for item in list(value.values()):
-                    Centroids_list.append(tuple(item))
+                detections = [Detection(bbox, score, class_name, feature) for bbox,
+                              score, class_name, feature in zip(bboxes, scores, names2, features)]
 
-                UpdateValuesCentroids = OrderedDict()
-                for id in IDs_list:
-                    UpdateValuesCentroids[id] = ct.objectsCentroids[id]
+                tracker.predict()
+                tracker.update(detections)
 
-                ConfigDataUpdater.updateData(UpdateValuesCentroids)
+                ID_with_Box = OrderedDict()
+                ID_with_Class = OrderedDict()
+                # update tracks
+                for track in tracker.tracks:
+                    if not track.is_confirmed() or track.time_since_update > 1:
+                        continue
+                    bbox = track.to_tlbr()
+                    class_name = track.get_class()
+                    id = int(track.track_id)
 
-                for index, (box, class_id, centroid) in enumerate(zip(boxes2, class_ids_final, centroid_boxes)):
-                    x, y, w, h = box
-                    id = -1
-                    if Centroids_list.__contains__(tuple(centroid)):
-                        id = IDs_list[Centroids_list.index(tuple(centroid))]
-                        color = colors[id]
-                        for item in ct.objectsCentroids[id]:
+                    ID_with_Box[id] = (int(bbox[0]), int(
+                        bbox[1]), int(bbox[2]), int(bbox[3]))
+                    ID_with_Class[id] = class_name
+                    # draw bbox on screen
+                    color = colors[id % len(colors)]
+                    cv2.rectangle(im0, (int(bbox[0]), int(
+                        bbox[1])), (int(bbox[2]), int(bbox[3])), color, 2)
+
+                    cv2.putText(im0, class_name + "-" + str(id),
+                                (int(bbox[0]), int(bbox[1]-10)), 0, 0.6, color, 1)
+
+                ConfigDataUpdater.updateData(ID_with_Box, ID_with_Class)
+
+                for id in ID_with_Box.keys():
+                    if ID_with_Class[id] == "person":
+                        color = colors[id % len(colors)]
+                        for centroid in ConfigDataUpdater.objectsCentroids[id]:
                             cv2.circle(
-                                im0, (item[0], item[1]), 3, color, -1)
-
-                    cv2.putText(im0, str(id), (centroid[0] - 10, centroid[1] - 10),
-                                cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 255, 0), 1)
-                    label = str(names[class_id])
-
-                    cv2.rectangle(im0, (x, y), (w, h), color, 2)
-                    cv2.putText(im0, label, (x, y - 5),
-                                cv2.FONT_HERSHEY_PLAIN, 1, color, 1)
-
+                                im0, (centroid[0], centroid[1]), 3, color, -1)
+                            
             # Stream results
             if view_img:
                 cv2.imshow(str(p), im0)

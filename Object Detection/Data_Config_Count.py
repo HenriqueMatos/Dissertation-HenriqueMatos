@@ -1,3 +1,4 @@
+from collections import OrderedDict
 import json
 import sys
 from shapely.geometry import Point
@@ -7,7 +8,7 @@ import intersect
 
 
 class Data_Config_Count():
-    def __init__(self):
+    def __init__(self, maxDisappeared=50, maxCentroids=20):
         self.JsonObjectString = None
         # Config
         self.camera_id = None
@@ -45,6 +46,14 @@ class Data_Config_Count():
 
         self.config_last_reset = False
         self.last_reset = None
+
+        ########################
+        self.objects = OrderedDict()
+        self.objectsCentroids = OrderedDict()
+        self.disappeared = OrderedDict()
+
+        self.maxDisappeared = maxDisappeared
+        self.maxCentroids = maxCentroids
 
     def register(self, jsonObject):
         self.JsonObjectString = json.dumps(jsonObject)
@@ -146,44 +155,94 @@ class Data_Config_Count():
             else:
                 self.config_remove_area = False
 
-    def updateData(self, UpdateValuesCentroids):
-        IDs_list = list(UpdateValuesCentroids.keys())
-        Values_list = list(UpdateValuesCentroids.values())
-        # print("update data")
-        self.num_people_total = len(IDs_list)
+    def updateData(self, ID_with_Box, ID_with_Class):
+
+        for id, value in ID_with_Box.items():
+
+            if ID_with_Class[id] == "person":
+                # print(value)
+                cX = int((value[0] + value[2]) / 2.0)
+                cY = int((value[1] + value[3]) / 2.0)
+
+                if self.objectsCentroids.keys().__contains__(id) and self.objects.keys().__contains__(id):
+                    # self.objects[id].append()
+                    # self.objectsCentroids[id]
+                    self.objects[id].append(value)
+                    # print("AQUI", self.objectsCentroids[id])
+                    self.objectsCentroids[id].append((cX, cY))
+                    # print(self.objectsCentroids[id])
+                    self.disappeared[id] = 0
+
+                    if len(self.objectsCentroids[id]) > self.maxCentroids:
+                        self.objectsCentroids[id].pop(0)
+                        self.objects[id].pop(0)
+
+                else:
+                    self.objects[id] = [value]
+                    self.objectsCentroids[id] = [(cX, cY)]
+                    self.disappeared[id] = 0
+        IDsToDelete = []
+        for key in self.disappeared.keys():
+            if self.disappeared[key] > self.maxDisappeared:
+                IDsToDelete.append(key)
+            else:
+                self.disappeared[key] += 1
+        for item in IDsToDelete:
+            del self.disappeared[item]
+            del self.objects[item]
+            del self.objectsCentroids[item]
+
+        # print(self.objectsCentroids.values())
+        ########### AQUI ###########
+        # IDs_list = list(self.objectsCentroids.keys())
+        # Values_list = list(self.objectsCentroids.values())
+
+        # print(list(ID_with_Box.keys()))
+        self.num_people_total = len(ID_with_Box.keys())
 
         # Restart zone count data
         for index, item in enumerate(self.zone):
             self.count_inside_zone[index] = 0
             self.count_outside_zone[index] = 0
 
-        for id, centroidList in zip(IDs_list, Values_list):
+        # Só com os novos dados usados
+        for id in ID_with_Box.keys():
+            if ID_with_Class[id] == "person":
+                # print(centroidList)
+                # ZONE
+                for index, item in enumerate(self.zone):
+                    point = Point(
+                        self.objectsCentroids[id][-1][0], self.objectsCentroids[id][-1][1])
+                    polygon = Polygon(item["points"])
+                    if polygon.contains(point):
+                        self.count_inside_zone[index] += 1
+                    else:
+                        self.count_outside_zone[index] += 1
 
-            # ZONE
-            for index, item in enumerate(self.zone):
-                point = Point(centroidList[-1][0], centroidList[-1][1])
-                polygon = Polygon(item["points"])
-                if polygon.contains(point):
-                    self.count_inside_zone[index] += 1
-                else:
-                    self.count_outside_zone[index] += 1
+                # LINE_INTERSECTION
+                for item in self.line_intersection_zone:
 
-            # LINE_INTERSECTION
-            for item in self.line_intersection_zone:
-
-                if len(centroidList) >= 2:
-                    DoIntersect, orientacao = intersect.doIntersect(
-                        (centroidList[-2][0], centroidList[-2][1]), (centroidList[-1][0], centroidList[-1][1]), tuple(item["start_point"]), tuple(item["end_point"]))
-                    if DoIntersect:
-                        if item["zone_direction_1or2"] == orientacao:
-                            print(item["name"], item["name_zone_after"], id)
-                        else:
-                            print(item["name"], item["name_zone_before"], id)
-                            # if orientacao == 0:
-                            #     print("Collinear", id)
-                            # if orientacao == 1:
-                            #     print("Esquerda", id)
-                            # if orientacao == 2:
-                            #     print("Direita", id)
+                    if len(self.objectsCentroids[id]) >= 2:
+                        # print(self.objectsCentroids[id][-2],
+                        #       self.objectsCentroids[id][-1])
+                        # print(tuple(item["start_point"]), tuple(item["end_point"]))
+                        
+                        DoIntersect, orientacao = intersect.doIntersect(
+                            self.objectsCentroids[id][-2], self.objectsCentroids[id][-1], tuple(item["start_point"]), tuple(item["end_point"]))
+                        # print("AQUI", DoIntersect, orientacao)
+                        if DoIntersect:
+                            print("Intersect\n\n\n\n")
+                            if item["zone_direction_1or2"] == orientacao:
+                                print(item["name"],
+                                      item["name_zone_after"], id)
+                            else:
+                                print(item["name"],
+                                      item["name_zone_before"], id)
+                                # if orientacao == 0:
+                                #     print("Collinear", id)
+                                # if orientacao == 1:
+                                #     print("Esquerda", id)
+                                # if orientacao == 2:
+                                #     print("Direita", id)
         print(self.count_inside_zone, self.count_outside_zone)
-        print(self.num_people_total)
+        print("Número de Pessoas", self.num_people_total)
