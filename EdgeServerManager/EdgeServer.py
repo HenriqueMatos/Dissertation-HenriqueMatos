@@ -86,7 +86,7 @@ def configObject():
                     else:
                         config[item] = None
                 break
-
+# configBefore=config_name_before, config=config_name
     return render_template('config.html', config=config, data=data, image=base64.b64encode(base64.decodebytes(imageData.encode('utf-8'))).decode('utf-8'))
 
 
@@ -144,13 +144,14 @@ def SetconfigPoints():
 
         for index in range(len(DataServer)):
             if DataServer[index]["preferred_username"] == preferred_username:
-                print(DataServer[index]["config"][config_name_before][config_name])
+                print(DataServer[index]["config"]
+                      [config_name_before][config_name])
                 # SAVE IN DATABASE (REDIS)
                 if(DataServer[index]["config"][config_name_before][config_name] != new_data):
                     # Send to Camera
                     print("NEW")
-                    
-                    DataServer[index]["config"][config_name_before][config_name]=new_data
+
+                    DataServer[index]["config"][config_name_before][config_name] = new_data
                     # Config[config_name_before][config_name]=new_data
                     print()
                 else:
@@ -160,12 +161,34 @@ def SetconfigPoints():
     return "OK"
 
 
+@app.route('/config_set', methods=['POST'])
+def Setconfig():
+    if request.method == "POST":
+        # print(request.form["data"])
+        data = json.loads(request.form["data"])
+        preferred_username = data["preferred_username"]
+        new_data = data["data"]
+        print("AQUI")
+        print(preferred_username)
+        print(new_data)
+
+        for index in range(len(DataServer)):
+            if DataServer[index]["preferred_username"] == preferred_username:
+                print(DataServer[index]["config"])
+                for item in new_data:
+                    DataServer[index]["config"][item] = new_data[item]
+                # SAVE IN DATABASE (REDIS)
+                # SEND NEW CONFIG TO CAMERA
+
+    return "OK"
+
+
 def web():
     app.run(debug=True, use_reloader=False, host='0.0.0.0', port=5000)
 
 
 def runningWorker():
-    
+
     # credentials = pika.PlainCredentials('admin', 'admin')
 
     # connection_parameters = pika.ConnectionParameters(
@@ -211,7 +234,7 @@ def runningWorker():
 
     # print(' [*] Waiting for messages. To exit press CTRL+C')
     # channel.start_consuming()
-    
+
     def on_message(client, userdata, message):
         # print("Received message: ", str(message.payload.decode("utf-8")),
         #   " From: ", message.topic, " ")
@@ -220,7 +243,7 @@ def runningWorker():
             if receivedObject["type"] == "login":
                 check, data = verifyToken(
                     oidc_obj, receivedObject["Authenticate"])
-                print(check,data)
+                print(check, data)
                 if check:
                     flag = True
                     Findindex = -1
@@ -243,7 +266,6 @@ def runningWorker():
 
                     DataServer.append(receivedObject)
 
-
     mqttBroker = "localhost"
     client = mqtt.Client("EdgeServer1")
     client.connect(mqttBroker)
@@ -253,7 +275,6 @@ def runningWorker():
     client.on_message = on_message
     time.sleep(30)
     client.loop_start()
-    
 
 
 if __name__ == '__main__':

@@ -601,43 +601,17 @@
         }
       }
       console.log(jsonData);
-      /*
-      let xhr = new XMLHttpRequest();
-      xhr.open("POST", window.location.href + "_set");
-
-      //xhr.setRequestHeader("Accept", "application/json");
-      xhr.setRequestHeader("Content-Type", "application/json");
-
-      xhr.onload = () => console.log(xhr.responseText);
-
-
-      console.log("{{configBefore}}","{{config}}","{{preferred_username}}")
-      console.log(jsonData)
-      xhr.send(JSON.stringify(jsonData));*/
-      /*if (NewConfig_FLAG) {
-        switch ("{{config}}") {
-          case "zone":
-            jsonData.push(Default_Config_zone);
-            break;
-          case "line_intersection_zone":
-            jsonData.push(Default_Config_line_intersection_zone);
-            break;
-          case "remove_area":
-            jsonData.push(Default_Config_remove_area);
-            break;
-        }
-      }*/
       let DataSend = {
         data: jsonData,
         configBefore: "{{configBefore}}",
         config: "{{config}}",
         preferred_username: "{{preferred_username}}",
       };
-      $.post(window.location.href + "_set", {
+      $.post(window.location.href + "_set", { 
         data: JSON.stringify(DataSend),
       }).done(function (data) {
         console.log(data);
-        
+        history.back()
       });
     });
 

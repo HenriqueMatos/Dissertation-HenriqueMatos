@@ -192,8 +192,8 @@ def main():
     # source = '0'  # file/dir/URL/glob, 0 for webcam
     source = './ch01_08000000058000601.mp4'  # file/dir/URL/glob, 0 for webcam
     data = './data/coco128.yaml'  # dataset.yaml path
-    imgsz = (height, width)  # inference size (height, width)
-    # imgsz = (640, 640)  # inference size (height, width)
+    # imgsz = (height, width)  # inference size (height, width)
+    imgsz = (640, 640)  # inference size (height, width)
     conf_thres = 0.25  # confidence threshold
     iou_thres = 0.45  # NMS IOU threshold
     max_det = 1000  # maximum detections per image
@@ -250,8 +250,8 @@ def main():
             cv2.fillPoly(mask, pts=[contours], color=(255, 255, 255))
             # apply the mask
             im0s = cv2.bitwise_or(im0s, mask)
-            
-        ############## REMOVE ALL POINTS FROM POLYGON
+
+        # REMOVE ALL POINTS FROM POLYGON
 
         # Draw Line_intersection_zone
         for item in ConfigDataUpdater.line_intersection_zone:
@@ -345,7 +345,7 @@ def main():
                     bbox = track.to_tlbr()
                     class_name = track.get_class()
                     id = int(track.track_id)
-
+                    # print(id, class_name)
                     ID_with_Box[id] = (int(bbox[0]), int(
                         bbox[1]), int(bbox[2]), int(bbox[3]))
                     ID_with_Class[id] = class_name
@@ -356,16 +356,16 @@ def main():
 
                     cv2.putText(im0, class_name + "-" + str(id),
                                 (int(bbox[0]), int(bbox[1]-10)), 0, 0.6, color, 1)
-
+                print(ID_with_Class,)
                 ConfigDataUpdater.updateData(ID_with_Box, ID_with_Class)
 
                 for id in ID_with_Box.keys():
                     if ID_with_Class[id] == "person":
                         color = colors[id % len(colors)]
-                        for centroid in ConfigDataUpdater.objectsCentroids[id]:
+                        for centroid in ConfigDataUpdater.People_Centroids[id]:
                             cv2.circle(
                                 im0, (centroid[0], centroid[1]), 3, color, -1)
-                            
+
             # Stream results
             if view_img:
                 cv2.imshow(str(p), im0)

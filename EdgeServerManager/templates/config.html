@@ -36,10 +36,7 @@
           <a class="nav-link active" aria-current="page" href="/">Home</a>
         </li>
       </ul>
-      <form class="d-flex">
-        
-        <button class="btn btn-outline-dark" type="submit">Submit</button>
-      </form>
+      <input id="SendDevice" class="btn btn-outline-dark" type="submit" value="Send to Device" />
     </div>
     
   </div>
@@ -58,9 +55,9 @@
       <div class="col"><b>{{item}}</b></div>
       <div class="col">
         <input
+        class="form-control"
           type="text"
-          id="fname"
-          name="fname"
+          id="{{item}}"
           placeholder="{{data.config[item]}}"
         />
       </div>
@@ -96,3 +93,55 @@
   </div>
   {% endblock %} 
 </div>
+<script>
+  $(document).ready(function () {
+  const isEqual = (...objects) => objects.every(obj => JSON.stringify(obj) === JSON.stringify(objects[0]));
+  var data = "{{data.config}}";
+  var parser = new DOMParser();
+  var dom = parser.parseFromString(
+    "<!doctype html><body>" + data,
+    "text/html"
+    );
+    var decodedString = dom.body.textContent;
+    console.log(decodedString);
+  let result = decodedString.split("'").join('"');
+  let result2 = result.replaceAll("None", "null");
+  //console.log(result2);
+  var jsonData = JSON.parse(result2);
+  delete jsonData["input"];
+  var jsonDataOriginal=$.extend( true, {}, jsonData );
+  //console.log(jsonData);
+
+  $(document).on("input", ".form-control", function () {
+    valor = $(this).val();
+    //console.log(this.id, valor);
+    if(!valor){
+      jsonData[this.id]=jsonDataOriginal[this.id]
+    }else{
+      jsonData[this.id]=valor
+    }
+    //console.log(jsonData)
+  });
+
+  $("#SendDevice").on("click", function () {
+    //console.log("{{data}}")
+      let DataSend = {
+        data: jsonData,
+        preferred_username: "{{data.preferred_username}}",
+      };
+      console.log(DataSend)
+      $.post(window.location.href + "_set", {
+        data: JSON.stringify(DataSend),
+      }).done(function (data) {
+        console.log(data);
+        window.location.href = window.location.href.replace("config","");
+      });
+    
+    
+   
+  });
+
+
+})
+
+</script>

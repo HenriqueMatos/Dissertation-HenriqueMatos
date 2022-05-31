@@ -1,10 +1,18 @@
 from collections import OrderedDict
 import json
 import sys
+import numpy as np
 from shapely.geometry import Point
 from shapely.geometry.polygon import Polygon
 
 import intersect
+
+
+def closest_node(node, nodes):
+    nodes = np.asarray(nodes)
+    deltas = nodes - node
+    dist_2 = np.einsum('ij,ij->i', deltas, deltas)
+    return np.argmin(dist_2)
 
 
 class Data_Config_Count():
@@ -48,8 +56,9 @@ class Data_Config_Count():
         self.last_reset = None
 
         ########################
-        self.objects = OrderedDict()
-        self.objectsCentroids = OrderedDict()
+        self.People_Box = OrderedDict()
+        self.People_Centroids = OrderedDict()
+        self.People_Objects = OrderedDict()
         self.disappeared = OrderedDict()
 
         self.maxDisappeared = maxDisappeared
@@ -164,23 +173,49 @@ class Data_Config_Count():
                 cX = int((value[0] + value[2]) / 2.0)
                 cY = int((value[1] + value[3]) / 2.0)
 
-                if self.objectsCentroids.keys().__contains__(id) and self.objects.keys().__contains__(id):
-                    # self.objects[id].append()
-                    # self.objectsCentroids[id]
-                    self.objects[id].append(value)
-                    # print("AQUI", self.objectsCentroids[id])
-                    self.objectsCentroids[id].append((cX, cY))
-                    # print(self.objectsCentroids[id])
+                if self.People_Centroids.keys().__contains__(id) and self.People_Box.keys().__contains__(id):
+                    # self.People_Box[id].append()
+                    # self.People_Centroids[id]
+                    self.People_Box[id].append(value)
+                    # print("AQUI", self.People_Centroids[id])
+                    self.People_Centroids[id].append((cX, cY))
+                    # print(self.People_Centroids[id])
                     self.disappeared[id] = 0
 
-                    if len(self.objectsCentroids[id]) > self.maxCentroids:
-                        self.objectsCentroids[id].pop(0)
-                        self.objects[id].pop(0)
-
+                    if len(self.People_Centroids[id]) > self.maxCentroids:
+                        self.People_Centroids[id].pop(0)
+                        self.People_Box[id].pop(0)
                 else:
-                    self.objects[id] = [value]
-                    self.objectsCentroids[id] = [(cX, cY)]
+                    self.People_Box[id] = [value]
+                    self.People_Centroids[id] = [(cX, cY)]
                     self.disappeared[id] = 0
+
+        PeopleList = OrderedDict()
+        for id, class_name in ID_with_Class.items():
+            if class_name == "person":
+                # Add last centroid
+                PeopleList[id] = self.People_Centroids[id][-1]
+
+        # Add Object to Corresponding Person
+        for id, class_name in ID_with_Class.items():
+            if class_name != "person":
+                # Find closest person to associate
+                cX = int((ID_with_Box[id][0] + ID_with_Box[id][2]) / 2.0)
+                cY = int((ID_with_Box[id][1] + ID_with_Box[id][3]) / 2.0)
+
+                node = closest_node((cX, cY), list(PeopleList.values()))
+
+                if self.People_Objects.keys().__contains__(list(
+                        PeopleList.keys())[node]):
+                    if not self.People_Objects[list(
+                            PeopleList.keys())[node]].__contains__(class_name):
+                        self.People_Objects[list(
+                            PeopleList.keys())[node]].append(class_name)
+                else:
+                    self.People_Objects[list(
+                        PeopleList.keys())[node]] = [class_name]
+
+        # Remove undetected People
         IDsToDelete = []
         for key in self.disappeared.keys():
             if self.disappeared[key] > self.maxDisappeared:
@@ -189,15 +224,11 @@ class Data_Config_Count():
                 self.disappeared[key] += 1
         for item in IDsToDelete:
             del self.disappeared[item]
-            del self.objects[item]
-            del self.objectsCentroids[item]
+            del self.People_Box[item]
+            del self.People_Centroids[item]
+            if self.People_Objects.keys().__contains__(item):
+                del self.People_Objects[item]
 
-        # print(self.objectsCentroids.values())
-        ########### AQUI ###########
-        # IDs_list = list(self.objectsCentroids.keys())
-        # Values_list = list(self.objectsCentroids.values())
-
-        # print(list(ID_with_Box.keys()))
         self.num_people_total = len(ID_with_Box.keys())
 
         # Restart zone count data
@@ -212,7 +243,7 @@ class Data_Config_Count():
                 # ZONE
                 for index, item in enumerate(self.zone):
                     point = Point(
-                        self.objectsCentroids[id][-1][0], self.objectsCentroids[id][-1][1])
+                        self.People_Centroids[id][-1][0], self.People_Centroids[id][-1][1])
                     polygon = Polygon(item["points"])
                     if polygon.contains(point):
                         self.count_inside_zone[index] += 1
@@ -222,13 +253,13 @@ class Data_Config_Count():
                 # LINE_INTERSECTION
                 for item in self.line_intersection_zone:
 
-                    if len(self.objectsCentroids[id]) >= 2:
-                        # print(self.objectsCentroids[id][-2],
-                        #       self.objectsCentroids[id][-1])
+                    if len(self.People_Centroids[id]) >= 2:
+                        # print(self.People_Centroids[id][-2],
+                        #       self.People_Centroids[id][-1])
                         # print(tuple(item["start_point"]), tuple(item["end_point"]))
-                        
+
                         DoIntersect, orientacao = intersect.doIntersect(
-                            self.objectsCentroids[id][-2], self.objectsCentroids[id][-1], tuple(item["start_point"]), tuple(item["end_point"]))
+                            self.People_Centroids[id][-2], self.People_Centroids[id][-1], tuple(item["start_point"]), tuple(item["end_point"]))
                         # print("AQUI", DoIntersect, orientacao)
                         if DoIntersect:
                             print("Intersect\n\n\n\n")
