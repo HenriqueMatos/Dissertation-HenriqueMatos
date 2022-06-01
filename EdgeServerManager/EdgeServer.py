@@ -179,8 +179,12 @@ def Setconfig():
                     DataServer[index]["config"][item] = new_data[item]
                 # SAVE IN DATABASE (REDIS)
                 # SEND NEW CONFIG TO CAMERA
+                sendData = {}
+                sendData["type"] = "update"
+                sendData["config"] = DataServer[index]["config"]
+                client.publish("edge_config/"+preferred_username,json.dumps(sendData))
 
-    return "OK"
+        return "OK"
 
 
 def web():
@@ -267,7 +271,7 @@ def runningWorker():
                     DataServer.append(receivedObject)
 
     mqttBroker = "localhost"
-    client = mqtt.Client("EdgeServer1")
+    
     client.connect(mqttBroker)
 
     client.loop_start()
@@ -276,9 +280,9 @@ def runningWorker():
     time.sleep(30)
     client.loop_start()
 
-
+client = mqtt.Client("EdgeServer1")
 if __name__ == '__main__':
-
+    
     threading.Thread(target=web, daemon=False).start()
     threading.Thread(target=runningWorker, daemon=False).start()
     while True:

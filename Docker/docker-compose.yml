@@ -20,6 +20,13 @@ services:
   #     # - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
   #     - ./RabbitMQFiles/rabbitmq.conf:/etc/rabbitmq/conf.d/10-default-guest-user.conf
   #     - ./RabbitMQFiles/enabled_plugins.txt:/etc/rabbitmq/enabled_plugins
+  redis:
+    image: redis:latest
+    ports:
+      - 6379:6379
+    volumes:
+      - ./redis_config/redis.conf:/redis.conf
+    command: ["redis-server", "/redis.conf"]
   mosquitto:
     image: eclipse-mosquitto
     restart: always
@@ -30,10 +37,3 @@ services:
     ports:
       - 1883:1883
       - 9001:9001 
-  redis:
-    image: redis:latest
-    ports:
-      - 6379:6379
-    volumes:
-      - ./redis_config/redis.conf:/redis.conf
-    command: ["redis-server", "/redis.conf"]

@@ -100,6 +100,17 @@ def get_box_dimensions(outputs, height, width, threshold):
 def on_message(client, userdata, message):
     print("Received message: ", str(message.payload.decode("utf-8")),
           " From: ", message.topic, " ")
+    print("\n\n\n\n\n")
+    try:
+        JsonObject = json.loads(str(message.payload.decode("utf-8")))
+        print(JsonObject["type"])
+        if JsonObject["type"] == "update":
+            # Update config and file
+            
+            if JsonObject.__contains__("config"):
+                ConfigDataUpdater.register(JsonObject["config"])
+    except print(0):
+        pass
 
 
 def ThreadDataTransmitter(ConfigDataUpdater, frame):
@@ -141,7 +152,8 @@ def ThreadDataTransmitter(ConfigDataUpdater, frame):
 
     client.publish("camera_config", json.dumps(sendData))
 
-    client.subscribe("edge_config/"+str(ConfigDataUpdater.camera_id))
+    client.subscribe("edge_config/trackingcamera1")
+    # client.subscribe("edge_config/"+str(ConfigDataUpdater.camera_id))
     client.on_message = on_message
     client.loop_start()
 
@@ -166,6 +178,7 @@ def main():
     with open('config/config.json', 'r') as f:
         data = json.load(f)
 
+    global ConfigDataUpdater
     ConfigDataUpdater = Data_Config_Count.Data_Config_Count()
     ConfigDataUpdater.register(data)
 
