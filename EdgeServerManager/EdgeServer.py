@@ -1,6 +1,7 @@
 import codecs
 import json
 import re
+from datetime import datetime
 import paho.mqtt.client as mqtt
 from traceback import print_tb
 from flask import Flask, request, render_template, redirect, flash, url_for
@@ -106,6 +107,18 @@ KEYS_zone = {
 KEYS_remove_area = [([], "listoflist")]
 
 
+@app.route('/refresh_all', methods=['GET'])
+def refresh_all():
+    sendData = {
+        "type": "refresh"
+    }
+    for index in range(len(DataServer)):
+        DataServer[index]["status"] = False
+        client.publish("edge_config/"+DataServer[index]["preferred_username"],
+                       json.dumps(sendData))
+    return "OK"
+
+
 @app.route('/config_points', methods=['POST'])
 def configPoints():
     keys = None
@@ -182,7 +195,8 @@ def Setconfig():
                 sendData = {}
                 sendData["type"] = "update"
                 sendData["config"] = DataServer[index]["config"]
-                client.publish("edge_config/"+preferred_username,json.dumps(sendData))
+                client.publish("edge_config/"+preferred_username,
+                               json.dumps(sendData))
 
         return "OK"
 
@@ -267,11 +281,16 @@ def runningWorker():
                             # print(receivedObject[key])
                             receivedObject[key] = json.loads(
                                 receivedObject[key])
-
+                    now = datetime.now()
+                    receivedObject["refresh_timestamp"] = datetime.timestamp(
+                        now)
+                    receivedObject["refresh_date"] = now.strftime(
+                        "%d/%m/%Y %H:%M:%S")
+                    receivedObject["status"] = True
                     DataServer.append(receivedObject)
 
     mqttBroker = "localhost"
-    
+
     client.connect(mqttBroker)
 
     client.loop_start()
@@ -280,9 +299,10 @@ def runningWorker():
     time.sleep(30)
     client.loop_start()
 
+
 client = mqtt.Client("EdgeServer1")
 if __name__ == '__main__':
-    
+
     threading.Thread(target=web, daemon=False).start()
     threading.Thread(target=runningWorker, daemon=False).start()
     while True:

@@ -39,6 +39,25 @@ import torch
 import torch.backends.cudnn as cudnn
 
 
+global KeycloakUsername
+global KeycloakPassword
+KeycloakUsername = "trackingcamera1"
+KeycloakPassword = "trackingcamera1"
+
+
+url = 'http://localhost:8080/auth/realms/AppAuthenticator/protocol/openid-connect/token'
+myobj = {"client_id": "EdgeServer1",
+         "grant_type": "password",
+         "client_secret": "deCGEfmNbxFkC5z32UnwxtyQThTx4Evy",
+         "scope": "openid",
+         "username": KeycloakUsername,
+         "password": KeycloakPassword}
+
+x = requests.post(url, data=myobj)
+# json.load(x.text)
+response = json.loads(x.text)
+
+
 class NumpyEncoder(json.JSONEncoder):
     def default(self, obj):
         if isinstance(obj, np.ndarray):
@@ -106,9 +125,25 @@ def on_message(client, userdata, message):
         print(JsonObject["type"])
         if JsonObject["type"] == "update":
             # Update config and file
-            
+
             if JsonObject.__contains__("config"):
                 ConfigDataUpdater.register(JsonObject["config"])
+        if JsonObject["type"] == "refresh":
+            _, frame = cap.read()
+
+            cv2.imwrite("frame.jpg", frame)
+            with open("frame.jpg", "rb") as image_file:
+                encoded_string = base64.b64encode(
+                    image_file.read()).decode('utf-8')
+            sendData = {}
+            sendData["frame"] = encoded_string
+            sendData["type"] = "login"
+            sendData["config"] = ConfigDataUpdater.JsonObjectString
+            sendData["Authenticate"] = response["access_token"]
+            sendData["camera_id"] = ConfigDataUpdater.camera_id
+
+            client.publish("camera_config", json.dumps(sendData))
+
     except print(0):
         pass
 
@@ -127,17 +162,7 @@ def ThreadDataTransmitter(ConfigDataUpdater, frame):
     # channel.queue_declare(queue='hello')
 
     # request
-    url = 'http://localhost:8080/auth/realms/AppAuthenticator/protocol/openid-connect/token'
-    myobj = {"client_id": "EdgeServer1",
-             "grant_type": "password",
-             "client_secret": "deCGEfmNbxFkC5z32UnwxtyQThTx4Evy",
-             "scope": "openid",
-             "username": "trackingcamera1",
-             "password": "trackingcamera1"}
 
-    x = requests.post(url, data=myobj)
-    # json.load(x.text)
-    response = json.loads(x.text)
     print(response)
     sendData = {}
     sendData["frame"] = frame
@@ -152,7 +177,7 @@ def ThreadDataTransmitter(ConfigDataUpdater, frame):
 
     client.publish("camera_config", json.dumps(sendData))
 
-    client.subscribe("edge_config/trackingcamera1")
+    client.subscribe("edge_config/"+KeycloakUsername)
     # client.subscribe("edge_config/"+str(ConfigDataUpdater.camera_id))
     client.on_message = on_message
     client.loop_start()
@@ -181,7 +206,7 @@ def main():
     global ConfigDataUpdater
     ConfigDataUpdater = Data_Config_Count.Data_Config_Count()
     ConfigDataUpdater.register(data)
-
+    global cap
     cap = cv2.VideoCapture("./ch01_08000000058000601.mp4")
     # cap = cv2.VideoCapture('/dev/video0')
     # cap = cv2.VideoCapture("./output.mp4")

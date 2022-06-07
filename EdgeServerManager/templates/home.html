@@ -15,16 +15,6 @@
   rel="stylesheet"
   href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css"
 />
-<script>
-  setInterval(updateValues, 1000);
-
-  function updateValues() {
-    $.getJSON(window.location.href + "updateDataServer", function (data) {
-      console.log(data);
-      DATA = data;
-    });
-  }
-</script>
 
 {% block content %}
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
@@ -41,22 +31,28 @@
     >
       <span class="navbar-toggler-icon"></span>
     </button>
-    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-      <li class="nav-item">
-        <a class="nav-link active" >Last Refresh:</a>
-      </li>
-    </ul>
     <input
       id="Refresh"
       class="btn btn-outline-dark"
       type="submit"
-      value="Refresh"
+      value="Refresh All"
     />
   </div>
 </nav>
 <br />
-<div style="text-align: center">
-  <div class="container">
+<div class="row justify-content-center">
+  <table class="table table-responsive" style="width: 80%">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Status</th>
+        <th scope="col">Last Refresh</th>
+        <th scope="col">Settings</th>
+      </tr>
+    </thead>
+    <tbody id="container"></tbody>
+  </table>
+  <!--<div id="container" class="container">
     {% for data in g.dataserver %}
 
     <div class="row">
@@ -77,6 +73,71 @@
     </div>
 
     {% endfor %}
-  </div>
+  </div>-->
 </div>
 {% endblock %}
+
+<script>
+  updateValues();
+  setInterval(updateValues, 1000);
+  var lastUpdateValue = "";
+  function updateValues() {
+    $.getJSON(window.location.href + "updateDataServer", function (data) {
+      console.log(data);
+      /*<tr>
+        <th scope="row">1</th>
+        <td>Mark</td>
+        <td>Otto</td>
+        <td>@mdo</td>
+      </tr>
+      <tr>
+        <th scope="row">2</th>
+        <td>Jacob</td>
+        <td>Thornton</td>
+        <td>@fat</td>
+      </tr>
+      */
+      //var htmlInsert = `<div class="row">`;
+      var htmlInsert = "";
+      for (var i = 0; i < data.DataServer.length; i++) {
+        console.log(data.DataServer[i]);
+
+        htmlInsert +=
+          `<tr>
+          <th >${data.DataServer[i].preferred_username}</th>` +
+          (data.DataServer[i].status == true
+            ? `<td  ><i class="bi bi-toggle-on text-success"style="font-size: 170%;" ></i></td>`
+            : `<td  ><i class="bi bi-toggle-off text-danger"style="font-size: 170%;" ></i></td>`) +
+          ` <td>${data.DataServer[i].refresh_date}</td>
+          <td><form action="config" method="POST">
+            <input
+              hidden
+              name="preferred_username"
+              value="${data.DataServer[i].preferred_username}"
+            />
+            <input
+              class="btn btn-outline-dark"
+              type="submit"
+              value="Go to"
+            />
+          </form></td>
+        </tr>`;
+      }
+
+      //htmlInsert += `</div>`;
+      if (lastUpdateValue != htmlInsert) {
+        var container = (document.getElementById("container").innerHTML =
+          htmlInsert);
+        lastUpdateValue = htmlInsert;
+      }
+    });
+
+    $("#Refresh").on("click", function () {
+      //console.log("{{data}}")
+      console.log(window.location.href + "refresh_all")
+      $.get(window.location.href + "refresh_all").done(function (data) {
+        console.log(data);
+      });
+    });
+  }
+</script>
