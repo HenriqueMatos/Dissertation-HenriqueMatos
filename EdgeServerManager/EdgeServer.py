@@ -25,7 +25,7 @@ from forms import LoginForm
 from keycloak_utils import get_oidc2, get_oidc, get_token, check_token, verifyToken
 
 
-SERVER_URL = "http://localhost:8080/auth/"
+SERVER_URL = "http://192.168.1.39:8080/auth/"
 REALM_NAME = "AppAuthenticator"
 CLIENT_ID = "EdgeServer1"
 CLIENT_SECRET = "deCGEfmNbxFkC5z32UnwxtyQThTx4Evy"
@@ -35,6 +35,7 @@ r = redis.Redis(host="localhost", port="6379")
 global DataServer
 
 if r.exists("data"):
+    # DataServer = r.hget("data")
     DataServer = json.loads(r.get("data"))
 else:
     DataServer = []
@@ -77,7 +78,6 @@ def configObject():
                 configData = x["config"]
                 data["config"] = configData
                 data["sensorid"] = x["camera_id"]
-                imageData = x["frame"]
                 print(x["config"])
                 for item in configData:
                     if type(configData[item]) is dict:
@@ -88,7 +88,7 @@ def configObject():
                         config[item] = None
                 break
 # configBefore=config_name_before, config=config_name
-    return render_template('config.html', config=config, data=data, image=base64.b64encode(base64.decodebytes(imageData.encode('utf-8'))).decode('utf-8'))
+    return render_template('config.html', config=config, data=data)
 
 
 KEYS_line_intersection_zone = {
@@ -116,6 +116,7 @@ def refresh_all():
         DataServer[index]["status"] = False
         client.publish("edge_config/"+DataServer[index]["preferred_username"],
                        json.dumps(sendData))
+    r.set("data", json.dumps(DataServer))
     return "OK"
 
 
@@ -255,7 +256,7 @@ def runningWorker():
 
     def on_message(client, userdata, message):
         # print("Received message: ", str(message.payload.decode("utf-8")),
-        #   " From: ", message.topic, " ")
+        #       " From: ", message.topic, " ")
         receivedObject = json.loads(message.payload)
         if receivedObject.__contains__("type"):
             if receivedObject["type"] == "login":
@@ -288,6 +289,7 @@ def runningWorker():
                         "%d/%m/%Y %H:%M:%S")
                     receivedObject["status"] = True
                     DataServer.append(receivedObject)
+                r.set("data", json.dumps(DataServer))
 
     mqttBroker = "localhost"
 

@@ -1,0 +1,135 @@
+{
+    "ip":"192.168.1.39",
+    "camera_id": 2,
+    "camera_name": "Camera2",
+    "camera_zone": "Escola de Engenharia",
+    "timestamp_config_creation": "07/06/2022 16:33:22",
+    "restart_count": "timestamp",
+    "object_detection_config": {
+        "threshold": 0.5,
+        "path_model_weights": "yolo/yolov3.weights",
+        "path_model_cfg": "yolo/yolov3.cfg",
+        "path_yolo_coco_names": "yolo/coco.names",
+        "object_data_tracking": [
+            "person",
+            "backpack",
+            "handbag",
+            "suitcase"
+        ]
+    },
+    "packet_default_output": [
+        "camera_id",
+        "timestamp",
+        "camera_zone"
+    ],
+    "packet_output": [
+        {
+            "num_people": null
+        }
+    ],
+    "publish_mqtt": "name",
+    "subscribe_mqtt": [
+        "name"
+    ],
+    "input": {
+        "num_people": null,
+        "zone": [
+            {
+                "name_inside_zone": "pátio escola de engenharia",
+                "name_outside_zone": "pátio escola de engenharia",
+                "points": [
+                    [
+                        30,
+                        344
+                    ],
+                    [
+                        33,
+                        40
+                    ],
+                    [
+                        263,
+                        19
+                    ],
+                    [
+                        430,
+                        20
+                    ],
+                    [
+                        529,
+                        40
+                    ],
+                    [
+                        553,
+                        124
+                    ],
+                    [
+                        537,
+                        293
+                    ],
+                    [
+                        564,
+                        343
+                    ]
+                ]
+            }
+        ],
+        "line_intersection_zone": [
+            {
+                "name": "Teste 123",
+                "start_point": [
+                    640,
+                    480
+                ],
+                "end_point": [
+                    640,
+                    0
+                ],
+                "zone_direction_1or2": 1,
+                "name_zone_before": "outside",
+                "name_zone_after": "inside"
+            },
+            {
+                "name": "interior salas",
+                "start_point": [
+                    177,
+                    553
+                ],
+                "end_point": [
+                    534,
+                    425
+                ],
+                "zone_direction_1or2": 1,
+                "name_zone_before": "outside",
+                "name_zone_after": "inside"
+            }
+        ],
+        "remove_area": [
+            [
+                [
+                    1278,
+                    0
+                ],
+                [
+                    1278,
+                    720
+                ],
+                [
+                    1027,
+                    720
+                ],
+                [
+                    700,
+                    362
+                ],
+                [
+                    980,
+                    258
+                ],
+                [
+                    704,
+                    0
+                ]
+            ]
+        ]
+    }
+}

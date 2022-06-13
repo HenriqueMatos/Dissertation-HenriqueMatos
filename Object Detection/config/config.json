@@ -1,8 +1,9 @@
 {
+    "ip":"192.168.1.39",
     "camera_id": 1,
     "camera_name": "Camera1",
     "camera_zone": "Escola de Engenharia",
-    "timestamp_config_creation": "timestamp",
+    "timestamp_config_creation": "07/06/2022 16:33:22",
     "restart_count": "timestamp",
     "object_detection_config": {
         "threshold": 0.5,
@@ -26,8 +27,8 @@
             "num_people": null
         }
     ],
-    "input_location_rabbit_queue": "name",
-    "output_location_rabbit_queue": [
+    "publish_mqtt": "name",
+    "subscribe_mqtt": [
         "name"
     ],
     "input": {

@@ -1,0 +1,33 @@
+################### AUTHENTICATION ####################### for all sensors
+################### KEYCLOAK ####################### 
+Camera1  --> Authentication?       --> SensorServerManager
+
+
+################### GET ALL SENSORS #######################
+All Sensors  <-- Request connected sensors <-- SensorServerManager
+Sensor1  --> Send current config (with image?) --> SensorServerManager
+
+
+################### GET CONFIG #######################
+Camera1  <-- Request current config <-- SensorServerManager
+Camera1  --> Send current config (with image?) --> SensorServerManager
+
+
+################### UPDATE CONFIG #######################
+Camera1  <-- Send new config <-- SensorServerManager
+Camera1  --> Confirm config --> SensorServerManager
+
+
+################### START? #######################
+################### STOP? #######################
+
+
+################### SEND DATA #######################
+Sensors  --> Send Data --> RabbitMQ (Queue, in ConfigFile)
+.
+.     (tempo em tempo)
+.
+Sensors  --> Send Data --> RabbitMQ (Queue, in ConfigFile)
+
+
+

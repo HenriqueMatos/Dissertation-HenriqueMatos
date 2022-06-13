@@ -1,0 +1,19 @@
+[
+    {
+        "people": [
+            {
+                "id_camera": 1,
+                "id_total": "1_2",
+                "zone": "pátio escola de engenharia",
+                "location": "GPS ou localizaçao relativa"
+            },
+            {
+                "id_camera": 2,
+                "id_total": "1_4",
+                "zone": "fora pátio escola de engenharia",
+                "location": "GPS ou localizaçao relativa"
+            }
+        ],
+        "num_line_intersction": "20"
+    }
+]

@@ -45,17 +45,17 @@ KeycloakUsername = "trackingcamera1"
 KeycloakPassword = "trackingcamera1"
 
 
-url = 'http://localhost:8080/auth/realms/AppAuthenticator/protocol/openid-connect/token'
-myobj = {"client_id": "EdgeServer1",
-         "grant_type": "password",
-         "client_secret": "deCGEfmNbxFkC5z32UnwxtyQThTx4Evy",
-         "scope": "openid",
-         "username": KeycloakUsername,
-         "password": KeycloakPassword}
+# url = 'http://'+ConfigDataUpdater.ip+':8080/auth/realms/AppAuthenticator/protocol/openid-connect/token'
+# myobj = {"client_id": "EdgeServer1",
+#          "grant_type": "password",
+#          "client_secret": "deCGEfmNbxFkC5z32UnwxtyQThTx4Evy",
+#          "scope": "openid",
+#          "username": KeycloakUsername,
+#          "password": KeycloakPassword}
 
-x = requests.post(url, data=myobj)
-# json.load(x.text)
-response = json.loads(x.text)
+# x = requests.post(url, data=myobj)
+# # json.load(x.text)
+# response = json.loads(x.text)
 
 
 class NumpyEncoder(json.JSONEncoder):
@@ -170,8 +170,8 @@ def ThreadDataTransmitter(ConfigDataUpdater, frame):
     sendData["config"] = ConfigDataUpdater.JsonObjectString
     sendData["Authenticate"] = response["access_token"]
     sendData["camera_id"] = ConfigDataUpdater.camera_id
-
-    mqttBroker = "localhost"
+    mqttBroker = ConfigDataUpdater.ip
+    # mqttBroker = "localhost"
     client = mqtt.Client(str(ConfigDataUpdater.camera_id))
     client.connect(mqttBroker)
 
@@ -188,7 +188,7 @@ def ThreadDataTransmitter(ConfigDataUpdater, frame):
     # connection.close()
 
 
-def main():
+def main(view_img=False):
 
     max_cosine_distance = 0.4
     nn_budget = None
@@ -206,6 +206,21 @@ def main():
     global ConfigDataUpdater
     ConfigDataUpdater = Data_Config_Count.Data_Config_Count()
     ConfigDataUpdater.register(data)
+
+    url = 'http://'+ConfigDataUpdater.ip + \
+        ':8080/auth/realms/AppAuthenticator/protocol/openid-connect/token'
+    myobj = {"client_id": "EdgeServer1",
+             "grant_type": "password",
+             "client_secret": "deCGEfmNbxFkC5z32UnwxtyQThTx4Evy",
+             "scope": "openid",
+             "username": KeycloakUsername,
+             "password": KeycloakPassword}
+
+    x = requests.post(url, data=myobj)
+    # json.load(x.text)
+    global response
+    response = json.loads(x.text)
+
     global cap
     cap = cv2.VideoCapture("./ch01_08000000058000601.mp4")
     # cap = cv2.VideoCapture('/dev/video0')
@@ -236,7 +251,7 @@ def main():
     iou_thres = 0.45  # NMS IOU threshold
     max_det = 1000  # maximum detections per image
     device = ''  # cuda device, i.e. 0 or 0,1,2,3 or cpu
-    view_img = True  # show
+    # view_img = True  # show
     # classes = 0  # filter by class: --class 0, or --class 0 2 3
     classes = None  # filter by class: --class 0, or --class 0 2 3
     agnostic_nms = True  # class-agnostic NMS
@@ -421,8 +436,17 @@ def main():
         strip_optimizer(weights)  # update model (to fix SourceChangeWarning)
 
 
+def parse_opt():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--view-img', action='store_true', help='show results')
+    opt = parser.parse_args()
+    print_args(vars(opt))
+    return opt
+
+
 if __name__ == '__main__':
-    main()
+    opt = parse_opt()
+    main(**vars(opt))
 
     # with open('config/config.json', 'r') as f:
     #     data = json.load(f)
