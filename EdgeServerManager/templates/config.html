@@ -50,7 +50,7 @@
       <div class="col"><b>SensorID: </b> {{data.sensorid}}</div>
     </div>
     <br>
-    {% for item in config %} {% if config[item]==None %}
+    {% for item in config %} {% if config[item]=="editable" %}
     <div class="row">
       <div class="col"><b>{{item}}</b></div>
       <div class="col">
@@ -63,14 +63,14 @@
       </div>
     </div>
     </br>
-    {% elif config[item]=="list" %}
+    {% elif config[item]=="noneditable" %}
     <div class="row">
       <div class="col"><b>{{item}}</b></div>
       <div class="col">{{data.config[item]}}</div>
     </div>
     <br>
-      {% else %}
-      {% for item2 in config[item] %} {% if item2=="zone" or
+    {% elif config[item]=="button" %}
+      {% for item2 in data.config[item] %} {% if item2=="zone" or
       item2=="remove_area" or item2=="line_intersection_zone"%}
       <div class="row">
         <div class="col">

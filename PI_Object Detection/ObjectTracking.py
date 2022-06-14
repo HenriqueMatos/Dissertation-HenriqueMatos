@@ -224,7 +224,7 @@ def main(view_img=False):
     global cap
     # cap = cv2.VideoCapture("./ch01_08000000058000601.mp4")
     # cap = cv2.VideoCapture('/dev/video0')
-    cap = cv2.VideoCapture("./output.mp4")
+    cap = cv2.VideoCapture("./ch01_08000000033001401.mp4")
     _, frame = cap.read()
     # frame=cv2.cvtColor(frame,cv2.COLOR_BGR2RGB)
     # frame = frame.astype('float64')
@@ -243,7 +243,7 @@ def main(view_img=False):
     # print(ConfigDataUpdater.line_intesection_zone)
     weights = './yolov5s.pt'  # model.pt path(s)
     # source = '0'  # file/dir/URL/glob, 0 for webcam
-    source = './ch01_08000000058000601.mp4'  # file/dir/URL/glob, 0 for webcam
+    source = './ch01_08000000033001401.mp4'  # file/dir/URL/glob, 0 for webcam
     data = './data/coco128.yaml'  # dataset.yaml path
     # imgsz = (height, width)  # inference size (height, width)
     imgsz = (640, 640)  # inference size (height, width)

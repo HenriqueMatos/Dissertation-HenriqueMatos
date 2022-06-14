@@ -1,7 +1,7 @@
 {
-    "ip": "192.168.1.39",
-    "camera_id": 1,
-    "camera_name": "Camera1",
+    "ip":"192.168.1.39",
+    "camera_id": 2,
+    "camera_name": "Camera2",
     "camera_zone": "Escola de Engenharia",
     "timestamp_config_creation": "07/06/2022 16:33:22",
     "restart_count": "timestamp",
@@ -32,10 +32,11 @@
         "name"
     ],
     "input": {
+        "num_people": null,
         "zone": [
             {
-                "name_inside_zone": "p\u00e1tio escola de engenharia",
-                "name_outside_zone": "p\u00e1tio escola de engenharia",
+                "name_inside_zone": "pátio escola de engenharia",
+                "name_outside_zone": "pátio escola de engenharia",
                 "points": [
                     [
                         30,
@@ -74,6 +75,20 @@
         ],
         "line_intersection_zone": [
             {
+                "name": "Teste 123",
+                "start_point": [
+                    640,
+                    480
+                ],
+                "end_point": [
+                    640,
+                    0
+                ],
+                "zone_direction_1or2": 1,
+                "name_zone_before": "outside",
+                "name_zone_after": "inside"
+            },
+            {
                 "name": "interior salas",
                 "start_point": [
                     177,
@@ -86,20 +101,6 @@
                 "zone_direction_1or2": 1,
                 "name_zone_before": "outside",
                 "name_zone_after": "inside"
-            },
-            {
-                "name": "123",
-                "start_point": [
-                    31,
-                    330
-                ],
-                "end_point": [
-                    111,
-                    572
-                ],
-                "zone_direction_1or2": "1",
-                "name_zone_before": "antes",
-                "name_zone_after": "depois"
             }
         ],
         "remove_area": [

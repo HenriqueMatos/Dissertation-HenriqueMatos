@@ -39,12 +39,6 @@ import torch
 import torch.backends.cudnn as cudnn
 
 
-global KeycloakUsername
-global KeycloakPassword
-KeycloakUsername = "trackingcamera1"
-KeycloakPassword = "trackingcamera1"
-
-
 # url = 'http://'+ConfigDataUpdater.ip+':8080/auth/realms/AppAuthenticator/protocol/openid-connect/token'
 # myobj = {"client_id": "EdgeServer1",
 #          "grant_type": "password",
@@ -127,7 +121,13 @@ def on_message(client, userdata, message):
             # Update config and file
 
             if JsonObject.__contains__("config"):
-                ConfigDataUpdater.register(JsonObject["config"])
+                try:
+                    ConfigDataUpdater.register(JsonObject["config"])
+                    file1 = open(config_file, "w")
+                    file1.write(json.dumps(JsonObject["config"]))
+                    file1.close()
+                except print(0):
+                    pass
         if JsonObject["type"] == "refresh":
             _, frame = cap.read()
 
@@ -188,25 +188,21 @@ def ThreadDataTransmitter(ConfigDataUpdater, frame):
     # connection.close()
 
 
-def main(view_img=False):
+def main(view_img=False, config='./config/config.json', username='', password='',source='0'):
+    global config_file
+    global KeycloakUsername
+    global KeycloakPassword
 
-    max_cosine_distance = 0.4
-    nn_budget = None
-    metric = nn_matching.NearestNeighborDistanceMetric(
-        "cosine", max_cosine_distance, nn_budget)
+    config_file = config
+    KeycloakUsername = username
+    KeycloakPassword = password
 
-    model_filename = 'model_data/mars-small128.pb'
-    encoder = gdet.create_box_encoder(model_filename, batch_size=1)
-    # initialize tracker
-    tracker = Tracker(metric)
-
-    with open('config/config.json', 'r') as f:
+    with open(config_file, 'r') as f:
         data = json.load(f)
 
     global ConfigDataUpdater
     ConfigDataUpdater = Data_Config_Count.Data_Config_Count()
     ConfigDataUpdater.register(data)
-
     url = 'http://'+ConfigDataUpdater.ip + \
         ':8080/auth/realms/AppAuthenticator/protocol/openid-connect/token'
     myobj = {"client_id": "EdgeServer1",
@@ -220,9 +216,29 @@ def main(view_img=False):
     # json.load(x.text)
     global response
     response = json.loads(x.text)
+    # print(x.status_code)
+    if x.status_code != 200:
+        sys.exit("Bad credentials")
+
+    # KeycloakUsername = "trackingcamera1"
+    # KeycloakPassword = "trackingcamera1"
+
+    max_cosine_distance = 0.4
+    nn_budget = None
+    metric = nn_matching.NearestNeighborDistanceMetric(
+        "cosine", max_cosine_distance, nn_budget)
+
+    model_filename = 'model_data/mars-small128.pb'
+    encoder = gdet.create_box_encoder(model_filename, batch_size=1)
+    # initialize tracker
+    tracker = Tracker(metric)
+
+    
+
+    
 
     global cap
-    cap = cv2.VideoCapture("./ch01_08000000058000601.mp4")
+    cap = cv2.VideoCapture(source)
     # cap = cv2.VideoCapture('/dev/video0')
     # cap = cv2.VideoCapture("./output.mp4")
     _, frame = cap.read()
@@ -243,7 +259,7 @@ def main(view_img=False):
     # print(ConfigDataUpdater.line_intesection_zone)
     weights = './yolov5s.pt'  # model.pt path(s)
     # source = '0'  # file/dir/URL/glob, 0 for webcam
-    source = './ch01_08000000058000601.mp4'  # file/dir/URL/glob, 0 for webcam
+    # source = './ch01_08000000058000601.mp4'  # file/dir/URL/glob, 0 for webcam
     data = './data/coco128.yaml'  # dataset.yaml path
     # imgsz = (height, width)  # inference size (height, width)
     imgsz = (640, 640)  # inference size (height, width)
@@ -262,7 +278,7 @@ def main(view_img=False):
     half = False  # use FP16 half-precision inference
     dnn = True  # use OpenCV DNN for ONNX inference
 
-    source = str(source)
+    # source = str(source)
 
     is_file = Path(source).suffix[1:] in (IMG_FORMATS + VID_FORMATS)
     is_url = source.lower().startswith(('rtsp://', 'rtmp://', 'http://', 'https://'))
@@ -439,6 +455,13 @@ def main(view_img=False):
 def parse_opt():
     parser = argparse.ArgumentParser()
     parser.add_argument('--view-img', action='store_true', help='show results')
+    parser.add_argument('--config', type=str, default='./config/config.json',
+                        help='directory to config json file')
+    parser.add_argument('--username', type=str, default='',
+                        help='Keycloack Username')
+    parser.add_argument('--password', type=str, default='',
+                        help='Keycloack Password')
+    parser.add_argument('--source', type=str, default='0', help='file/dir/URL/glob, 0 for webcam')
     opt = parser.parse_args()
     print_args(vars(opt))
     return opt

@@ -177,7 +177,8 @@ class Data_Config_Count():
         DataPacket["line_intersection"] = []
 
         PersonPacket = {}
-
+        print(ID_with_Box)
+        
         for id, value in ID_with_Box.items():
 
             if ID_with_Class[id] == "person":
@@ -213,29 +214,31 @@ class Data_Config_Count():
                 # Add last centroid
                 PeopleList[id] = self.People_Centroids[id][-1]
 
-        # Add Object to Corresponding Person
-        for id, class_name in ID_with_Class.items():
-            if class_name != "person":
-                # Find closest person to associate
-                cX = int((ID_with_Box[id][0] + ID_with_Box[id][2]) / 2.0)
-                cY = int((ID_with_Box[id][1] + ID_with_Box[id][3]) / 2.0)
+        if len(PeopleList.keys())>0:
+            # Add Object to Corresponding Person
+            for id, class_name in ID_with_Class.items():
+                if class_name != "person":
+                    # Find closest person to associate
+                    print("CONAAAAAAAAAAAAAAAAAAAA\n\n")
+                    print(ID_with_Box[id], list(PeopleList.values()))
+                    cX = int((ID_with_Box[id][0] + ID_with_Box[id][2]) / 2.0)
+                    cY = int((ID_with_Box[id][1] + ID_with_Box[id][3]) / 2.0)
+                    node = closest_node((cX, cY), list(PeopleList.values()))
 
-                node = closest_node((cX, cY), list(PeopleList.values()))
-
-                if self.People_Objects.keys().__contains__(list(
-                        PeopleList.keys())[node]):
-                    if not self.People_Objects[list(
-                            PeopleList.keys())[node]].__contains__(class_name):
+                    if self.People_Objects.keys().__contains__(list(
+                            PeopleList.keys())[node]):
+                        if not self.People_Objects[list(
+                                PeopleList.keys())[node]].__contains__(class_name):
+                            self.People_Objects[list(
+                                PeopleList.keys())[node]].append(class_name)
+                    else:
                         self.People_Objects[list(
-                            PeopleList.keys())[node]].append(class_name)
-                else:
-                    self.People_Objects[list(
-                        PeopleList.keys())[node]] = [class_name]
+                            PeopleList.keys())[node]] = [class_name]
 
-        # Assign Objects to PersonPacket Variable
-        for id in PersonPacket:
-            if self.People_Objects.__contains__(id):
-                PersonPacket[id]["objects"] = self.People_Objects[id]
+            # Assign Objects to PersonPacket Variable
+            for id in PersonPacket:
+                if self.People_Objects.__contains__(id):
+                    PersonPacket[id]["objects"] = self.People_Objects[id]
 
         # Remove undetected People
         IDsToDelete = []

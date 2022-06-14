@@ -67,7 +67,18 @@ def updateDataServer():
 
 @app.route('/config', methods=['POST'])
 def configObject():
-    config = {}
+    config = {
+        "ip": "noneditable",
+        "camera_id": "noneditable",
+        "camera_name": "editable",
+        "camera_zone": "editable",
+        "timestamp_config_creation": "noneditable",
+        "restart_count": "editable",
+        "object_detection_config": "editable",
+        "publish_mqtt": "editable",
+        "subscribe_mqtt": "editable",
+        "input": "button"
+    }
     if request.method == "POST":
         preferred_username = request.form["preferred_username"]
         data = {}
@@ -79,13 +90,13 @@ def configObject():
                 data["config"] = configData
                 data["sensorid"] = x["camera_id"]
                 print(x["config"])
-                for item in configData:
-                    if type(configData[item]) is dict:
-                        config[item] = list(configData[item].keys())
-                    elif type(configData[item]) is list:
-                        config[item] = "list"
-                    else:
-                        config[item] = None
+                # for item in configData:
+                #     if type(configData[item]) is dict:
+                #         config[item] = list(configData[item].keys())
+                #     elif type(configData[item]) is list:
+                #         config[item] = "list"
+                #     else:
+                #         config[item] = None
                 break
 # configBefore=config_name_before, config=config_name
     return render_template('config.html', config=config, data=data)
