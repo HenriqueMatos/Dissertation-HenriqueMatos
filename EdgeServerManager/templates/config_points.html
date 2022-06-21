@@ -120,6 +120,24 @@
             </li>
             {% else %}
             <div class="card-header">{{eachData}}</div>
+            {% if eachData=="zone_direction_1or2" %}
+
+            <li class="list-group-item">
+              <select
+                id="{{actualIndex}}-{{eachData}}"
+                class="form-select form-control"
+                aria-label="Default select example"
+              >
+                {% if ExistingData[eachData]==1 %}
+                <option selected value="1">1</option>
+                <option value="2">2</option>
+                {% else %}
+                <option value="1">1</option>
+                <option selected value="2">2</option>
+                {% endif %}
+              </select>
+            </li>
+            {% else %}
 
             <li class="list-group-item">
               <input
@@ -130,8 +148,9 @@
                 placeholder="{{ExistingData[eachData]}}"
               />
             </li>
-            {% endif %} {% endfor %} {% elif config=="zone" %} {% for eachData
-            in ExistingData %} {% if keys[eachData][1]=="listoflist" %}
+            {% endif %} {% endif %} {% endfor %} {% elif config=="zone" %} {%
+            for eachData in ExistingData %} {% if
+            keys[eachData][1]=="listoflist" %}
             <div id="content-{{actualIndex}}" class="card-header">
               {{eachData}}
               <i class="bi bi-plus-circle" id="{{actualIndex}}"></i>
@@ -265,6 +284,19 @@
 
               {% else %}
               <div class="card-header">{{eachData}}</div>
+              {% if eachData=="zone_direction_1or2" %}
+
+              <li class="list-group-item">
+                <select
+                  id="{{actualIndex}}-{{eachData}}"
+                  class="form-select form-control"
+                  aria-label="Default select example"
+                >
+                  <option selected value="1">1</option>
+                  <option value="2">2</option>
+                </select>
+              </li>
+              {% else %}
 
               <li class="list-group-item">
                 <input
@@ -274,8 +306,8 @@
                   name="fname"
                 />
               </li>
-              {% endif %} {% endfor %} {% elif config=="zone" %} {% for eachData
-              in keys %} {% if keys[eachData][1]=="listoflist" %}
+              {% endif %}{% endif %} {% endfor %} {% elif config=="zone" %} {%
+              for eachData in keys %} {% if keys[eachData][1]=="listoflist" %}
               <div id="content-{{actualIndex}}" class="card-header">
                 {{eachData}}
                 <i class="bi bi-plus-circle" id="{{actualIndex}}"></i>
@@ -307,6 +339,78 @@
 </div>
 
 <script>
+  class Point {
+    constructor(x, y) {
+      this.x = x;
+
+      this.y = y;
+    }
+  }
+
+  // To find orientation of ordered triplet
+  // (p1, p2, p3). The function returns
+  // following values
+  // 0 --> p, q and r are collinear
+  // 1 --> Clockwise
+  // 2 --> Counterclockwise
+
+  function orientation(p1, p2, p3) {
+    // See 10th slides from following link
+
+    // for derivation of the formula
+
+    let val = (p2.y - p1.y) * (p3.x - p2.x) - (p2.x - p1.x) * (p3.y - p2.y);
+
+    if (val == 0) return 0; // collinear
+
+    // clock or counterclock wise
+
+    return val > 0 ? 1 : 2;
+  }
+  function drawArrow(ctx, fromx, fromy, tox, toy, arrowWidth, color) {
+    //variables to be used when creating the arrow
+    var headlen = 10;
+    var angle = Math.atan2(toy - fromy, tox - fromx);
+
+    ctx.save();
+    ctx.strokeStyle = color;
+
+    //starting path of the arrow from the start square to the end square
+    //and drawing the stroke
+    ctx.beginPath();
+    ctx.moveTo(fromx, fromy);
+    ctx.lineTo(tox, toy);
+    ctx.lineWidth = arrowWidth;
+    ctx.stroke();
+
+    //starting a new path from the head of the arrow to one of the sides of
+    //the point
+    ctx.beginPath();
+    ctx.moveTo(tox, toy);
+    ctx.lineTo(
+      tox - headlen * Math.cos(angle - Math.PI / 7),
+      toy - headlen * Math.sin(angle - Math.PI / 7)
+    );
+
+    //path from the side point of the arrow, to the other side point
+    ctx.lineTo(
+      tox - headlen * Math.cos(angle + Math.PI / 7),
+      toy - headlen * Math.sin(angle + Math.PI / 7)
+    );
+
+    //path from the side point back to the tip of the arrow, and then
+    //again to the opposite side point
+    ctx.lineTo(tox, toy);
+    ctx.lineTo(
+      tox - headlen * Math.cos(angle - Math.PI / 7),
+      toy - headlen * Math.sin(angle - Math.PI / 7)
+    );
+
+    //draws the paths created above
+    ctx.stroke();
+    ctx.restore();
+  }
+
   var NewConfig_FLAG = false;
   var NewConfig_zone = {
     name_inside_zone: "",
@@ -607,11 +711,11 @@
         config: "{{config}}",
         preferred_username: "{{preferred_username}}",
       };
-      $.post(window.location.href + "_set", { 
+      $.post(window.location.href + "_set", {
         data: JSON.stringify(DataSend),
       }).done(function (data) {
         console.log(data);
-        history.back()
+        history.back();
       });
     });
 
@@ -701,10 +805,35 @@
                 arrayData2 = jsonData[parseInt(indexes[0] - 1)][indexes[1]];
               }
             }
+
+            (centrePointX = (arrayData[0] + arrayData2[0]) / 2),
+              (centrePointY = (arrayData[1] + arrayData2[1]) / 2),
+              (angle = Math.atan2(
+                arrayData2[1] - arrayData[1],
+                arrayData2[0] - arrayData[0]
+              )),
+              (dist = 20);
+            console.log("cona", angle, dist);
+
+            startX = Math.sin(angle) * dist + centrePointX;
+            startY = -Math.cos(angle) * dist + centrePointY;
+            endX = -Math.sin(angle) * dist + centrePointX;
+            endY = Math.cos(angle) * dist + centrePointY;
             console.log(arrayData);
 
+            //startpoint = arrayData ; endpoint = arrayData2
             drawImage();
             draw_line_intersection_zone(arrayData, arrayData2);
+            //draw_line_intersection_zone([startX, startY], [endX, endY]);
+
+            let o = orientation(
+              new Point(arrayData[0], arrayData[1]),
+              new Point(arrayData2[0], arrayData2[1]),
+              new Point(startX, startY)
+            );
+
+            drawArrow(ctx, endX, endY, startX, startY, 3, "green");
+            console.log("orientation", o, startX, startY);
           });
 
           break;

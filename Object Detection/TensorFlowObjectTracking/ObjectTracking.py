@@ -83,12 +83,12 @@ def main():
     # }
 
     print('loading model...')
-    # hub_model = hub.load(
-    #     "https://tfhub.dev/tensorflow/ssd_mobilenet_v2/fpnlite_320x320/1")
+    hub_model = hub.load(
+        "https://tfhub.dev/tensorflow/ssd_mobilenet_v2/fpnlite_320x320/1")
     # hub_model = hub.load(
     #     "https://tfhub.dev/tensorflow/ssd_mobilenet_v2/fpnlite_640x640/1")
-    hub_model = hub.load(
-        "https://tfhub.dev/tensorflow/faster_rcnn/resnet50_v1_640x640/1")
+    # hub_model = hub.load(
+    #     "https://tfhub.dev/tensorflow/faster_rcnn/resnet50_v1_640x640/1")
     # hub_model = hub.load(
     #     "https://tfhub.dev/tensorflow/faster_rcnn/resnet101_v1_640x640/1")
     # hub_model = hub.load(

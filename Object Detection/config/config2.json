@@ -1,5 +1,5 @@
 {
-    "ip":"192.168.1.39",
+    "ip": "localhost",
     "camera_id": 2,
     "camera_name": "Camera2",
     "camera_zone": "Escola de Engenharia",
@@ -33,103 +33,23 @@
     ],
     "input": {
         "num_people": null,
-        "zone": [
-            {
-                "name_inside_zone": "pátio escola de engenharia",
-                "name_outside_zone": "pátio escola de engenharia",
-                "points": [
-                    [
-                        30,
-                        344
-                    ],
-                    [
-                        33,
-                        40
-                    ],
-                    [
-                        263,
-                        19
-                    ],
-                    [
-                        430,
-                        20
-                    ],
-                    [
-                        529,
-                        40
-                    ],
-                    [
-                        553,
-                        124
-                    ],
-                    [
-                        537,
-                        293
-                    ],
-                    [
-                        564,
-                        343
-                    ]
-                ]
-            }
-        ],
+        "zone": [],
         "line_intersection_zone": [
             {
-                "name": "Teste 123",
+                "name": "Escola de Engenharia",
                 "start_point": [
-                    640,
-                    480
+                    1031,
+                    199
                 ],
                 "end_point": [
-                    640,
-                    0
+                    1263,
+                    494
                 ],
-                "zone_direction_1or2": 1,
-                "name_zone_before": "outside",
-                "name_zone_after": "inside"
-            },
-            {
-                "name": "interior salas",
-                "start_point": [
-                    177,
-                    553
-                ],
-                "end_point": [
-                    534,
-                    425
-                ],
-                "zone_direction_1or2": 1,
-                "name_zone_before": "outside",
-                "name_zone_after": "inside"
+                "zone_direction_1or2": "1",
+                "name_zone_before": "exterior ",
+                "name_zone_after": "interior escola"
             }
         ],
-        "remove_area": [
-            [
-                [
-                    1278,
-                    0
-                ],
-                [
-                    1278,
-                    720
-                ],
-                [
-                    1027,
-                    720
-                ],
-                [
-                    700,
-                    362
-                ],
-                [
-                    980,
-                    258
-                ],
-                [
-                    704,
-                    0
-                ]
-            ]
-        ]
+        "remove_area": []
     }
 }

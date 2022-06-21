@@ -25,7 +25,7 @@ from forms import LoginForm
 from keycloak_utils import get_oidc2, get_oidc, get_token, check_token, verifyToken
 
 
-SERVER_URL = "http://192.168.1.39:8080/auth/"
+SERVER_URL = "http://localhost:8080/auth/"
 REALM_NAME = "AppAuthenticator"
 CLIENT_ID = "EdgeServer1"
 CLIENT_SECRET = "deCGEfmNbxFkC5z32UnwxtyQThTx4Evy"
