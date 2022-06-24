@@ -128,12 +128,12 @@
                 class="form-select form-control"
                 aria-label="Default select example"
               >
-                {% if ExistingData[eachData]==1 %}
-                <option selected value="1">1</option>
-                <option value="2">2</option>
-                {% else %}
+                {% if ExistingData[eachData]=="2" %}
                 <option value="1">1</option>
-                <option selected value="2">2</option>
+                <option selected value="2" style="font-weight: bold">2</option>
+                {% else %}
+                <option selected value="1" style="font-weight: bold">1</option>
+                <option value="2">2</option>
                 {% endif %}
               </select>
             </li>
@@ -289,7 +289,7 @@
               <li class="list-group-item">
                 <select
                   id="{{actualIndex}}-{{eachData}}"
-                  class="form-select form-control"
+                  class="form-select"
                   aria-label="Default select example"
                 >
                   <option selected value="1">1</option>
@@ -509,13 +509,49 @@
         }
       });
     }
-    function draw_line_intersection_zone(arrayData, arrayData2) {
+    function draw_line_intersection_zone(
+      arrayData,
+      arrayData2,
+      zone_direction_1or2
+    ) {
       ctx.fillStyle = "#000000";
       ctx.beginPath();
       ctx.moveTo(arrayData[0], arrayData[1]);
       ctx.lineTo(arrayData2[0], arrayData2[1]);
       ctx.closePath();
       ctx.stroke();
+
+      (centrePointX = (arrayData[0] + arrayData2[0]) / 2),
+        (centrePointY = (arrayData[1] + arrayData2[1]) / 2),
+        (angle = Math.atan2(
+          arrayData2[1] - arrayData[1],
+          arrayData2[0] - arrayData[0]
+        )),
+        (dist = 20);
+
+      startX = Math.sin(angle) * dist + centrePointX;
+      startY = -Math.cos(angle) * dist + centrePointY;
+      endX = -Math.sin(angle) * dist + centrePointX;
+      endY = Math.cos(angle) * dist + centrePointY;
+      let o = orientation(
+        new Point(arrayData[0], arrayData[1]),
+        new Point(arrayData2[0], arrayData2[1]),
+        new Point(startX, startY)
+        //new Point(endX, endY)
+      );
+      /*let o2 = orientation(
+        new Point(arrayData[0], arrayData[1]),
+        new Point(arrayData2[0], arrayData2[1]),
+        new Point(endX, endY)
+      );*/
+      console.log("CONA", zone_direction_1or2);
+      if ((o == zone_direction_1or2) == 1) {
+        drawArrow(ctx, endX, endY, startX, startY, 3, "green");
+      } else {
+        drawArrow(ctx, startX, startY, endX, endY, 3, "green");
+      }
+
+      console.log("orientation", o, startX, startY, endX, endY);
     }
     function draw_remove_area(arrayData) {
       ctx.fillStyle = "#FFFFFF";
@@ -562,6 +598,8 @@
             NewConfig_FLAG = true;
             NewConfig_line_intersection_zone[indexes[1]][0] = valor;
             if ([indexes[1]] == "start_point") {
+              zone_direction_1or2 =
+                NewConfig_line_intersection_zone["zone_direction_1or2"];
               arrayData = NewConfig_line_intersection_zone[indexes[1]];
               arrayData2 = NewConfig_line_intersection_zone["end_point"];
             } else {
@@ -577,9 +615,15 @@
               arrayData = jsonData[parseInt(indexes[0] - 1)]["start_point"];
               arrayData2 = jsonData[parseInt(indexes[0] - 1)][indexes[1]];
             }
+            zone_direction_1or2 =
+              jsonData[parseInt(indexes[0] - 1)]["zone_direction_1or2"];
           }
           drawImage();
-          draw_line_intersection_zone(arrayData, arrayData2);
+          draw_line_intersection_zone(
+            arrayData,
+            arrayData2,
+            zone_direction_1or2
+          );
           break;
         case "remove_area":
           if (indexes[0] > jsonData.length) {
@@ -632,6 +676,8 @@
               arrayData = NewConfig_line_intersection_zone["start_point"];
               arrayData2 = NewConfig_line_intersection_zone[indexes[1]];
             }
+            zone_direction_1or2 =
+              NewConfig_line_intersection_zone["zone_direction_1or2"];
           } else {
             jsonData[parseInt(indexes[0] - 1)][indexes[1]][1] = valor;
             if ([indexes[1]] == "start_point") {
@@ -641,9 +687,15 @@
               arrayData = jsonData[parseInt(indexes[0] - 1)]["start_point"];
               arrayData2 = jsonData[parseInt(indexes[0] - 1)][indexes[1]];
             }
+            zone_direction_1or2 =
+              jsonData[parseInt(indexes[0] - 1)]["zone_direction_1or2"];
           }
           drawImage();
-          draw_line_intersection_zone(arrayData, arrayData2);
+          draw_line_intersection_zone(
+            arrayData,
+            arrayData2,
+            zone_direction_1or2
+          );
           break;
         case "remove_area":
           if (indexes[0] > jsonData.length) {
@@ -679,6 +731,24 @@
       } else {
         jsonData[parseInt(indexes[0] - 1)][indexes[1]] = valor;
       }
+    });
+    $(document).on("input", ".form-select", function () {
+      valor = $(this).val();
+      var config = "{{config}}";
+      console.log(this.id, valor);
+      var indexes = this.id.split("-");
+      if (indexes[0] > jsonData.length) {
+        NewConfig_FLAG = true;
+        NewConfig_line_intersection_zone[indexes[1]] = valor;
+        arrayData = NewConfig_line_intersection_zone["start_point"];
+        arrayData2 = NewConfig_line_intersection_zone["end_point"];
+      } else {
+        jsonData[parseInt(indexes[0] - 1)][indexes[1]] = valor;
+        arrayData = jsonData[parseInt(indexes[0] - 1)]["start_point"];
+        arrayData2 = jsonData[parseInt(indexes[0] - 1)]["end_point"];
+      }
+      drawImage();
+      draw_line_intersection_zone(arrayData, arrayData2, valor);
     });
 
     $("#myCanvas").on("mousemove", function (e) {
@@ -789,6 +859,8 @@
                 arrayData = NewConfig_line_intersection_zone["start_point"];
                 arrayData2 = NewConfig_line_intersection_zone[indexes[1]];
               }
+              zone_direction_1or2 =
+                NewConfig_line_intersection_zone["zone_direction_1or2"];
             } else {
               jsonData[parseInt(indexes[0] - 1)][indexes[1]][0] = parseInt(X);
               jsonData[parseInt(indexes[0] - 1)][indexes[1]][1] = parseInt(Y);
@@ -804,36 +876,17 @@
                 arrayData = jsonData[parseInt(indexes[0] - 1)]["start_point"];
                 arrayData2 = jsonData[parseInt(indexes[0] - 1)][indexes[1]];
               }
+              zone_direction_1or2 =
+                jsonData[parseInt(indexes[0] - 1)]["zone_direction_1or2"];
             }
-
-            (centrePointX = (arrayData[0] + arrayData2[0]) / 2),
-              (centrePointY = (arrayData[1] + arrayData2[1]) / 2),
-              (angle = Math.atan2(
-                arrayData2[1] - arrayData[1],
-                arrayData2[0] - arrayData[0]
-              )),
-              (dist = 20);
-            console.log("cona", angle, dist);
-
-            startX = Math.sin(angle) * dist + centrePointX;
-            startY = -Math.cos(angle) * dist + centrePointY;
-            endX = -Math.sin(angle) * dist + centrePointX;
-            endY = Math.cos(angle) * dist + centrePointY;
-            console.log(arrayData);
 
             //startpoint = arrayData ; endpoint = arrayData2
             drawImage();
-            draw_line_intersection_zone(arrayData, arrayData2);
-            //draw_line_intersection_zone([startX, startY], [endX, endY]);
-
-            let o = orientation(
-              new Point(arrayData[0], arrayData[1]),
-              new Point(arrayData2[0], arrayData2[1]),
-              new Point(startX, startY)
+            draw_line_intersection_zone(
+              arrayData,
+              arrayData2,
+              zone_direction_1or2
             );
-
-            drawArrow(ctx, endX, endY, startX, startY, 3, "green");
-            console.log("orientation", o, startX, startY);
           });
 
           break;
@@ -1268,12 +1321,19 @@
             if (IntIndex >= jsonData.length) {
               arrayData = NewConfig_line_intersection_zone["start_point"];
               arrayData2 = NewConfig_line_intersection_zone["end_point"];
+              zone_direction_1or2 =
+                NewConfig_line_intersection_zone["zone_direction_1or2"];
             } else {
               arrayData = jsonData[IntIndex]["start_point"];
               arrayData2 = jsonData[IntIndex]["end_point"];
+              zone_direction_1or2 = jsonData[IntIndex]["zone_direction_1or2"];
             }
             console.log(config);
-            draw_line_intersection_zone(arrayData, arrayData2);
+            draw_line_intersection_zone(
+              arrayData,
+              arrayData2,
+              zone_direction_1or2
+            );
             break;
           case "remove_area":
             if (IntIndex >= jsonData.length) {

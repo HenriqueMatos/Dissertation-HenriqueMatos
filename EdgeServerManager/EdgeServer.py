@@ -213,6 +213,20 @@ def Setconfig():
         return "OK"
 
 
+@app.route('/id_association', methods=['GET'])
+def id_association():
+    DataObject = []
+    for value in DataServer:
+        DataObject.append({
+
+            "frame":  base64.b64encode(base64.decodebytes(value["frame"].encode('utf-8'))).decode('utf-8'),
+            "preferred_username": value["preferred_username"],
+            "line_intersection_zone": value["config"]["input"]["line_intersection_zone"]
+        })
+
+    return render_template('id_association.html',DataObject=DataObject)
+
+
 def web():
     app.run(debug=True, use_reloader=False, host='0.0.0.0', port=5000)
 
