@@ -5,9 +5,9 @@
     "timestamp_config_creation": "timestamp",
     "restart_count": "timestamp",
     "object_detection_config": {
-        "threshold": 0.5,
-        "path_model_weights": "yolo/yolov3.weights",
-        "path_model_cfg": "yolo/yolov3.cfg",
+        "threshold": 0.4,
+        "path_model_weights": "yolo/yolov3-spp.weights",
+        "path_model_cfg": "yolo/yolov3-spp.cfg",
         "path_yolo_coco_names": "yolo/coco.names",
         "object_data_tracking": [
             "person",
@@ -33,44 +33,7 @@
     "input": {
         "num_people": null,
         "zone": [
-            {
-                "name_inside_zone": "pátio escola de engenharia",
-                "name_outside_zone": "pátio escola de engenharia",
-                "points": [
-                    [
-                        30,
-                        344
-                    ],
-                    [
-                        33,
-                        40
-                    ],
-                    [
-                        263,
-                        19
-                    ],
-                    [
-                        430,
-                        20
-                    ],
-                    [
-                        529,
-                        40
-                    ],
-                    [
-                        553,
-                        124
-                    ],
-                    [
-                        537,
-                        293
-                    ],
-                    [
-                        564,
-                        343
-                    ]
-                ]
-            }
+            
         ],
         "line_intersection_zone": [
             {
@@ -103,32 +66,7 @@
             }
         ],
         "remove_area": [
-            [
-                [
-                    1278,
-                    0
-                ],
-                [
-                    1278,
-                    720
-                ],
-                [
-                    1027,
-                    720
-                ],
-                [
-                    700,
-                    362
-                ],
-                [
-                    980,
-                    258
-                ],
-                [
-                    704,
-                    0
-                ]
-            ]
+            
         ]
     }
 }

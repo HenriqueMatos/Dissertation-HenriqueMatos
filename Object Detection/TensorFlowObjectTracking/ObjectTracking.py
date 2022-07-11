@@ -93,10 +93,6 @@ def main():
     #     "https://tfhub.dev/tensorflow/faster_rcnn/resnet101_v1_640x640/1")
     # hub_model = hub.load(
     #     "https://tfhub.dev/tensorflow/retinanet/resnet50_v1_fpn_640x640/1")
-    # hub_model = hub.load(
-    #     "https://tfhub.dev/tensorflow/retinanet/resnet50_v1_fpn_640x640/1")
-    # hub_model = hub.load(
-    #     "https://tfhub.dev/tensorflow/ssd_mobilenet_v2/fpnlite_640x640/1")
 
     print('model loaded!')
     TotalFPS = 0
@@ -313,6 +309,7 @@ def main():
         ####### Frames #######
         fps = 1/(new_frame_time-prev_frame_time)
         if isShow == False:
+            print(new_frame_time-prev_frame_time)
             print(fps)
 
         if isShow:

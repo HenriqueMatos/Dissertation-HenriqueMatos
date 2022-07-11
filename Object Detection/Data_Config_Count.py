@@ -219,7 +219,6 @@ class Data_Config_Count():
             for id, class_name in ID_with_Class.items():
                 if class_name != "person":
                     # Find closest person to associate
-                    print("CONAAAAAAAAAAAAAAAAAAAA\n\n")
                     print(ID_with_Box[id], list(PeopleList.values()))
                     cX = int((ID_with_Box[id][0] + ID_with_Box[id][2]) / 2.0)
                     cY = int((ID_with_Box[id][1] + ID_with_Box[id][3]) / 2.0)

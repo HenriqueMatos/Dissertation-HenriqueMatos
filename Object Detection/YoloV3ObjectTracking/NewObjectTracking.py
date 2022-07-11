@@ -1,5 +1,6 @@
 import base64
 import codecs
+import imutils
 import datetime
 import json
 import time
@@ -46,7 +47,8 @@ def load_yolo(path_model_weights, path_model_cfg, path_yolo_coco_names, wanted_c
 def detect_objects(img, net, outputLayers):
     # (640,384)
     # (320, 320)
-    blob = cv2.dnn.blobFromImage(img, scalefactor=0.00392, size=(1280, 736), mean=(0, 0, 0), swapRB=True, crop=False)
+    # (1280, 736)
+    blob = cv2.dnn.blobFromImage(img, scalefactor=0.00392, size=(320,320), mean=(0, 0, 0), swapRB=True, crop=False)
 
     net.setInput(blob)
     outputs = net.forward(outputLayers)
@@ -146,15 +148,15 @@ def main():
     # frame=cv2.cvtColor(frame,cv2.COLOR_BGR2RGB)
     # frame = frame.astype('float64')
 
-    cv2.imwrite("frame.jpg", frame)
+    # cv2.imwrite("frame.jpg", frame)
 
-    with open("frame.jpg", "rb") as image_file:
-        encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
-    try:
-        _thread.start_new_thread(
-            ThreadDataTransmitter, (ConfigDataUpdater, encoded_string, ))
-    except:
-        print("Error: unable to start thread")
+    # with open("frame.jpg", "rb") as image_file:
+    #     encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
+    # try:
+    #     _thread.start_new_thread(
+    #         ThreadDataTransmitter, (ConfigDataUpdater, encoded_string, ))
+    # except:
+    #     print("Error: unable to start thread")
 
     # print(ConfigDataUpdater.line_intesection_zone)
 
@@ -177,8 +179,6 @@ def main():
             # apply the mask
             frame = cv2.bitwise_or(frame, mask)
         ##########################
-        # frame = cv2.resize(frame, (640, 360))
-        # frame = imutils.resize(frame, width=640)
         height, width, channels = frame.shape
         # frame = frame.resize((640,360))
         total_frames = total_frames + 1
@@ -195,17 +195,25 @@ def main():
         class_ids_final = []
         nonPersonDetections = []
         nonPersonClass_ids = []
+        newclass_ids=[]
+        class_ids=np.array(class_ids)
+        # print(boxes)
+        boxes=np.array(boxes)
+        classes=np.array(classes)
+        # print(boxes)
         for i in indexes:
             # if class_ids[i] in ID_wanted_classes:
+            # print(boxes[i])
             if class_ids[i] == 0:
-                boxes_final.append(boxes[i])
+                boxes_final.append(tuple(boxes[i][0]))
                 class_ids_final.append(class_ids[i])
             elif class_ids[i] in ID_wanted_classes:
-                nonPersonDetections.append(boxes[i])
+                nonPersonDetections.append(tuple(boxes[i][0]))
                 nonPersonClass_ids.append(class_ids[i])
 
         boxes2 = []
         centroid_boxes = []
+        # print(boxes_final)
         for item in boxes_final:
             x, y, w, h = item
             boxes2.append((x, y, x+w, y+h))
@@ -230,11 +238,11 @@ def main():
                           True, (255, 0, 0), 2)
 
         # Draw Line_intersection_zone
-        for item in ConfigDataUpdater.line_intersection_zone:
-            cv2.line(frame, item["start_point"],
-                     item["end_point"], (0, 255, 0), 2)
+        # for item in ConfigDataUpdater.line_intersection_zone:
+        #     cv2.line(frame, item["start_point"],
+        #              item["end_point"], (0, 255, 0), 2)
 
-        ConfigDataUpdater.updateData(UpdateValuesCentroids)
+        # ConfigDataUpdater.updateData(UpdateValuesCentroids)
 
         for nonPersonDetection, nonPersonClass in zip(nonPersonDetections, nonPersonClass_ids):
             x, y, w, h = nonPersonDetection
@@ -268,6 +276,7 @@ def main():
         if time_diff.seconds == 0:
             fps = 0.0
         else:
+            print(1/(total_frames / time_diff.seconds))
             fps = (total_frames / time_diff.seconds)
         # print(time_diff.seconds,"Seconds")
         fps_text = "FPS: {:.2f}".format(fps)

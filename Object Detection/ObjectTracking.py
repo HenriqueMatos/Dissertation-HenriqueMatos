@@ -39,6 +39,13 @@ import torch
 import torch.backends.cudnn as cudnn
 
 
+FILE = Path(__file__).resolve()
+ROOT = FILE.parents[0]  # YOLOv5 root directory
+if str(ROOT) not in sys.path:
+    sys.path.append(str(ROOT))  # add ROOT to PATH
+ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
+
+
 # url = 'http://'+ConfigDataUpdater.ip+':8080/auth/realms/AppAuthenticator/protocol/openid-connect/token'
 # myobj = {"client_id": "EdgeServer1",
 #          "grant_type": "password",
@@ -188,7 +195,7 @@ def ThreadDataTransmitter(ConfigDataUpdater, frame):
     # connection.close()
 
 
-def main(view_img=False, config='./config/config.json', username='', password='',source='0'):
+def main(view_img=False, config='./config/config.json', username='', password='', source='0'):
     global config_file
     global KeycloakUsername
     global KeycloakPassword
@@ -233,10 +240,6 @@ def main(view_img=False, config='./config/config.json', username='', password=''
     # initialize tracker
     tracker = Tracker(metric)
 
-    
-
-    
-
     global cap
     cap = cv2.VideoCapture(source)
     # cap = cv2.VideoCapture('/dev/video0')
@@ -266,7 +269,7 @@ def main(view_img=False, config='./config/config.json', username='', password=''
     conf_thres = 0.25  # confidence threshold
     iou_thres = 0.45  # NMS IOU threshold
     max_det = 1000  # maximum detections per image
-    device = ''  # cuda device, i.e. 0 or 0,1,2,3 or cpu
+    device = '0'  # cuda device, i.e. 0 or 0,1,2,3 or cpu
     # view_img = True  # show
     # classes = 0  # filter by class: --class 0, or --class 0 2 3
     classes = None  # filter by class: --class 0, or --class 0 2 3
@@ -277,7 +280,8 @@ def main(view_img=False, config='./config/config.json', username='', password=''
     line_thickness = 2  # bounding box thickness (pixels)
     half = False  # use FP16 half-precision inference
     dnn = True  # use OpenCV DNN for ONNX inference
-
+    save_img = True
+    save_txt=False
     # source = str(source)
 
     is_file = Path(source).suffix[1:] in (IMG_FORMATS + VID_FORMATS)
@@ -286,6 +290,12 @@ def main(view_img=False, config='./config/config.json', username='', password=''
         '.txt') or (is_url and not is_file)
     if is_url and is_file:
         source = check_file(source)  # download
+        
+    project = ROOT / 'runs/detect'
+    name = 'exp'
+    exist_ok = False
+    save_dir = increment_path(Path(project) / name, exist_ok=exist_ok)
+    (save_dir / 'labels' if save_txt else save_dir).mkdir(parents=True, exist_ok=True)  # make dir
 
     # Load model
     device = select_device(device)
@@ -302,10 +312,11 @@ def main(view_img=False, config='./config/config.json', username='', password=''
         bs = len(dataset)  # batch_size
     else:
         # Foi adicionado para passar os frames à frente
-        cudnn.benchmark = True
+        # cudnn.benchmark = True
         dataset = LoadImages(source, img_size=imgsz, stride=stride, auto=pt)
         # bs = len(dataset)
         bs = 1  # batch_size
+    vid_path, vid_writer = [None] * bs, [None] * bs
 
     # Run inference
     model.warmup(imgsz=(1 if pt else bs, 3, *imgsz))  # warmup
@@ -368,8 +379,12 @@ def main(view_img=False, config='./config/config.json', username='', password=''
                 p, im0, frame = path, im0s.copy(), getattr(dataset, 'frame', 0)
 
             p = Path(p)  # to Path
+            
+            save_path = str(save_dir / p.name)  # im.jpg
+            # print(save_path)
 
             s += '%gx%g ' % im.shape[2:]  # print string
+
             # normalization gain whwh
             annotator = Annotator(
                 im0, line_width=line_thickness, example=str(names))
@@ -425,7 +440,7 @@ def main(view_img=False, config='./config/config.json', username='', password=''
 
                     cv2.putText(im0, class_name + "-" + str(id),
                                 (int(bbox[0]), int(bbox[1]-10)), 0, 0.6, color, 1)
-                print(ID_with_Class,)
+                # print(ID_with_Class,)
                 ConfigDataUpdater.updateData(ID_with_Box, ID_with_Class)
 
                 for id in ID_with_Box.keys():
@@ -439,6 +454,29 @@ def main(view_img=False, config='./config/config.json', username='', password=''
             if view_img:
                 cv2.imshow(str(p), im0)
                 cv2.waitKey(1)  # 1 millisecond
+
+            if save_img:
+                if dataset.mode == 'image':
+                    cv2.imwrite(save_path, im0)
+                else:  # 'video' or 'stream'
+                    if vid_path[i] != save_path:  # new video
+                        print("AQUICONAAAAAAAAA")
+                        vid_path[i] = save_path
+                        if isinstance(vid_writer[i], cv2.VideoWriter):
+                            # release previous video writer
+                            vid_writer[i].release()
+                        if vid_cap:  # video
+                            fps = vid_cap.get(cv2.CAP_PROP_FPS)
+                            w = int(vid_cap.get(cv2.CAP_PROP_FRAME_WIDTH))
+                            h = int(vid_cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
+                        else:  # stream
+                            fps, w, h = 30, im0.shape[1], im0.shape[0]
+                        # force *.mp4 suffix on results videos
+                        save_path = str(Path(save_path).with_suffix('.mp4'))
+                        print(save_path)
+                        vid_writer[i] = cv2.VideoWriter(
+                            save_path, cv2.VideoWriter_fourcc(*'mp4v'), fps, (w, h))
+                    vid_writer[i].write(im0)
 
         # Print time (inference-only)
         LOGGER.info(f'{s}Done. ({t3 - t2:.3f}s)')
@@ -461,7 +499,8 @@ def parse_opt():
                         help='Keycloack Username')
     parser.add_argument('--password', type=str, default='',
                         help='Keycloack Password')
-    parser.add_argument('--source', type=str, default='0', help='file/dir/URL/glob, 0 for webcam')
+    parser.add_argument('--source', type=str, default='0',
+                        help='file/dir/URL/glob, 0 for webcam')
     opt = parser.parse_args()
     print_args(vars(opt))
     return opt

@@ -66,27 +66,23 @@
     <div class="row">
         <div style="display: inline-flex;justify-content: space-between;" class="col">
           <div class="col-xs-5 col-md-5 col-sm-5">
-            <select id="option-select-1-1" class="form-select" disabled>
+            <select id="option-select-1-1" class="form-select" >
             </select>
           </div>
           <br>
           <div class="col-xs-5 col-md-5 col-sm-5">
-            <select id="option-select-1-2" class="form-select" disabled>
-              <option selected value="1">1</option>
-              <option value="2">2</option>
+            <select id="option-select-1-2" class="form-select" >
             </select>
           </div>
         </div>
         <div style="display: inline-flex;justify-content: space-between;" class="col">
           <div class="col-xs-5 col-md-5 col-sm-5">
-            <select  id="option-select-2-1" class="form-select" disabled>
+            <select  id="option-select-2-1" class="form-select" >
             </select>
           </div>
           <br>
           <div class="col-xs-5 col-md-5 col-sm-5">
-            <select  id="option-select-2-2" class="form-select" disabled>
-              <option selected value="1">1</option>
-              <option value="2">2</option>
+            <select  id="option-select-2-2" class="form-select" >
             </select>
           </div>
         </div>
@@ -116,7 +112,120 @@
 <script>
 
   $(document).ready(function () {
+    class Point {
+      constructor(x, y) {
+        this.x = x;
+  
+        this.y = y;
+      }
+    }
+  
+    // To find orientation of ordered triplet
+    // (p1, p2, p3). The function returns
+    // following values
+    // 0 --> p, q and r are collinear
+    // 1 --> Clockwise
+    // 2 --> Counterclockwise
+  
+    function orientation(p1, p2, p3) {
+      // See 10th slides from following link
+  
+      // for derivation of the formula
+  
+      let val = (p2.y - p1.y) * (p3.x - p2.x) - (p2.x - p1.x) * (p3.y - p2.y);
+  
+      if (val == 0) return 0; // collinear
+  
+      // clock or counterclock wise
+  
+      return val > 0 ? 1 : 2;
+    }
+    function drawArrow(ctx, fromx, fromy, tox, toy, arrowWidth, color) {
+      //variables to be used when creating the arrow
+      var headlen = 10;
+      var angle = Math.atan2(toy - fromy, tox - fromx);
+  
+      ctx.save();
+      ctx.strokeStyle = color;
+  
+      //starting path of the arrow from the start square to the end square
+      //and drawing the stroke
+      ctx.beginPath();
+      ctx.moveTo(fromx, fromy);
+      ctx.lineTo(tox, toy);
+      ctx.lineWidth = arrowWidth;
+      ctx.stroke();
+  
+      //starting a new path from the head of the arrow to one of the sides of
+      //the point
+      ctx.beginPath();
+      ctx.moveTo(tox, toy);
+      ctx.lineTo(
+        tox - headlen * Math.cos(angle - Math.PI / 7),
+        toy - headlen * Math.sin(angle - Math.PI / 7)
+      );
+  
+      //path from the side point of the arrow, to the other side point
+      ctx.lineTo(
+        tox - headlen * Math.cos(angle + Math.PI / 7),
+        toy - headlen * Math.sin(angle + Math.PI / 7)
+      );
+  
+      //path from the side point back to the tip of the arrow, and then
+      //again to the opposite side point
+      ctx.lineTo(tox, toy);
+      ctx.lineTo(
+        tox - headlen * Math.cos(angle - Math.PI / 7),
+        toy - headlen * Math.sin(angle - Math.PI / 7)
+      );
+  
+      //draws the paths created above
+      ctx.stroke();
+      ctx.restore();
+    }
+    function draw_line_intersection_zone(ctx,
+      arrayData,
+      arrayData2,
+      zone_direction_1or2
+    ) {
+      ctx.fillStyle = "#000000";
+      ctx.beginPath();
+      ctx.moveTo(arrayData[0], arrayData[1]);
+      ctx.lineTo(arrayData2[0], arrayData2[1]);
+      ctx.closePath();
+      ctx.stroke();
 
+      (centrePointX = (arrayData[0] + arrayData2[0]) / 2),
+        (centrePointY = (arrayData[1] + arrayData2[1]) / 2),
+        (angle = Math.atan2(
+          arrayData2[1] - arrayData[1],
+          arrayData2[0] - arrayData[0]
+        )),
+        (dist = 20);
+
+      startX = Math.sin(angle) * dist + centrePointX;
+      startY = -Math.cos(angle) * dist + centrePointY;
+      endX = -Math.sin(angle) * dist + centrePointX;
+      endY = Math.cos(angle) * dist + centrePointY;
+      let o = orientation(
+        new Point(arrayData[0], arrayData[1]),
+        new Point(arrayData2[0], arrayData2[1]),
+        new Point(startX, startY)
+        //new Point(endX, endY)
+      );
+      /*let o2 = orientation(
+        new Point(arrayData[0], arrayData[1]),
+        new Point(arrayData2[0], arrayData2[1]),
+        new Point(endX, endY)
+      );*/
+      if ((o == zone_direction_1or2) == 1) {
+        drawArrow(ctx, endX, endY, startX, startY, 5, "red");
+      } else {
+        drawArrow(ctx, startX, startY, endX, endY, 5, "red");
+      }
+
+      console.log("orientation", o, startX, startY, endX, endY);
+    }
   
 
     var DataObject="{{DataObject}}"
@@ -130,10 +239,7 @@
     //console.log(result);
     var jsonData = JSON.parse(result);
     console.log(jsonData);
-    $(document).on("input", ".form-select", function () {
-
-      
-
+    $(document).on("input", "#select-1,#select-2", function () {
         valor = $(this).val();
         var indexes = this.id.split("-");
         if(indexes[1]==1){
@@ -145,55 +251,127 @@
             for (let i = 0; i < option_select.length; i++) {
                 option_select[i].removeAttribute('disabled');
             }
-            document.getElementById("option-select-1-2").removeAttribute('disabled')
-                    var select = document.getElementById("option-select-1-1");
-                    select.innerHTML = "";
-                    select.removeAttribute('disabled');
-                    
+            var select = document.getElementById("option-select-1-1");
+            select.innerHTML = "";
+            var select2=document.getElementById("option-select-1-2");
+            select2.innerHTML = ""
             if(valor!=""){
-                console.log(this.id, valor);
+                console.log("cona",this.id, valor);
                 document.getElementById("select-2-"+valor).setAttribute("disabled",'true')
                 for (var i = 0; i < jsonData.length; i++) {
                   if(jsonData[i]["preferred_username"]==valor){
                     drawImage1(jsonData[i]["frame"])
-
-                    
-                  for (var j = 0; j<=jsonData[i]["line_intersection_zone"].length; j++){
+                  for (var j = 0; j<jsonData[i]["line_intersection_zone"].length; j++){
                       var opt = document.createElement('option');
-                      opt.value = jsonData[i]["line_intersection_zone"][j]["name"];
+                      opt.value = j;
                       opt.innerHTML = jsonData[i]["line_intersection_zone"][j]["name"];
                       select.appendChild(opt);
                   }
-                  var mango = select.appendChild.insertAdjacentHTML(
-                    "afterend",
-                    AddValue
-                  );
+                  for(var j = 1; j<=2; j++){
+                    var opt = document.createElement('option');
+                    opt.value = j;
+                    opt.innerHTML = j;
+                    select2.appendChild(opt);
+                    if(jsonData[i]["line_intersection_zone"][0]["zone_direction_1or2"]==j){
+                      opt.setAttribute("selected",'true')
+                    }
+                  }
+                  draw_line_intersection_zone(context,jsonData[i]["line_intersection_zone"][0]["start_point"],jsonData[i]["line_intersection_zone"][0]["end_point"],jsonData[i]["line_intersection_zone"][0]["zone_direction_1or2"])
                   }
                 }
             }
-            
         }else{
           var canvas = document.getElementById("myCanvas2");
           const context = canvas.getContext('2d');
           context.clearRect(0, 0, canvas.width, canvas.height);
-
-            var option_select=document.getElementsByClassName("option_select1")
-            for (let i = 0; i < option_select.length; i++) {
-                option_select[i].removeAttribute('disabled');
-            }
-            if(valor!=""){
-                document.getElementById("select-1-"+valor).setAttribute("disabled",'true')
-
-                for (var i = 0; i < jsonData.length; i++) {
-                  if(jsonData[i]["preferred_username"]==valor){
-                    drawImage2(jsonData[i]["frame"])
+          var option_select=document.getElementsByClassName("option_select1")
+          for (let i = 0; i < option_select.length; i++) {
+              option_select[i].removeAttribute('disabled');
+          }
+          var select = document.getElementById("option-select-2-1");
+          select.innerHTML = "";
+          var select2=document.getElementById("option-select-2-2");
+          select2.innerHTML = ""
+          if(valor!=""){
+              document.getElementById("select-1-"+valor).setAttribute("disabled",'true')
+              for (var i = 0; i < jsonData.length; i++) {
+                if(jsonData[i]["preferred_username"]==valor){
+                  drawImage2(jsonData[i]["frame"])
+                  for (var j = 0; j<jsonData[i]["line_intersection_zone"].length; j++){
+                    var opt = document.createElement('option');
+                    opt.value = j;
+                    opt.innerHTML = jsonData[i]["line_intersection_zone"][j]["name"];
+                    if(i==0){
+                      opt.setAttribute("selected",'true')
+                    }
+                    select.appendChild(opt);
                   }
+                  for(var j = 1; j<=2; j++){
+                    var opt = document.createElement('option');
+                    opt.value = j;
+                    opt.innerHTML = j;
+                    select2.appendChild(opt);
+                    if(jsonData[i]["line_intersection_zone"][0]["zone_direction_1or2"]==j){
+                      opt.setAttribute("selected",'true')
+                    }
+                  }
+                  draw_line_intersection_zone(context,jsonData[i]["line_intersection_zone"][0]["start_point"],jsonData[i]["line_intersection_zone"][0]["end_point"],jsonData[i]["line_intersection_zone"][0]["zone_direction_1or2"])
                 }
-
-            }
-            
+              }
+          }
         }
       });
+
+      $(document).on("input", "#option-select-1-1,#option-select-2-1", function () {
+        valor = $(this).val();
+        var indexes = this.id.split("-");
+        console.log(indexes[2])
+        console.log("option-select-"+indexes[2]+"-1")
+        console.log(document.getElementById("option-select-"+indexes[2]+"-1").value)
+        var index2=document.getElementById("option-select-"+indexes[2]+"-1").value
+        var index=document.getElementById("select-"+indexes[2]).value
+        var canvas = document.getElementById("myCanvas"+indexes[2]);
+        const context = canvas.getContext('2d');
+        console.log(index,index2)
+        for (var i = 0; i < jsonData.length; i++) {
+          if(jsonData[i]["preferred_username"]==index){
+            if(indexes[2]==1){
+              drawImage1(jsonData[i]["frame"])
+
+            }else{
+              drawImage2(jsonData[i]["frame"])
+            }
+            draw_line_intersection_zone(context,jsonData[i]["line_intersection_zone"][index2]["start_point"],jsonData[i]["line_intersection_zone"][index2]["end_point"],jsonData[i]["line_intersection_zone"][index2]["zone_direction_1or2"])
+          }
+        }
+
+
+
+      });
+      $(document).on("input", "#option-select-1-2,#option-select-2-2", function () {
+        valor = $(this).val();
+        var indexes = this.id.split("-");
+        console.log(indexes[2])
+        console.log("option-select-"+indexes[2]+"-1")
+        console.log(document.getElementById("option-select-"+indexes[2]+"-1").value)
+        var index2=document.getElementById("option-select-"+indexes[2]+"-1").value
+        var index=document.getElementById("select-"+indexes[2]).value
+        var canvas = document.getElementById("myCanvas"+indexes[2]);
+        const context = canvas.getContext('2d');
+        console.log(index,index2)
+        for (var i = 0; i < jsonData.length; i++) {
+          if(jsonData[i]["preferred_username"]==index){
+            if(indexes[2]==1){
+              drawImage1(jsonData[i]["frame"])
+
+            }else{
+              drawImage2(jsonData[i]["frame"])
+            }
+            draw_line_intersection_zone(context,jsonData[i]["line_intersection_zone"][index2]["start_point"],jsonData[i]["line_intersection_zone"][index2]["end_point"],valor)
+          }
+        }
+      });
+
       function drawImage1(frame) {
         var c = document.getElementById("myCanvas1");
         var ctx = c.getContext("2d");
