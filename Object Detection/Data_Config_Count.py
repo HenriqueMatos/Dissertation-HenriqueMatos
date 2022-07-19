@@ -177,7 +177,7 @@ class Data_Config_Count():
         DataPacket["line_intersection"] = []
 
         PersonPacket = {}
-        print(ID_with_Box)
+        # print(ID_with_Box)
         
         for id, value in ID_with_Box.items():
 
@@ -219,7 +219,7 @@ class Data_Config_Count():
             for id, class_name in ID_with_Class.items():
                 if class_name != "person":
                     # Find closest person to associate
-                    print(ID_with_Box[id], list(PeopleList.values()))
+                    # print(ID_with_Box[id], list(PeopleList.values()))
                     cX = int((ID_with_Box[id][0] + ID_with_Box[id][2]) / 2.0)
                     cY = int((ID_with_Box[id][1] + ID_with_Box[id][3]) / 2.0)
                     node = closest_node((cX, cY), list(PeopleList.values()))

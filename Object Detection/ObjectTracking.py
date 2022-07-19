@@ -59,64 +59,6 @@ ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
 # response = json.loads(x.text)
 
 
-class NumpyEncoder(json.JSONEncoder):
-    def default(self, obj):
-        if isinstance(obj, np.ndarray):
-            return obj.tolist()
-        return json.JSONEncoder.default(self, obj)
-
-
-def load_yolo(path_model_weights, path_model_cfg, path_yolo_coco_names, wanted_classes):
-    # net = cv2.dnn.readNet("yolo/yolov3-tiny.weights", "yolo/yolov3-tiny.cfg")
-    net = cv2.dnn.readNet(path_model_weights, path_model_cfg)
-    classes = []
-    with open(path_yolo_coco_names, "r") as f:
-        classes = [line.strip() for line in f.readlines()]
-    ID_wanted_classes = []
-    for className in wanted_classes:
-        if className in classes:
-            ID_wanted_classes.append(classes.index(className))
-
-    output_layers = [
-        layer_name for layer_name in net.getUnconnectedOutLayersNames()]
-    colors = np.random.uniform(0, 255, size=(len(classes), 3))
-    print(classes)
-    return net, classes, colors, output_layers, ID_wanted_classes
-
-
-def detect_objects(img, net, outputLayers):
-    blob = cv2.dnn.blobFromImage(img, scalefactor=0.00392, size=(
-        320, 320), mean=(0, 0, 0), swapRB=True, crop=False)
-    net.setInput(blob)
-    outputs = net.forward(outputLayers)
-    # print(outputs)
-    return blob, outputs
-
-
-def get_box_dimensions(outputs, height, width, threshold):
-    boxes = []
-    confs = []
-    class_ids = []
-    for output in outputs:
-        for detect in output:
-            scores = detect[5:]
-            class_id = np.argmax(scores)
-            conf = scores[class_id]
-            # print(conf)
-            if conf > threshold:
-                # print(conf)
-                center_x = int(detect[0] * width)
-                center_y = int(detect[1] * height)
-                w = int(detect[2] * width)
-                h = int(detect[3] * height)
-                x = int(center_x - w/2)
-                y = int(center_y - h / 2)
-                boxes.append([x, y, w, h])
-                confs.append(float(conf))
-                class_ids.append(class_id)
-    return boxes, confs, class_ids
-
-
 def on_message(client, userdata, message):
     print("Received message: ", str(message.payload.decode("utf-8")),
           " From: ", message.topic, " ")
@@ -269,10 +211,11 @@ def main(view_img=False, config='./config/config.json', username='', password=''
     conf_thres = 0.25  # confidence threshold
     iou_thres = 0.45  # NMS IOU threshold
     max_det = 1000  # maximum detections per image
-    device = '0'  # cuda device, i.e. 0 or 0,1,2,3 or cpu
+    device = 'cpu'  # cuda device, i.e. 0 or 0,1,2,3 or cpu
     # view_img = True  # show
     # classes = 0  # filter by class: --class 0, or --class 0 2 3
-    classes = None  # filter by class: --class 0, or --class 0 2 3
+    # classes = None  # filter by class: --class 0, or --class 0 2 3
+    classes = [0, 24, 25, 26, 27, 28, 39, 63, 74]
     agnostic_nms = True  # class-agnostic NMS
     augment = False  # augmented inference
     visualize = False  # visualize features
@@ -280,8 +223,8 @@ def main(view_img=False, config='./config/config.json', username='', password=''
     line_thickness = 2  # bounding box thickness (pixels)
     half = False  # use FP16 half-precision inference
     dnn = True  # use OpenCV DNN for ONNX inference
-    save_img = True
-    save_txt=False
+    save_img = False
+    save_txt = False
     # source = str(source)
 
     is_file = Path(source).suffix[1:] in (IMG_FORMATS + VID_FORMATS)
@@ -290,12 +233,13 @@ def main(view_img=False, config='./config/config.json', username='', password=''
         '.txt') or (is_url and not is_file)
     if is_url and is_file:
         source = check_file(source)  # download
-        
+
     project = ROOT / 'runs/detect'
     name = 'exp'
     exist_ok = False
     save_dir = increment_path(Path(project) / name, exist_ok=exist_ok)
-    (save_dir / 'labels' if save_txt else save_dir).mkdir(parents=True, exist_ok=True)  # make dir
+    (save_dir / 'labels' if save_txt else save_dir).mkdir(parents=True,
+                                                          exist_ok=True)  # make dir
 
     # Load model
     device = select_device(device)
@@ -321,27 +265,32 @@ def main(view_img=False, config='./config/config.json', username='', password=''
     # Run inference
     model.warmup(imgsz=(1 if pt else bs, 3, *imgsz))  # warmup
     dt, seen = [0.0, 0.0, 0.0], 0
+    
+    Image_save_count={}
+    
     for path, im, im0s, vid_cap, s in dataset:
+        
+        # COMENTADO PARA NÃO INTERFERIR COM AS IMAGENS
+        
+        # ####### Polygon Remove #######
+        # for arrayPoints in ConfigDataUpdater.remove_area:
+        #     mask = np.zeros(im0s.shape, dtype=np.uint8)
+        #     contours = np.array(arrayPoints)
+        #     cv2.fillPoly(mask, pts=[contours], color=(255, 255, 255))
+        #     # apply the mask
+        #     im0s = cv2.bitwise_or(im0s, mask)
 
-        ####### Polygon Remove #######
-        for arrayPoints in ConfigDataUpdater.remove_area:
-            mask = np.zeros(im0s.shape, dtype=np.uint8)
-            contours = np.array(arrayPoints)
-            cv2.fillPoly(mask, pts=[contours], color=(255, 255, 255))
-            # apply the mask
-            im0s = cv2.bitwise_or(im0s, mask)
+        # # REMOVE ALL POINTS FROM POLYGON
 
-        # REMOVE ALL POINTS FROM POLYGON
+        # # Draw Line_intersection_zone
+        # for item in ConfigDataUpdater.line_intersection_zone:
+        #     cv2.line(im0s, tuple(item["start_point"]),
+        #              tuple(item["end_point"]), (0, 255, 0), 2)
 
-        # Draw Line_intersection_zone
-        for item in ConfigDataUpdater.line_intersection_zone:
-            cv2.line(im0s, tuple(item["start_point"]),
-                     tuple(item["end_point"]), (0, 255, 0), 2)
-
-        # Draw Zones
-        for item in ConfigDataUpdater.zone:
-            cv2.polylines(im0s, [np.array(item["points"])],
-                          True, (255, 0, 0), 2)
+        # # Draw Zones
+        # for item in ConfigDataUpdater.zone:
+        #     cv2.polylines(im0s, [np.array(item["points"])],
+        #                   True, (255, 0, 0), 2)
 
         t1 = time_sync()
 
@@ -379,7 +328,7 @@ def main(view_img=False, config='./config/config.json', username='', password=''
                 p, im0, frame = path, im0s.copy(), getattr(dataset, 'frame', 0)
 
             p = Path(p)  # to Path
-            
+
             save_path = str(save_dir / p.name)  # im.jpg
             # print(save_path)
 
@@ -413,7 +362,6 @@ def main(view_img=False, config='./config/config.json', username='', password=''
                     names2.append(names[int(cls)])
 
                 features = encoder(im0, bboxes)
-
                 detections = [Detection(bbox, score, class_name, feature) for bbox,
                               score, class_name, feature in zip(bboxes, scores, names2, features)]
 
@@ -433,7 +381,16 @@ def main(view_img=False, config='./config/config.json', username='', password=''
                     ID_with_Box[id] = (int(bbox[0]), int(
                         bbox[1]), int(bbox[2]), int(bbox[3]))
                     ID_with_Class[id] = class_name
+                    # SAVE IMAGE IN SYSTEM 
+                    if id in Image_save_count:
+                        Image_save_count[id]+=1
+                    else:
+                        Image_save_count[id]=1
+                    if not os.path.exists('gallery/'+str(id)):
+                        os.makedirs('gallery/'+str(id))
+                    cv2.imwrite('gallery/%d/%d.jpg'% (id,Image_save_count[id]), im0[int(bbox[1]):int(bbox[3]), int(bbox[0]):int(bbox[2])])
                     # draw bbox on screen
+                    # time.sleep(50000)
                     color = colors[id % len(colors)]
                     cv2.rectangle(im0, (int(bbox[0]), int(
                         bbox[1])), (int(bbox[2]), int(bbox[3])), color, 2)
@@ -460,7 +417,6 @@ def main(view_img=False, config='./config/config.json', username='', password=''
                     cv2.imwrite(save_path, im0)
                 else:  # 'video' or 'stream'
                     if vid_path[i] != save_path:  # new video
-                        print("AQUICONAAAAAAAAA")
                         vid_path[i] = save_path
                         if isinstance(vid_writer[i], cv2.VideoWriter):
                             # release previous video writer
