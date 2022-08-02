@@ -1,9 +1,14 @@
 from collections import OrderedDict
 import json
+import string
 import sys
 import numpy as np
 from shapely.geometry import Point
 from shapely.geometry.polygon import Polygon
+from dataclasses import dataclass
+
+from sympy import centroid
+
 
 import intersect
 
@@ -15,8 +20,45 @@ def closest_node(node, nodes):
     return np.argmin(dist_2)
 
 
+@dataclass
+class PersonDetectionData:
+    id: int
+    maxDisappeared = int
+    maxCentroids = int
+    centroid: list = []
+    box:  list = []
+    disappeared_count: int = 0
+    objects: list = []
+    global_id: str = None
+    # Descrever como está organizado o tuplo
+
+    def appendData(self, box, centroid):
+        self.box.append(box)
+        self.centroid.append(centroid)
+        self.disappeared_count = 0
+        if len(self.centroid) > self.maxCentroids:
+            self.box[id].pop(0)
+            self.centroid[id].pop(0)
+
+    def getLastCentroid(self):
+        return self.centroid[-1]
+    
+    def addObject(self, object):
+        if condition:
+            
+
+    # funçoes:
+    #   reset disappeared
+    #   add centroid
+    #   add object
+    #   get tamanho de listas
+
+    # def total_cost(self) -> float:
+    #     return self.unit_price * self.quantity_on_hand
+
+
 class Data_Config_Count():
-    def __init__(self, maxDisappeared=50, maxCentroids=20):
+    def __init__(self, maxDisappeared=60, maxCentroids=20):
         self.JsonObjectString = None
         # Config
         self.ip = None
@@ -61,6 +103,7 @@ class Data_Config_Count():
         self.People_Centroids = OrderedDict()
         self.People_Objects = OrderedDict()
         self.disappeared = OrderedDict()
+        self.ARRAY_FULL_DATA = {}
 
         self.maxDisappeared = maxDisappeared
         self.maxCentroids = maxCentroids
@@ -69,7 +112,7 @@ class Data_Config_Count():
         self.JsonObjectString = json.dumps(jsonObject)
         # ip
         if jsonObject.__contains__("ip"):
-                self.ip = jsonObject["ip"]
+            self.ip = jsonObject["ip"]
         else:
             sys.exit("Bad Config Data")
         # camera_id
@@ -178,7 +221,8 @@ class Data_Config_Count():
 
         PersonPacket = {}
         # print(ID_with_Box)
-        
+        PeopleList = {}
+
         for id, value in ID_with_Box.items():
 
             if ID_with_Class[id] == "person":
@@ -191,31 +235,33 @@ class Data_Config_Count():
                 PersonPacket[id]["line_intersection"] = []  # Not Done
                 PersonPacket[id]["location"] = [cX, cY]
 
-                if self.People_Centroids.keys().__contains__(id) and self.People_Box.keys().__contains__(id):
-                    # self.People_Box[id].append()
-                    # self.People_Centroids[id]
-                    self.People_Box[id].append(value)
-                    # print("AQUI", self.People_Centroids[id])
-                    self.People_Centroids[id].append((cX, cY))
-                    # print(self.People_Centroids[id])
-                    self.disappeared[id] = 0
+                # Add New Data
+                if not self.ARRAY_FULL_DATA.keys().__contains__(id):
+                    self.ARRAY_FULL_DATA[id] = PersonDetectionData(
+                        id, self.maxDisappeared, self.maxCentroids)
+                self.ARRAY_FULL_DATA[id].appendData(value, (cX, cY))
 
-                    if len(self.People_Centroids[id]) > self.maxCentroids:
-                        self.People_Centroids[id].pop(0)
-                        self.People_Box[id].pop(0)
-                else:
-                    self.People_Box[id] = [value]
-                    self.People_Centroids[id] = [(cX, cY)]
-                    self.disappeared[id] = 0
+                PeopleList[id] = (cX, cY)
 
-        PeopleList = OrderedDict()
-        for id, class_name in ID_with_Class.items():
-            if class_name == "person":
-                # Add last centroid
-                PeopleList[id] = self.People_Centroids[id][-1]
+                # if self.People_Centroids.keys().__contains__(id) and self.People_Box.keys().__contains__(id):
+                #     # self.People_Box[id].append()
+                #     # self.People_Centroids[id]
+                #     self.People_Box[id].append(value)
+                #     # print("AQUI", self.People_Centroids[id])
+                #     self.People_Centroids[id].append((cX, cY))
+                #     # print(self.People_Centroids[id])
+                #     self.disappeared[id] = 0
 
-        if len(PeopleList.keys())>0:
-            # Add Object to Corresponding Person
+                #     if len(self.People_Centroids[id]) > self.maxCentroids:
+                #         self.People_Centroids[id].pop(0)
+                #         self.People_Box[id].pop(0)
+                # else:
+                #     self.People_Box[id] = [value]
+                #     self.People_Centroids[id] = [(cX, cY)]
+                #     self.disappeared[id] = 0
+
+        # Add Object to Corresponding Person
+        if len(PeopleList.keys()) > 0:
             for id, class_name in ID_with_Class.items():
                 if class_name != "person":
                     # Find closest person to associate
