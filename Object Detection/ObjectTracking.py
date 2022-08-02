@@ -14,7 +14,6 @@ import requests
 import paho.mqtt.client as mqtt
 
 # import NewClass_ID_Association
-import centroidtracker
 import Data_Config_Count
 
 from deep_sort.detection import Detection
@@ -44,7 +43,6 @@ ROOT = FILE.parents[0]  # YOLOv5 root directory
 if str(ROOT) not in sys.path:
     sys.path.append(str(ROOT))  # add ROOT to PATH
 ROOT = Path(os.path.relpath(ROOT, Path.cwd()))  # relative
-
 
 # url = 'http://'+ConfigDataUpdater.ip+':8080/auth/realms/AppAuthenticator/protocol/openid-connect/token'
 # myobj = {"client_id": "EdgeServer1",
@@ -211,7 +209,7 @@ def main(view_img=False, config='./config/config.json', username='', password=''
     conf_thres = 0.25  # confidence threshold
     iou_thres = 0.45  # NMS IOU threshold
     max_det = 1000  # maximum detections per image
-    device = 'cpu'  # cuda device, i.e. 0 or 0,1,2,3 or cpu
+    device = '0'  # cuda device, i.e. 0 or 0,1,2,3 or cpu
     # view_img = True  # show
     # classes = 0  # filter by class: --class 0, or --class 0 2 3
     # classes = None  # filter by class: --class 0, or --class 0 2 3
@@ -265,13 +263,13 @@ def main(view_img=False, config='./config/config.json', username='', password=''
     # Run inference
     model.warmup(imgsz=(1 if pt else bs, 3, *imgsz))  # warmup
     dt, seen = [0.0, 0.0, 0.0], 0
-    
-    Image_save_count={}
-    
+
+    Image_save_count = {}
+
     for path, im, im0s, vid_cap, s in dataset:
-        
+
         # COMENTADO PARA NÃO INTERFERIR COM AS IMAGENS
-        
+
         # ####### Polygon Remove #######
         # for arrayPoints in ConfigDataUpdater.remove_area:
         #     mask = np.zeros(im0s.shape, dtype=np.uint8)
@@ -319,6 +317,8 @@ def main(view_img=False, config='./config/config.json', username='', password=''
         # pred = utils.general.apply_classifier(pred, classifier_model, im, im0s)
 
         # Process predictions
+        f = open("ListOfData.txt", "a")
+
         for i, det in enumerate(pred):  # per image
             seen += 1
             if webcam:  # batch_size >= 1
@@ -381,31 +381,37 @@ def main(view_img=False, config='./config/config.json', username='', password=''
                     ID_with_Box[id] = (int(bbox[0]), int(
                         bbox[1]), int(bbox[2]), int(bbox[3]))
                     ID_with_Class[id] = class_name
-                    # SAVE IMAGE IN SYSTEM 
+                    # SAVE IMAGE IN SYSTEM
                     if id in Image_save_count:
-                        Image_save_count[id]+=1
+                        Image_save_count[id] += 1
                     else:
-                        Image_save_count[id]=1
-                    if not os.path.exists('gallery/'+str(id)):
-                        os.makedirs('gallery/'+str(id))
-                    cv2.imwrite('gallery/%d/%d.jpg'% (id,Image_save_count[id]), im0[int(bbox[1]):int(bbox[3]), int(bbox[0]):int(bbox[2])])
+                        Image_save_count[id] = 1
+                    if not os.path.exists('TesteImage1/gallery/'+str(id)):
+                        os.makedirs('TesteImage1/gallery/'+str(id))
+
+                    done = cv2.imwrite('TesteImage1/gallery/'+str(id)+'/%d.jpg' % (Image_save_count[id]), im0[int(
+                        bbox[1]):int(bbox[3]), int(bbox[0]):int(bbox[2])])
+                    # if done:
+                    #     f.write("('./reid-data/Actual_Tracking/%d-1-%d.jpg',%d,1),\n" % (id, Image_save_count[id],id))
                     # draw bbox on screen
                     # time.sleep(50000)
                     color = colors[id % len(colors)]
-                    cv2.rectangle(im0, (int(bbox[0]), int(
-                        bbox[1])), (int(bbox[2]), int(bbox[3])), color, 2)
 
-                    cv2.putText(im0, class_name + "-" + str(id),
-                                (int(bbox[0]), int(bbox[1]-10)), 0, 0.6, color, 1)
+                    # cv2.rectangle(im0, (int(bbox[0]), int(
+                    #     bbox[1])), (int(bbox[2]), int(bbox[3])), color, 2)
+
+                    # cv2.putText(im0, class_name + "-" + str(id),
+                    #             (int(bbox[0]), int(bbox[1]-10)), 0, 0.6, color, 1)
+
                 # print(ID_with_Class,)
                 ConfigDataUpdater.updateData(ID_with_Box, ID_with_Class)
 
-                for id in ID_with_Box.keys():
-                    if ID_with_Class[id] == "person":
-                        color = colors[id % len(colors)]
-                        for centroid in ConfigDataUpdater.People_Centroids[id]:
-                            cv2.circle(
-                                im0, (centroid[0], centroid[1]), 3, color, -1)
+                # for id in ID_with_Box.keys():
+                #     if ID_with_Class[id] == "person":
+                #         color = colors[id % len(colors)]
+                #         for centroid in ConfigDataUpdater.People_Centroids[id]:
+                #             cv2.circle(
+                #                 im0, (centroid[0], centroid[1]), 3, color, -1)
 
             # Stream results
             if view_img:
