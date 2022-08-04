@@ -1,16 +1,42 @@
 from collections import OrderedDict
 import json
+import os
 import string
 import sys
+from time import sleep
+import cv2
 import numpy as np
 from shapely.geometry import Point
 from shapely.geometry.polygon import Polygon
 from dataclasses import dataclass
+import paho.mqtt.client as mqtt
 
 from sympy import centroid
 
 
 import intersect
+
+
+class NumpyArrayEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, np.ndarray):
+            return obj.tolist()
+        return json.JSONEncoder.default(self, obj)
+
+
+def isGoingInsideFrame(CenterPoint, InicialPoint, FinalPoint):
+    center_point = np.array(CenterPoint)
+    inicial_point = np.array(InicialPoint)
+    final_point = np.array(FinalPoint)
+
+    inicial_distance = np.linalg.norm(center_point-inicial_point)
+    final_distance = np.linalg.norm(center_point-final_point)
+    # está a afastar-se
+    print(final_distance, inicial_distance)
+    if inicial_distance > final_distance:
+        return False
+    else:
+        return True
 
 
 def closest_node(node, nodes):
@@ -20,45 +46,47 @@ def closest_node(node, nodes):
     return np.argmin(dist_2)
 
 
-@dataclass
 class PersonDetectionData:
-    id: int
-    maxDisappeared = int
-    maxCentroids = int
-    centroid: list = []
-    box:  list = []
-    disappeared_count: int = 0
-    objects: list = []
-    global_id: str = None
-    # Descrever como está organizado o tuplo
+    def __init__(self, id, maxDisappeared, maxCentroids, maxImageFrames):
+        self.id: id
+        self.maxDisappeared = maxDisappeared
+        self.maxCentroids = maxCentroids
+        self.maxImageFrames = maxImageFrames
+        self.centroid = []
+        self.box = []
+        self.disappeared_count = 0
+        self.objects = []
+        self.global_id = None
+        self.boxFrameImage = []
+        # Descrever como está organizado o tuplo
 
-    def appendData(self, box, centroid):
+    def appendData(self, box, centroid, box_frame):
         self.box.append(box)
         self.centroid.append(centroid)
+        self.boxFrameImage.append(box_frame)
         self.disappeared_count = 0
         if len(self.centroid) > self.maxCentroids:
-            self.box[id].pop(0)
-            self.centroid[id].pop(0)
+            self.box.pop(0)
+            self.centroid.pop(0)
+        if len(self.boxFrameImage) > self.maxImageFrames:
+            self.boxFrameImage.pop(0)
 
     def getLastCentroid(self):
         return self.centroid[-1]
-    
+
     def addObject(self, object):
-        if condition:
-            
+        if object not in self.objects:
+            self.objects.append(object)
 
-    # funçoes:
-    #   reset disappeared
-    #   add centroid
-    #   add object
-    #   get tamanho de listas
+    def isToDelete(self):
+        return self.disappeared_count > self.maxDisappeared
 
-    # def total_cost(self) -> float:
-    #     return self.unit_price * self.quantity_on_hand
+    def increaseDisappearedCount(self):
+        self.disappeared_count += 1
 
 
 class Data_Config_Count():
-    def __init__(self, maxDisappeared=60, maxCentroids=20):
+    def __init__(self, centerFramePoint, maxDisappeared=60, maxCentroids=20, maxImageFrames=20):
         self.JsonObjectString = None
         # Config
         self.ip = None
@@ -77,6 +105,8 @@ class Data_Config_Count():
         self.packet_default_output = None
         ##################
         # MQTT Send/Receive
+        self.mqtt_client = None
+
         self.subscribe_mqtt = None
         self.publish_mqtt = None
         ##################
@@ -99,14 +129,16 @@ class Data_Config_Count():
         self.last_reset = None
 
         ########################
-        self.People_Box = OrderedDict()
-        self.People_Centroids = OrderedDict()
-        self.People_Objects = OrderedDict()
+        # self.People_Box = OrderedDict()
+        # self.People_Centroids = OrderedDict()
+        # self.People_Objects = OrderedDict()
         self.disappeared = OrderedDict()
         self.ARRAY_FULL_DATA = {}
 
         self.maxDisappeared = maxDisappeared
         self.maxCentroids = maxCentroids
+        self.maxImageFrames = maxImageFrames
+        self.centerFramePoint = centerFramePoint
 
     def register(self, jsonObject):
         self.JsonObjectString = json.dumps(jsonObject)
@@ -196,10 +228,12 @@ class Data_Config_Count():
                 self.zone = jsonObject["input"]["zone"]
             else:
                 self.config_zone = False
+
             if jsonObject["input"].__contains__("line_intersection_zone"):
                 self.config_line_intersection_zone = True
                 # Verify highest point and change
                 self.line_intersection_zone = jsonObject["input"]["line_intersection_zone"]
+                # print(self.line_intersection_zone)
                 # print(self.line_intersection_zone["start_point"])
                 for index, each_intersection_zone in enumerate(self.line_intersection_zone):
                     self.line_intersection_zone[index]["start_point"], self.line_intersection_zone[index]["end_point"] = min(
@@ -213,7 +247,7 @@ class Data_Config_Count():
             else:
                 self.config_remove_area = False
 
-    def updateData(self, ID_with_Box, ID_with_Class):
+    def updateData(self, ID_with_Box, ID_with_Class, ID_with_Box_Frame):
 
         DataPacket = {}
         DataPacket["people"] = []
@@ -238,27 +272,11 @@ class Data_Config_Count():
                 # Add New Data
                 if not self.ARRAY_FULL_DATA.keys().__contains__(id):
                     self.ARRAY_FULL_DATA[id] = PersonDetectionData(
-                        id, self.maxDisappeared, self.maxCentroids)
-                self.ARRAY_FULL_DATA[id].appendData(value, (cX, cY))
+                        id, self.maxDisappeared, self.maxCentroids, self.maxImageFrames)
+                self.ARRAY_FULL_DATA[id].appendData(
+                    value, (cX, cY), ID_with_Box_Frame[id])
 
                 PeopleList[id] = (cX, cY)
-
-                # if self.People_Centroids.keys().__contains__(id) and self.People_Box.keys().__contains__(id):
-                #     # self.People_Box[id].append()
-                #     # self.People_Centroids[id]
-                #     self.People_Box[id].append(value)
-                #     # print("AQUI", self.People_Centroids[id])
-                #     self.People_Centroids[id].append((cX, cY))
-                #     # print(self.People_Centroids[id])
-                #     self.disappeared[id] = 0
-
-                #     if len(self.People_Centroids[id]) > self.maxCentroids:
-                #         self.People_Centroids[id].pop(0)
-                #         self.People_Box[id].pop(0)
-                # else:
-                #     self.People_Box[id] = [value]
-                #     self.People_Centroids[id] = [(cX, cY)]
-                #     self.disappeared[id] = 0
 
         # Add Object to Corresponding Person
         if len(PeopleList.keys()) > 0:
@@ -270,34 +288,26 @@ class Data_Config_Count():
                     cY = int((ID_with_Box[id][1] + ID_with_Box[id][3]) / 2.0)
                     node = closest_node((cX, cY), list(PeopleList.values()))
 
-                    if self.People_Objects.keys().__contains__(list(
-                            PeopleList.keys())[node]):
-                        if not self.People_Objects[list(
-                                PeopleList.keys())[node]].__contains__(class_name):
-                            self.People_Objects[list(
-                                PeopleList.keys())[node]].append(class_name)
-                    else:
-                        self.People_Objects[list(
-                            PeopleList.keys())[node]] = [class_name]
+                    self.ARRAY_FULL_DATA[list(
+                        PeopleList.keys())[node]].addObject(class_name)
 
             # Assign Objects to PersonPacket Variable
             for id in PersonPacket:
-                if self.People_Objects.__contains__(id):
-                    PersonPacket[id]["objects"] = self.People_Objects[id]
+                if self.ARRAY_FULL_DATA[id].objects:
+                    # if self.People_Objects.__contains__(id):
+                    PersonPacket[id]["objects"] = self.ARRAY_FULL_DATA[id].objects
 
         # Remove undetected People
         IDsToDelete = []
-        for key in self.disappeared.keys():
-            if self.disappeared[key] > self.maxDisappeared:
-                IDsToDelete.append(key)
+
+        for id in self.ARRAY_FULL_DATA.keys():
+            if self.ARRAY_FULL_DATA[id].isToDelete():
+                IDsToDelete.append(id)
             else:
-                self.disappeared[key] += 1
+                self.ARRAY_FULL_DATA[id].increaseDisappearedCount()
+
         for item in IDsToDelete:
-            del self.disappeared[item]
-            del self.People_Box[item]
-            del self.People_Centroids[item]
-            if self.People_Objects.keys().__contains__(item):
-                del self.People_Objects[item]
+            self.ARRAY_FULL_DATA.pop(item)
 
         self.num_people_total = len(ID_with_Box.keys())
 
@@ -312,8 +322,8 @@ class Data_Config_Count():
                 # print(centroidList)
                 # ZONE
                 for index, item in enumerate(self.zone):
-                    point = Point(
-                        self.People_Centroids[id][-1][0], self.People_Centroids[id][-1][1])
+                    point = Point(*self.ARRAY_FULL_DATA[id].getLastCentroid())
+
                     polygon = Polygon(item["points"])
                     if polygon.contains(point):
                         PersonPacket[id]["zone"].append(
@@ -334,15 +344,15 @@ class Data_Config_Count():
                             "num_zone_before": 0,
                             "num_zone_after": 0
                         }
-                for item in self.line_intersection_zone:
+                for intersectIndex, item in enumerate(self.line_intersection_zone):
 
-                    if len(self.People_Centroids[id]) >= 2:
+                    if len(self.ARRAY_FULL_DATA[id].centroid) >= 2:
                         # print(self.People_Centroids[id][-2],
                         #       self.People_Centroids[id][-1])
                         # print(tuple(item["start_point"]), tuple(item["end_point"]))
 
                         DoIntersect, orientacao = intersect.doIntersect(
-                            self.People_Centroids[id][-2], self.People_Centroids[id][-1], tuple(item["start_point"]), tuple(item["end_point"]))
+                            self.ARRAY_FULL_DATA[id].centroid[-2], self.ARRAY_FULL_DATA[id].centroid[-1], tuple(item["start_point"]), tuple(item["end_point"]))
                         # print("AQUI", DoIntersect, orientacao)
                         if DoIntersect:
                             print("Intersect\n\n\n\n")
@@ -370,6 +380,64 @@ class Data_Config_Count():
                                 #     print("Esquerda", id)
                                 # if orientacao == 2:
                                 #     print("Direita", id)
+                            print("\n\n\n\n\n")
+                            print(isGoingInsideFrame(
+                                self.centerFramePoint, self.ARRAY_FULL_DATA[id].centroid[-1], self.ARRAY_FULL_DATA[id].centroid[0]))
+                            # sleep(50000)
+                            # Check if Person just went inside the frame or outside
+                            if isGoingInsideFrame(self.centerFramePoint, self.ARRAY_FULL_DATA[id].centroid[-1], self.ARRAY_FULL_DATA[id].centroid[0]):
+                                # PERSON IS GOING INSIDE THE CAMERA
+                                # Check if there is any ID Association in Config
+                                # If so send group of images to associated tracking system
+                                print(item["id_association"])
+                                if "id_association" in item :
+                                    if item["id_association"]:
+                                        print("TODO")
+                                        SendData = {}
+                                        ImagesData = {}
+                                        
+                                        for index, box_frame in enumerate(self.ARRAY_FULL_DATA[id].boxFrameImage):
+                                            ImagesData[index] = json.dumps(
+                                                {"frame": box_frame,"shape":box_frame.shape}, cls=NumpyArrayEncoder)
+                                            # ImagesData["shape"+str(index)]=box_frame.shape
+                                            # ImagesData[index] = json.dumps(
+                                            #     {"frame": "box_frame","shape":box_frame.shape}, cls=NumpyArrayEncoder)
+                                        SendData["id"] = id
+                                        SendData["name"] = item["id_association"]["name"]
+                                        SendData["frames"] = ImagesData
+                                        SendData["type"] ="re-identification"
+
+                                        # self.mqtt_client.publish(
+                                        #     item["id_association"]["publish_location"]+"/re_identification", json.dumps(SendData))
+                                        
+                                        self.mqtt_client.publish(
+                                            item["id_association"]["publish_location"], json.dumps(SendData))
+                                        sleep(5000000)
+                            else:
+                                # PERSON IS GOING OUTSIDE THE CAMERA
+                                # Save images in correct directory
+                                # - RootDir
+                                #      - IntersectData
+                                #               - intersect-0  -> intersect-{intersect_config_index}
+                                #                       - cam0-id = globalID -> cam{camID}-{personID}
+                                #                               |- frames.jpg (images)
+                                #                       - cam0-id = globalID -> cam{camID}-{personID}
+                                #                               |- frames.jpg (images)
+                                #               - intersect-1
+                                #
+                                SaveDir = "./IntersectData/intersect-{}/cam{}-{}/".format(
+                                    intersectIndex, self.camera_id, id)
+                                if self.ARRAY_FULL_DATA[id].global_id:
+                                    SaveDir = "./IntersectData/intersect-{}/{}/".format(
+                                        intersectIndex, self.ARRAY_FULL_DATA[id].global_id)
+
+                                if not os.path.exists(SaveDir):
+                                    os.makedirs(SaveDir)
+
+                                for index, item in enumerate(self.ARRAY_FULL_DATA[id].boxFrameImage):
+                                    done = cv2.imwrite(
+                                        SaveDir+'%d.jpg' % (index), item)
+
         print(self.count_inside_zone, self.count_outside_zone)
         print("Número de Pessoas", self.num_people_total)
 

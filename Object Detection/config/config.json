@@ -69,7 +69,11 @@
                 ],
                 "zone_direction_1or2": 1,
                 "name_zone_before": "outside",
-                "name_zone_after": "inside"
+                "name_zone_after": "inside",
+                "id_association": {
+                    "publish_location": "edge_config/trackingcamera1",
+                    "name": "Escola de Engenharia"
+                }
             },
             {
                 "name": "123",
@@ -83,7 +87,11 @@
                 ],
                 "zone_direction_1or2": "1",
                 "name_zone_before": "antes",
-                "name_zone_after": "depois"
+                "name_zone_after": "depois",
+                "id_association": {
+                    "publish_location": "edge_config/trackingcamera1",
+                    "name": "Escola de Engenharia"
+                }
             }
         ],
         "remove_area": []

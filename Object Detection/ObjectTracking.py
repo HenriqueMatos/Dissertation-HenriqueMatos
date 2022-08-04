@@ -91,24 +91,46 @@ def on_message(client, userdata, message):
 
             client.publish("camera_config", json.dumps(sendData))
 
+        if JsonObject["type"] == "re-identification":
+            print(JsonObject["id"])
+            print(JsonObject["name"])
+            print(JsonObject["frames"])
+            print(JsonObject["frames"]['0'])
+            
+            for intersectIndex, item in enumerate(ConfigDataUpdater.line_intersection_zone):
+                if item["name"] == JsonObject["name"]:
+                    
+                    # Save images in query
+                    SaveDir = "./QueryData/"
+                    for key, value in JsonObject["frames"].items():
+                        JsonData = json.loads(value)
+
+
+                        if not os.path.exists(SaveDir):
+                            os.makedirs(SaveDir)
+
+                        cv2.imwrite(
+                            SaveDir+key+'.jpg', np.asarray(JsonData["frame"]))
+                        
+                    # Get gallery images directory
+                    gallery_directory="./IntersectData/intersect-{}/".format(intersectIndex)
+                    # NO ASSOCIATION MADE
+                    if not os.path.exists(gallery_directory):
+                        break
+                    
+                    # Do The Re-Identification
+                        
+                    # When Done Delete Query Data and Gallery Person ID Data
+                    
+                    # If any association was made Send New ID to tracking system
+                    
+                    break
+
     except print(0):
         pass
 
 
 def ThreadDataTransmitter(ConfigDataUpdater, frame):
-
-    ################ RABBIT MQ ################
-    # credentials = pika.PlainCredentials('admin', 'admin')
-
-    # connection_parameters = pika.ConnectionParameters(
-    #     'localhost', credentials=credentials, virtual_host="keycloak_test")
-    # connection = pika.BlockingConnection(
-    #     connection_parameters)
-    # channel = connection.channel()
-
-    # channel.queue_declare(queue='hello')
-
-    # request
 
     print(response)
     sendData = {}
@@ -119,20 +141,17 @@ def ThreadDataTransmitter(ConfigDataUpdater, frame):
     sendData["camera_id"] = ConfigDataUpdater.camera_id
     mqttBroker = ConfigDataUpdater.ip
     # mqttBroker = "localhost"
-    client = mqtt.Client(str(ConfigDataUpdater.camera_id))
-    client.connect(mqttBroker)
+    ConfigDataUpdater.mqtt_client = mqtt.Client(
+        str(ConfigDataUpdater.camera_id))
+    ConfigDataUpdater.mqtt_client.connect(mqttBroker)
 
-    client.publish("camera_config", json.dumps(sendData))
+    ConfigDataUpdater.mqtt_client.publish(
+        "camera_config", json.dumps(sendData))
 
-    client.subscribe("edge_config/"+KeycloakUsername)
+    ConfigDataUpdater.mqtt_client.subscribe("edge_config/"+KeycloakUsername)
     # client.subscribe("edge_config/"+str(ConfigDataUpdater.camera_id))
-    client.on_message = on_message
-    client.loop_start()
-
-    # channel.basic_publish(
-    #     exchange='', routing_key='hello', body=json.dumps(sendData))
-    # # print(" [x] Sent "+''.join(args))
-    # connection.close()
+    ConfigDataUpdater.mqtt_client.on_message = on_message
+    ConfigDataUpdater.mqtt_client.loop_start()
 
 
 def main(view_img=False, config='./config/config.json', username='', password='', source='0'):
@@ -147,8 +166,20 @@ def main(view_img=False, config='./config/config.json', username='', password=''
     with open(config_file, 'r') as f:
         data = json.load(f)
 
+    global cap
+    cap = cv2.VideoCapture(source)
+    # cap = cv2.VideoCapture('/dev/video0')
+    # cap = cv2.VideoCapture("./output.mp4")
+    _, frame = cap.read()
+    # frame=cv2.cvtColor(frame,cv2.COLOR_BGR2RGB)
+    # frame = frame.astype('float64')
+    height, width, channels = frame.shape
+
+    cv2.imwrite("frame.jpg", frame)
+
     global ConfigDataUpdater
-    ConfigDataUpdater = Data_Config_Count.Data_Config_Count()
+    ConfigDataUpdater = Data_Config_Count.Data_Config_Count(
+        [height/2, width/2])
     ConfigDataUpdater.register(data)
     url = 'http://'+ConfigDataUpdater.ip + \
         ':8080/auth/realms/AppAuthenticator/protocol/openid-connect/token'
@@ -180,17 +211,6 @@ def main(view_img=False, config='./config/config.json', username='', password=''
     # initialize tracker
     tracker = Tracker(metric)
 
-    global cap
-    cap = cv2.VideoCapture(source)
-    # cap = cv2.VideoCapture('/dev/video0')
-    # cap = cv2.VideoCapture("./output.mp4")
-    _, frame = cap.read()
-    # frame=cv2.cvtColor(frame,cv2.COLOR_BGR2RGB)
-    # frame = frame.astype('float64')
-    height, width, channels = frame.shape
-
-    cv2.imwrite("frame.jpg", frame)
-
     with open("frame.jpg", "rb") as image_file:
         encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
     try:
@@ -209,7 +229,7 @@ def main(view_img=False, config='./config/config.json', username='', password=''
     conf_thres = 0.25  # confidence threshold
     iou_thres = 0.45  # NMS IOU threshold
     max_det = 1000  # maximum detections per image
-    device = '0'  # cuda device, i.e. 0 or 0,1,2,3 or cpu
+    device = 'cpu'  # cuda device, i.e. 0 or 0,1,2,3 or cpu
     # view_img = True  # show
     # classes = 0  # filter by class: --class 0, or --class 0 2 3
     # classes = None  # filter by class: --class 0, or --class 0 2 3
@@ -267,7 +287,7 @@ def main(view_img=False, config='./config/config.json', username='', password=''
     Image_save_count = {}
 
     for path, im, im0s, vid_cap, s in dataset:
-
+        imageBackUp = im0s.copy()
         # COMENTADO PARA NÃO INTERFERIR COM AS IMAGENS
 
         # ####### Polygon Remove #######
@@ -280,10 +300,10 @@ def main(view_img=False, config='./config/config.json', username='', password=''
 
         # # REMOVE ALL POINTS FROM POLYGON
 
-        # # Draw Line_intersection_zone
-        # for item in ConfigDataUpdater.line_intersection_zone:
-        #     cv2.line(im0s, tuple(item["start_point"]),
-        #              tuple(item["end_point"]), (0, 255, 0), 2)
+        # Draw Line_intersection_zone
+        for item in ConfigDataUpdater.line_intersection_zone:
+            cv2.line(im0s, tuple(item["start_point"]),
+                     tuple(item["end_point"]), (0, 255, 0), 2)
 
         # # Draw Zones
         # for item in ConfigDataUpdater.zone:
@@ -370,6 +390,7 @@ def main(view_img=False, config='./config/config.json', username='', password=''
 
                 ID_with_Box = OrderedDict()
                 ID_with_Class = OrderedDict()
+                ID_with_Box_Frame = OrderedDict()
                 # update tracks
                 for track in tracker.tracks:
                     if not track.is_confirmed() or track.time_since_update > 1:
@@ -381,37 +402,41 @@ def main(view_img=False, config='./config/config.json', username='', password=''
                     ID_with_Box[id] = (int(bbox[0]), int(
                         bbox[1]), int(bbox[2]), int(bbox[3]))
                     ID_with_Class[id] = class_name
+                    # cv2.imwrite('frameTeste.jpg',
+                    #             imageBackUp[0:height, 0:width])
+                    # sys.exit(-1)
+                    # print(imageBackUp[int(bbox[1]):int(
+                    #     bbox[3]), int(bbox[0]):int(bbox[2])])
+                    # time.sleep(500000)
+                    ID_with_Box_Frame[id] = imageBackUp[int(bbox[1]):int(
+                        bbox[3]), int(bbox[0]):int(bbox[2])]
                     # SAVE IMAGE IN SYSTEM
-                    if id in Image_save_count:
-                        Image_save_count[id] += 1
-                    else:
-                        Image_save_count[id] = 1
-                    if not os.path.exists('TesteImage1/gallery/'+str(id)):
-                        os.makedirs('TesteImage1/gallery/'+str(id))
+                    # if id in Image_save_count:
+                    #     Image_save_count[id] += 1
+                    # else:
+                    #     Image_save_count[id] = 1
+                    # if not os.path.exists('TesteImage1/gallery/'+str(id)):
+                    #     os.makedirs('TesteImage1/gallery/'+str(id))
+                    # done = cv2.imwrite('TesteImage1/gallery/'+str(id)+'/%d.jpg' % (Image_save_count[id]), im0[int(
+                    #     bbox[1]):int(bbox[3]), int(bbox[0]):int(bbox[2])])
 
-                    done = cv2.imwrite('TesteImage1/gallery/'+str(id)+'/%d.jpg' % (Image_save_count[id]), im0[int(
-                        bbox[1]):int(bbox[3]), int(bbox[0]):int(bbox[2])])
-                    # if done:
-                    #     f.write("('./reid-data/Actual_Tracking/%d-1-%d.jpg',%d,1),\n" % (id, Image_save_count[id],id))
-                    # draw bbox on screen
-                    # time.sleep(50000)
                     color = colors[id % len(colors)]
 
-                    # cv2.rectangle(im0, (int(bbox[0]), int(
-                    #     bbox[1])), (int(bbox[2]), int(bbox[3])), color, 2)
+                    cv2.rectangle(im0, (int(bbox[0]), int(
+                        bbox[1])), (int(bbox[2]), int(bbox[3])), color, 2)
 
-                    # cv2.putText(im0, class_name + "-" + str(id),
-                    #             (int(bbox[0]), int(bbox[1]-10)), 0, 0.6, color, 1)
+                    cv2.putText(im0, class_name + "-" + str(id),
+                                (int(bbox[0]), int(bbox[1]-10)), 0, 0.6, color, 1)
 
-                # print(ID_with_Class,)
-                ConfigDataUpdater.updateData(ID_with_Box, ID_with_Class)
+                ConfigDataUpdater.updateData(
+                    ID_with_Box, ID_with_Class, ID_with_Box_Frame)
 
-                # for id in ID_with_Box.keys():
-                #     if ID_with_Class[id] == "person":
-                #         color = colors[id % len(colors)]
-                #         for centroid in ConfigDataUpdater.People_Centroids[id]:
-                #             cv2.circle(
-                #                 im0, (centroid[0], centroid[1]), 3, color, -1)
+                for id in ID_with_Box.keys():
+                    if ID_with_Class[id] == "person":
+                        color = colors[id % len(colors)]
+                        for centroid in ConfigDataUpdater.ARRAY_FULL_DATA[id].centroid:
+                            cv2.circle(
+                                im0, (centroid[0], centroid[1]), 3, color, -1)
 
             # Stream results
             if view_img:

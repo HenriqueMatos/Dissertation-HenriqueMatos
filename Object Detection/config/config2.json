@@ -38,12 +38,12 @@
             {
                 "name": "Escola de Engenharia",
                 "start_point": [
-                    1031,
-                    199
+                    931,
+                    217
                 ],
                 "end_point": [
-                    1263,
-                    494
+                    1049,
+                    463
                 ],
                 "zone_direction_1or2": "1",
                 "name_zone_before": "exterior ",
