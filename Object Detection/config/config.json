@@ -72,7 +72,7 @@
                 "name_zone_after": "inside",
                 "id_association": {
                     "publish_location": "edge_config/trackingcamera1",
-                    "name": "Escola de Engenharia"
+                    "name": "interior salas"
                 }
             },
             {
@@ -90,7 +90,7 @@
                 "name_zone_after": "depois",
                 "id_association": {
                     "publish_location": "edge_config/trackingcamera1",
-                    "name": "Escola de Engenharia"
+                    "name": "123"
                 }
             }
         ],

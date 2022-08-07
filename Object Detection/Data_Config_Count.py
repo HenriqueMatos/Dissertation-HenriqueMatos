@@ -414,6 +414,10 @@ class Data_Config_Count():
                                             item["id_association"]["publish_location"], json.dumps(SendData))
                                         sleep(5000000)
                             else:
+                                # !!!!!!!!!!!!!!!!!
+                                # NÃO PRECISA DE FAZER RE IDENTIFICATION SE NÃO TIVER NAS CONFIGURAÇOES
+                                
+                                
                                 # PERSON IS GOING OUTSIDE THE CAMERA
                                 # Save images in correct directory
                                 # - RootDir
@@ -425,10 +429,10 @@ class Data_Config_Count():
                                 #                               |- frames.jpg (images)
                                 #               - intersect-1
                                 #
-                                SaveDir = "./IntersectData/intersect-{}/cam{}-{}/".format(
+                                SaveDir = "./GalleryData/intersect-{}/cam{}-{}/".format(
                                     intersectIndex, self.camera_id, id)
                                 if self.ARRAY_FULL_DATA[id].global_id:
-                                    SaveDir = "./IntersectData/intersect-{}/{}/".format(
+                                    SaveDir = "./GalleryData/intersect-{}/{}/".format(
                                         intersectIndex, self.ARRAY_FULL_DATA[id].global_id)
 
                                 if not os.path.exists(SaveDir):

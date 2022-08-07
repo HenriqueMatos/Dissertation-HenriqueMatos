@@ -37,6 +37,10 @@ from pathlib import Path
 import torch
 import torch.backends.cudnn as cudnn
 
+# import deere_identification
+from deep_person_reid.re_identification import do_Re_Identification
+# from deep_person
+# import .deep_person_reid.re_identification as re_identification
 
 FILE = Path(__file__).resolve()
 ROOT = FILE.parents[0]  # YOLOv5 root directory
@@ -94,32 +98,37 @@ def on_message(client, userdata, message):
         if JsonObject["type"] == "re-identification":
             print(JsonObject["id"])
             print(JsonObject["name"])
-            print(JsonObject["frames"])
-            print(JsonObject["frames"]['0'])
+            # print(JsonObject["frames"])
+            # print(JsonObject["frames"]['0'])
             
             for intersectIndex, item in enumerate(ConfigDataUpdater.line_intersection_zone):
+                print(item["name"] == JsonObject["name"])
+                print(JsonObject["name"],item["name"])
                 if item["name"] == JsonObject["name"]:
                     
-                    # Save images in query
-                    SaveDir = "./QueryData/"
-                    for key, value in JsonObject["frames"].items():
-                        JsonData = json.loads(value)
-
-
-                        if not os.path.exists(SaveDir):
-                            os.makedirs(SaveDir)
-
-                        cv2.imwrite(
-                            SaveDir+key+'.jpg', np.asarray(JsonData["frame"]))
-                        
                     # Get gallery images directory
-                    gallery_directory="./IntersectData/intersect-{}/".format(intersectIndex)
+                    gallery_directory="./GalleryData/intersect-{}/".format(intersectIndex)
                     # NO ASSOCIATION MADE
                     if not os.path.exists(gallery_directory):
                         break
                     
-                    # Do The Re-Identification
+                    # Save images in query
+                    query_directory = "./QueryData/"
+                    for key, value in JsonObject["frames"].items():
+                        JsonData = json.loads(value)
+
+
+                        if not os.path.exists(query_directory):
+                            os.makedirs(query_directory)
+
+                        cv2.imwrite(
+                            query_directory+key+'.jpg', np.asarray(JsonData["frame"]))
                         
+                    
+                    
+                    # Do The Re-Identification
+                    result=do_Re_Identification(gallery_directory,query_directory)
+                    print(result)
                     # When Done Delete Query Data and Gallery Person ID Data
                     
                     # If any association was made Send New ID to tracking system

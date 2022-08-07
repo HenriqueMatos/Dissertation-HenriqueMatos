@@ -1,5 +1,7 @@
 {
     "python.analysis.extraPaths": [
-        "./Object Detection/Tensorflow/models/official"
+        "./Object Detection/Tensorflow/models/official",
+        "./Object Detection/deep-person-reid",
+        "./Object Detection/deep_person_reid"
     ]
 }
