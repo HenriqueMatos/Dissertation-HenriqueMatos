@@ -2,6 +2,7 @@ import base64
 import codecs
 import datetime
 import json
+import shutil
 import time
 import cv2
 import numpy as np
@@ -67,73 +68,106 @@ def on_message(client, userdata, message):
     print("\n\n\n\n\n")
     try:
         JsonObject = json.loads(str(message.payload.decode("utf-8")))
-        print(JsonObject["type"])
-        if JsonObject["type"] == "update":
-            # Update config and file
+        if JsonObject.__contains__("type"):
+            print(JsonObject["type"])
+            if JsonObject["type"] == "update":
+                # Update config and file
 
-            if JsonObject.__contains__("config"):
-                try:
-                    ConfigDataUpdater.register(JsonObject["config"])
-                    file1 = open(config_file, "w")
-                    file1.write(json.dumps(JsonObject["config"]))
-                    file1.close()
-                except print(0):
-                    pass
-        if JsonObject["type"] == "refresh":
-            _, frame = cap.read()
+                if JsonObject.__contains__("config"):
+                    try:
+                        ConfigDataUpdater.register(JsonObject["config"])
+                        file1 = open(config_file, "w")
+                        file1.write(json.dumps(JsonObject["config"]))
+                        file1.close()
+                    except print(0):
+                        pass
+            if JsonObject["type"] == "refresh":
+                _, frame = cap.read()
 
-            cv2.imwrite("frame.jpg", frame)
-            with open("frame.jpg", "rb") as image_file:
-                encoded_string = base64.b64encode(
-                    image_file.read()).decode('utf-8')
-            sendData = {}
-            sendData["frame"] = encoded_string
-            sendData["type"] = "login"
-            sendData["config"] = ConfigDataUpdater.JsonObjectString
-            sendData["Authenticate"] = response["access_token"]
-            sendData["camera_id"] = ConfigDataUpdater.camera_id
+                cv2.imwrite("frame.jpg", frame)
+                with open("frame.jpg", "rb") as image_file:
+                    encoded_string = base64.b64encode(
+                        image_file.read()).decode('utf-8')
+                sendData = {}
+                sendData["frame"] = encoded_string
+                sendData["type"] = "login"
+                sendData["config"] = ConfigDataUpdater.JsonObjectString
+                sendData["Authenticate"] = response["access_token"]
+                sendData["camera_id"] = ConfigDataUpdater.camera_id
 
-            client.publish("camera_config", json.dumps(sendData))
+                client.publish("camera_config", json.dumps(sendData))
 
-        if JsonObject["type"] == "re-identification":
-            print(JsonObject["id"])
-            print(JsonObject["name"])
-            # print(JsonObject["frames"])
-            # print(JsonObject["frames"]['0'])
-            
-            for intersectIndex, item in enumerate(ConfigDataUpdater.line_intersection_zone):
-                print(item["name"] == JsonObject["name"])
-                print(JsonObject["name"],item["name"])
-                if item["name"] == JsonObject["name"]:
-                    
-                    # Get gallery images directory
-                    gallery_directory="./GalleryData/intersect-{}/".format(intersectIndex)
-                    # NO ASSOCIATION MADE
-                    if not os.path.exists(gallery_directory):
+            if JsonObject["type"] == "re-identification":
+                print(JsonObject["id"])
+                print(JsonObject["name"])
+                # print(JsonObject["frames"])
+                # print(JsonObject["frames"]['0'])
+
+                for intersectIndex, item in enumerate(ConfigDataUpdater.line_intersection_zone):
+                    print(item["name"] == JsonObject["name"])
+                    print(JsonObject["name"], item["name"])
+                    if item["name"] == JsonObject["name"]:
+
+                        # Get gallery images directory
+                        gallery_directory = "./GalleryData/intersect-{}/".format(
+                            intersectIndex)
+                        # NO ASSOCIATION MADE
+                        if not os.path.exists(gallery_directory):
+                            break
+
+                        # REMOVE OUTDATED FOLDERS
+                        for file in os.listdir(gallery_directory):
+                            d = os.path.join(gallery_directory, file)
+                            if os.path.isdir(d):
+                                # print(d)
+                                ti_c = os.path.getctime(d)
+                                print(ti_c)
+                                print(time.time()-ti_c)
+                                # REMOVE IF FOLDER HAS MORE THAN 1 DAY
+                                if (time.time()-ti_c) > 1*24*60*60:
+                                    shutil.rmtree(d)
+                        # time.sleep(1000000)
+
+                        # Save images in query
+                        query_directory = "./QueryData/"
+                        for key, value in JsonObject["frames"].items():
+                            JsonData = json.loads(value)
+                            if not os.path.exists(query_directory):
+                                os.makedirs(query_directory)
+                            cv2.imwrite(
+                                query_directory+key+'.jpg', np.asarray(JsonData["frame"]))
+
+                        # Do The Re-Identification
+                        if len(os.listdir(gallery_directory)) == 0 or len(os.listdir(query_directory)) == 0:
+                            break
+
+                        result = do_Re_Identification(
+                            gallery_directory, query_directory)
+                        print(result)
+
+                        # Remove Query Files
+                        shutil.rmtree(query_directory)
+                        # If successful Re-Identification remove associated gallery files
+                        if result:
+                            # DESCOMENTAR
+                            # shutil.rmtree(os.path.join(
+                            #     gallery_directory, result))
+
+                            sendData = {}
+                            sendData["type"] = "reid-association"
+                            sendData["old-id"] = JsonObject["id"]
+                            sendData["new-id"] = result
+
+                            client.publish(item["id_association"]["publish_location"],
+                                           json.dumps(sendData))
+
+                        # If any association was made Send New ID to tracking system
+
                         break
-                    
-                    # Save images in query
-                    query_directory = "./QueryData/"
-                    for key, value in JsonObject["frames"].items():
-                        JsonData = json.loads(value)
-
-
-                        if not os.path.exists(query_directory):
-                            os.makedirs(query_directory)
-
-                        cv2.imwrite(
-                            query_directory+key+'.jpg', np.asarray(JsonData["frame"]))
-                        
-                    
-                    
-                    # Do The Re-Identification
-                    result=do_Re_Identification(gallery_directory,query_directory)
-                    print(result)
-                    # When Done Delete Query Data and Gallery Person ID Data
-                    
-                    # If any association was made Send New ID to tracking system
-                    
-                    break
+            if JsonObject["type"] == "reid-association":
+                print(JsonObject)
+                ConfigDataUpdater.setGlobalID(
+                    int(JsonObject["old-id"]), JsonObject["new-id"])
 
     except print(0):
         pass
@@ -429,16 +463,42 @@ def main(view_img=False, config='./config/config.json', username='', password=''
                     # done = cv2.imwrite('TesteImage1/gallery/'+str(id)+'/%d.jpg' % (Image_save_count[id]), im0[int(
                     #     bbox[1]):int(bbox[3]), int(bbox[0]):int(bbox[2])])
 
+                    # color = colors[id % len(colors)]
+
+                    # cv2.rectangle(im0, (int(bbox[0]), int(
+                    #     bbox[1])), (int(bbox[2]), int(bbox[3])), color, 2)
+                    # if ConfigDataUpdater.ARRAY_FULL_DATA[str(id)].global_id:
+                    #     cv2.putText(im0, class_name + "-" + str(ConfigDataUpdater.ARRAY_FULL_DATA[str(id)].global_id),
+                    #                 (int(bbox[0]), int(bbox[1]-10)), 0, 0.6, color, 1)
+                    # else:
+                    #     cv2.putText(im0, class_name + "-" + str(id),
+                    #                 (int(bbox[0]), int(bbox[1]-10)), 0, 0.6, color, 1)
+
+                ConfigDataUpdater.updateData(
+                    ID_with_Box, ID_with_Class, ID_with_Box_Frame)
+
+                for track in tracker.tracks:
+                    if not track.is_confirmed() or track.time_since_update > 1:
+                        continue
+                    bbox = track.to_tlbr()
+                    class_name = track.get_class()
+                    id = int(track.track_id)
                     color = colors[id % len(colors)]
 
                     cv2.rectangle(im0, (int(bbox[0]), int(
                         bbox[1])), (int(bbox[2]), int(bbox[3])), color, 2)
-
-                    cv2.putText(im0, class_name + "-" + str(id),
-                                (int(bbox[0]), int(bbox[1]-10)), 0, 0.6, color, 1)
-
-                ConfigDataUpdater.updateData(
-                    ID_with_Box, ID_with_Class, ID_with_Box_Frame)
+                    if class_name == "person":
+                        # print(ConfigDataUpdater.ARRAY_FULL_DATA.keys())
+                        print(ConfigDataUpdater.ARRAY_FULL_DATA[id].global_id)
+                        if ConfigDataUpdater.ARRAY_FULL_DATA[id].global_id:
+                            cv2.putText(im0, class_name + "-" + str(ConfigDataUpdater.ARRAY_FULL_DATA[id].global_id),
+                                        (int(bbox[0]), int(bbox[1]-10)), 0, 0.6, color, 1)
+                        else:
+                            cv2.putText(im0, class_name + "-" + str(id),
+                                        (int(bbox[0]), int(bbox[1]-10)), 0, 0.6, color, 1)
+                    else:
+                        cv2.putText(im0, class_name + "-" + str(id),
+                                    (int(bbox[0]), int(bbox[1]-10)), 0, 0.6, color, 1)
 
                 for id in ID_with_Box.keys():
                     if ID_with_Class[id] == "person":

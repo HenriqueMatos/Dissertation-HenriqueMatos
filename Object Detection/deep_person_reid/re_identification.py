@@ -41,7 +41,7 @@ def do_Re_Identification(gallery_directory, query_directory, use_gpu=False):
                 for name in files:
                     # print(os.path.join(path, name))
                     gallery_data.append((os.path.join(path, name), 1, 1))
-            # print()
+            print(gallery_data)
             for path, subdirs, files in os.walk(query_directory):
                 for name in files:
                     # print(os.path.join(path, name))

@@ -412,7 +412,7 @@ class Data_Config_Count():
                                         
                                         self.mqtt_client.publish(
                                             item["id_association"]["publish_location"], json.dumps(SendData))
-                                        sleep(5000000)
+                                        # sleep(5000000)
                             else:
                                 # !!!!!!!!!!!!!!!!!
                                 # NÃO PRECISA DE FAZER RE IDENTIFICATION SE NÃO TIVER NAS CONFIGURAÇOES
@@ -452,3 +452,9 @@ class Data_Config_Count():
 
         # file1.write(json.dumps(DataPacket)+",")
         # file1.close()
+    def setGlobalID(self,oldID,globalID):
+        # print(oldID,globalID)
+        # print(self.ARRAY_FULL_DATA.__contains__(oldID))
+        if self.ARRAY_FULL_DATA.__contains__(oldID):
+            self.ARRAY_FULL_DATA[oldID].global_id=globalID
+        # sys.exit(0)
