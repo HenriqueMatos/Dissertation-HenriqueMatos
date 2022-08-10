@@ -103,10 +103,10 @@ def on_message(client, userdata, message):
                 # print(JsonObject["frames"])
                 # print(JsonObject["frames"]['0'])
 
-                for intersectIndex, item in enumerate(ConfigDataUpdater.config.line_intersection_zone):
-                    print(item["name"] == JsonObject["name"])
-                    print(JsonObject["name"], item["name"])
-                    if item["name"] == JsonObject["name"]:
+                for intersectIndex, item in enumerate(ConfigDataUpdater.config.input.line_intersection_zone):
+                    print(item.name == JsonObject["name"])
+                    print(JsonObject["name"], item.name)
+                    if item.name == JsonObject["name"]:
 
                         # Get gallery images directory
                         gallery_directory = "./GalleryData/intersect-{}/".format(
@@ -158,7 +158,7 @@ def on_message(client, userdata, message):
                             sendData["old-id"] = JsonObject["id"]
                             sendData["new-id"] = result
 
-                            client.publish(item["id_association"]["publish_location"],
+                            client.publish(item.id_association.publish_location,
                                            json.dumps(sendData))
 
                         # If any association was made Send New ID to tracking system
