@@ -47,7 +47,11 @@
                 ],
                 "zone_direction_1or2": "1",
                 "name_zone_before": "exterior ",
-                "name_zone_after": "interior escola"
+                "name_zone_after": "interior escola",
+                "id_association": {
+                    "publish_location": "edge_config/trackingcamera1",
+                    "name": "123"
+                }
             }
         ],
         "remove_area": []
