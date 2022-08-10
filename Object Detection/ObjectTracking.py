@@ -150,8 +150,8 @@ def on_message(client, userdata, message):
                         # If successful Re-Identification remove associated gallery files
                         if result:
                             # DESCOMENTAR
-                            # shutil.rmtree(os.path.join(
-                            #     gallery_directory, result))
+                            shutil.rmtree(os.path.join(
+                                gallery_directory, result))
 
                             sendData = {}
                             sendData["type"] = "reid-association"

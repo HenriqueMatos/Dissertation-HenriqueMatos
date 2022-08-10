@@ -416,7 +416,7 @@ class Data_Config_Count():
                             else:
                                 # !!!!!!!!!!!!!!!!!
                                 # NÃO PRECISA DE FAZER RE IDENTIFICATION SE NÃO TIVER NAS CONFIGURAÇOES
-                                
+                                # if 
                                 
                                 # PERSON IS GOING OUTSIDE THE CAMERA
                                 # Save images in correct directory
