@@ -15,7 +15,7 @@ import requests
 import paho.mqtt.client as mqtt
 
 # import NewClass_ID_Association
-import Data_Config_Count
+from Data_Config_Count import Data_Config_Count
 
 from deep_sort.detection import Detection
 from deep_sort.tracker import Tracker
@@ -93,7 +93,7 @@ def on_message(client, userdata, message):
                 sendData["type"] = "login"
                 sendData["config"] = ConfigDataUpdater.JsonObjectString
                 sendData["Authenticate"] = response["access_token"]
-                sendData["camera_id"] = ConfigDataUpdater.camera_id
+                sendData["camera_id"] = ConfigDataUpdater.config.camera_id
 
                 client.publish("camera_config", json.dumps(sendData))
 
@@ -103,7 +103,7 @@ def on_message(client, userdata, message):
                 # print(JsonObject["frames"])
                 # print(JsonObject["frames"]['0'])
 
-                for intersectIndex, item in enumerate(ConfigDataUpdater.line_intersection_zone):
+                for intersectIndex, item in enumerate(ConfigDataUpdater.config.line_intersection_zone):
                     print(item["name"] == JsonObject["name"])
                     print(JsonObject["name"], item["name"])
                     if item["name"] == JsonObject["name"]:
@@ -165,7 +165,7 @@ def on_message(client, userdata, message):
 
                         break
             if JsonObject["type"] == "reid-association":
-                print(JsonObject)
+                # print(JsonObject)
                 ConfigDataUpdater.setGlobalID(
                     int(JsonObject["old-id"]), JsonObject["new-id"])
 
@@ -181,11 +181,11 @@ def ThreadDataTransmitter(ConfigDataUpdater, frame):
     sendData["type"] = "login"
     sendData["config"] = ConfigDataUpdater.JsonObjectString
     sendData["Authenticate"] = response["access_token"]
-    sendData["camera_id"] = ConfigDataUpdater.camera_id
-    mqttBroker = ConfigDataUpdater.ip
+    sendData["camera_id"] = ConfigDataUpdater.config.camera_id
+    mqttBroker = ConfigDataUpdater.config.ip
     # mqttBroker = "localhost"
     ConfigDataUpdater.mqtt_client = mqtt.Client(
-        str(ConfigDataUpdater.camera_id))
+        str(ConfigDataUpdater.config.camera_id))
     ConfigDataUpdater.mqtt_client.connect(mqttBroker)
 
     ConfigDataUpdater.mqtt_client.publish(
@@ -221,10 +221,10 @@ def main(view_img=False, config='./config/config.json', username='', password=''
     cv2.imwrite("frame.jpg", frame)
 
     global ConfigDataUpdater
-    ConfigDataUpdater = Data_Config_Count.Data_Config_Count(
-        [height/2, width/2])
+    ConfigDataUpdater = Data_Config_Count([height/2, width/2])
     ConfigDataUpdater.register(data)
-    url = 'http://'+ConfigDataUpdater.ip + \
+    print(ConfigDataUpdater.config.camera_id)
+    url = 'http://'+ConfigDataUpdater.config.ip + \
         ':8080/auth/realms/AppAuthenticator/protocol/openid-connect/token'
     myobj = {"client_id": "EdgeServer1",
              "grant_type": "password",
@@ -284,7 +284,7 @@ def main(view_img=False, config='./config/config.json', username='', password=''
     line_thickness = 2  # bounding box thickness (pixels)
     half = False  # use FP16 half-precision inference
     dnn = True  # use OpenCV DNN for ONNX inference
-    save_img = False
+    save_img = True
     save_txt = False
     # source = str(source)
 
@@ -334,7 +334,7 @@ def main(view_img=False, config='./config/config.json', username='', password=''
         # COMENTADO PARA NÃO INTERFERIR COM AS IMAGENS
 
         # ####### Polygon Remove #######
-        # for arrayPoints in ConfigDataUpdater.remove_area:
+        # for arrayPoints in ConfigDataUpdater.config.input.remove_area:
         #     mask = np.zeros(im0s.shape, dtype=np.uint8)
         #     contours = np.array(arrayPoints)
         #     cv2.fillPoly(mask, pts=[contours], color=(255, 255, 255))
@@ -344,12 +344,12 @@ def main(view_img=False, config='./config/config.json', username='', password=''
         # # REMOVE ALL POINTS FROM POLYGON
 
         # Draw Line_intersection_zone
-        for item in ConfigDataUpdater.line_intersection_zone:
-            cv2.line(im0s, tuple(item["start_point"]),
-                     tuple(item["end_point"]), (0, 255, 0), 2)
+        for line_intersection_zone in ConfigDataUpdater.config.input.line_intersection_zone:
+            cv2.line(im0s, tuple(line_intersection_zone.start_point),
+                     tuple(line_intersection_zone.end_point), (0, 255, 0), 2)
 
         # # Draw Zones
-        # for item in ConfigDataUpdater.zone:
+        # for item in ConfigDataUpdater.config.input.zone:
         #     cv2.polylines(im0s, [np.array(item["points"])],
         #                   True, (255, 0, 0), 2)
 
@@ -489,7 +489,7 @@ def main(view_img=False, config='./config/config.json', username='', password=''
                         bbox[1])), (int(bbox[2]), int(bbox[3])), color, 2)
                     if class_name == "person":
                         # print(ConfigDataUpdater.ARRAY_FULL_DATA.keys())
-                        print(ConfigDataUpdater.ARRAY_FULL_DATA[id].global_id)
+                        # print(ConfigDataUpdater.ARRAY_FULL_DATA[id].global_id)
                         if ConfigDataUpdater.ARRAY_FULL_DATA[id].global_id:
                             cv2.putText(im0, class_name + "-" + str(ConfigDataUpdater.ARRAY_FULL_DATA[id].global_id),
                                         (int(bbox[0]), int(bbox[1]-10)), 0, 0.6, color, 1)
