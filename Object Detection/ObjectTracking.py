@@ -317,10 +317,12 @@ def main(view_img=False, config='./config/config.json', username='', password=''
         bs = len(dataset)  # batch_size
     else:
         # Foi adicionado para passar os frames à frente
-        # cudnn.benchmark = True
+        cudnn.benchmark = True
+        # dataset = LoadStreams(source, img_size=imgsz, stride=stride, auto=pt)
         dataset = LoadImages(source, img_size=imgsz, stride=stride, auto=pt)
-        # bs = len(dataset)
-        bs = 1  # batch_size
+        bs = len(dataset)  # batch_size
+
+        # bs = 1  # batch_size
     vid_path, vid_writer = [None] * bs, [None] * bs
 
     # Run inference
@@ -328,18 +330,22 @@ def main(view_img=False, config='./config/config.json', username='', password=''
     dt, seen = [0.0, 0.0, 0.0], 0
 
     Image_save_count = {}
-
+    PASS_FRAMES=0
     for path, im, im0s, vid_cap, s in dataset:
+        if PASS_FRAMES>0:
+            PASS_FRAMES-=1
+            continue
+        
         imageBackUp = im0s.copy()
         # COMENTADO PARA NÃO INTERFERIR COM AS IMAGENS
 
-        # ####### Polygon Remove #######
-        # for arrayPoints in ConfigDataUpdater.config.input.remove_area:
-        #     mask = np.zeros(im0s.shape, dtype=np.uint8)
-        #     contours = np.array(arrayPoints)
-        #     cv2.fillPoly(mask, pts=[contours], color=(255, 255, 255))
-        #     # apply the mask
-        #     im0s = cv2.bitwise_or(im0s, mask)
+        ####### Polygon Remove #######
+        for remove_area in ConfigDataUpdater.config.input.remove_area:
+            mask = np.zeros(im0s.shape, dtype=np.uint8)
+            contours = np.array(remove_area)
+            cv2.fillPoly(mask, pts=[contours], color=(255, 255, 255))
+            # apply the mask
+            im0s = cv2.bitwise_or(im0s, mask)
 
         # # REMOVE ALL POINTS FROM POLYGON
 
@@ -348,10 +354,10 @@ def main(view_img=False, config='./config/config.json', username='', password=''
             cv2.line(im0s, tuple(line_intersection_zone.start_point),
                      tuple(line_intersection_zone.end_point), (0, 255, 0), 2)
 
-        # # Draw Zones
-        # for item in ConfigDataUpdater.config.input.zone:
-        #     cv2.polylines(im0s, [np.array(item["points"])],
-        #                   True, (255, 0, 0), 2)
+        # Draw Zones
+        for zone in ConfigDataUpdater.config.input.zone:
+            cv2.polylines(im0s, [np.array(zone.points)],
+                          True, (255, 0, 0), 2)
 
         t1 = time_sync()
 
@@ -445,34 +451,9 @@ def main(view_img=False, config='./config/config.json', username='', password=''
                     ID_with_Box[id] = (int(bbox[0]), int(
                         bbox[1]), int(bbox[2]), int(bbox[3]))
                     ID_with_Class[id] = class_name
-                    # cv2.imwrite('frameTeste.jpg',
-                    #             imageBackUp[0:height, 0:width])
-                    # sys.exit(-1)
-                    # print(imageBackUp[int(bbox[1]):int(
-                    #     bbox[3]), int(bbox[0]):int(bbox[2])])
-                    # time.sleep(500000)
+
                     ID_with_Box_Frame[id] = imageBackUp[int(bbox[1]):int(
                         bbox[3]), int(bbox[0]):int(bbox[2])]
-                    # SAVE IMAGE IN SYSTEM
-                    # if id in Image_save_count:
-                    #     Image_save_count[id] += 1
-                    # else:
-                    #     Image_save_count[id] = 1
-                    # if not os.path.exists('TesteImage1/gallery/'+str(id)):
-                    #     os.makedirs('TesteImage1/gallery/'+str(id))
-                    # done = cv2.imwrite('TesteImage1/gallery/'+str(id)+'/%d.jpg' % (Image_save_count[id]), im0[int(
-                    #     bbox[1]):int(bbox[3]), int(bbox[0]):int(bbox[2])])
-
-                    # color = colors[id % len(colors)]
-
-                    # cv2.rectangle(im0, (int(bbox[0]), int(
-                    #     bbox[1])), (int(bbox[2]), int(bbox[3])), color, 2)
-                    # if ConfigDataUpdater.ARRAY_FULL_DATA[str(id)].global_id:
-                    #     cv2.putText(im0, class_name + "-" + str(ConfigDataUpdater.ARRAY_FULL_DATA[str(id)].global_id),
-                    #                 (int(bbox[0]), int(bbox[1]-10)), 0, 0.6, color, 1)
-                    # else:
-                    #     cv2.putText(im0, class_name + "-" + str(id),
-                    #                 (int(bbox[0]), int(bbox[1]-10)), 0, 0.6, color, 1)
 
                 ConfigDataUpdater.updateData(
                     ID_with_Box, ID_with_Class, ID_with_Box_Frame)
@@ -533,7 +514,7 @@ def main(view_img=False, config='./config/config.json', username='', password=''
                         vid_writer[i] = cv2.VideoWriter(
                             save_path, cv2.VideoWriter_fourcc(*'mp4v'), fps, (w, h))
                     vid_writer[i].write(im0)
-
+        PASS_FRAMES = 1/(t3 - t2)
         # Print time (inference-only)
         LOGGER.info(f'{s}Done. ({t3 - t2:.3f}s)')
 
