@@ -1,5 +1,5 @@
 {
-    "ip": "192.168.1.46",
+    "ip": "localhost",
     "camera_id": 1,
     "camera_name": "Camera1",
     "camera_zone": "Escola de Engenharia",
@@ -70,7 +70,7 @@
                 "zone_direction_1or2": 1,
                 "name_zone_before": "outside",
                 "name_zone_after": "inside",
-                "id_association": null
+                "id_association": {}
             },
             {
                 "name": "123",

@@ -41,6 +41,22 @@
   </div>
 </nav>
 <br />
+<div class="row justify-content-center">
+  <table class="table table-responsive" style="width: 80%">
+    <thead>
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Config Name</th>
+        <th scope="col">Name</th>
+        <th scope="col">Config Name</th>
+        <th scope="col">Delete</th>
+      </tr>
+    </thead>
+    <tbody id="add_association"></tbody>
+  </table>
+</div>
+<br>
+
 
 <div style="text-align: center">
   <div class="container">
@@ -65,24 +81,14 @@
     <br>
     <div class="row">
         <div style="display: inline-flex;justify-content: space-between;" class="col">
-          <div class="col-xs-5 col-md-5 col-sm-5">
+          <div class="col">
             <select id="option-select-1-1" class="form-select" >
             </select>
-          </div>
-          <br>
-          <div class="col-xs-5 col-md-5 col-sm-5">
-            <select id="option-select-1-2" class="form-select" >
-            </select>
-          </div>
+          </div> 
         </div>
         <div style="display: inline-flex;justify-content: space-between;" class="col">
-          <div class="col-xs-5 col-md-5 col-sm-5">
+          <div class="col">
             <select  id="option-select-2-1" class="form-select" >
-            </select>
-          </div>
-          <br>
-          <div class="col-xs-5 col-md-5 col-sm-5">
-            <select  id="option-select-2-2" class="form-select" >
             </select>
           </div>
         </div>
@@ -101,6 +107,7 @@
       </div>
     </div>
     </br>
+    <input  class="btn btn-outline-dark" type="submit" value="Submit" />
     
   </div>
   
@@ -108,6 +115,7 @@
   <img hidden src="data:image/jpg;base64,{{ value["frame"] }}" ismap />
   {% endfor %}
 {% endblock %} 
+
 
 <script>
 
@@ -183,11 +191,7 @@
       ctx.stroke();
       ctx.restore();
     }
-    function draw_line_intersection_zone(ctx,
-      arrayData,
-      arrayData2,
-      zone_direction_1or2
-    ) {
+    function draw_line_intersection_zone(ctx,arrayData,arrayData2,zone_direction_1or2) {
       ctx.fillStyle = "#000000";
       ctx.beginPath();
       ctx.moveTo(arrayData[0], arrayData[1]);
@@ -218,11 +222,11 @@
         new Point(arrayData2[0], arrayData2[1]),
         new Point(endX, endY)
       );*/
-      if ((o == zone_direction_1or2) == 1) {
+      /*if ((o == zone_direction_1or2) == 1) {
         drawArrow(ctx, endX, endY, startX, startY, 5, "red");
       } else {
         drawArrow(ctx, startX, startY, endX, endY, 5, "red");
-      }
+      }*/
 
       console.log("orientation", o, startX, startY, endX, endY);
     }
@@ -253,10 +257,9 @@
             }
             var select = document.getElementById("option-select-1-1");
             select.innerHTML = "";
-            var select2=document.getElementById("option-select-1-2");
-            select2.innerHTML = ""
+            //var select2=document.getElementById("option-select-1-2");
+            //select2.innerHTML = ""
             if(valor!=""){
-                console.log("cona",this.id, valor);
                 document.getElementById("select-2-"+valor).setAttribute("disabled",'true')
                 for (var i = 0; i < jsonData.length; i++) {
                   if(jsonData[i]["preferred_username"]==valor){
@@ -267,7 +270,7 @@
                       opt.innerHTML = jsonData[i]["line_intersection_zone"][j]["name"];
                       select.appendChild(opt);
                   }
-                  for(var j = 1; j<=2; j++){
+                  /*for(var j = 1; j<=2; j++){
                     var opt = document.createElement('option');
                     opt.value = j;
                     opt.innerHTML = j;
@@ -275,7 +278,7 @@
                     if(jsonData[i]["line_intersection_zone"][0]["zone_direction_1or2"]==j){
                       opt.setAttribute("selected",'true')
                     }
-                  }
+                  }*/
                   draw_line_intersection_zone(context,jsonData[i]["line_intersection_zone"][0]["start_point"],jsonData[i]["line_intersection_zone"][0]["end_point"],jsonData[i]["line_intersection_zone"][0]["zone_direction_1or2"])
                   }
                 }
@@ -290,8 +293,8 @@
           }
           var select = document.getElementById("option-select-2-1");
           select.innerHTML = "";
-          var select2=document.getElementById("option-select-2-2");
-          select2.innerHTML = ""
+          //var select2=document.getElementById("option-select-2-2");
+          //select2.innerHTML = ""
           if(valor!=""){
               document.getElementById("select-1-"+valor).setAttribute("disabled",'true')
               for (var i = 0; i < jsonData.length; i++) {
@@ -306,7 +309,7 @@
                     }
                     select.appendChild(opt);
                   }
-                  for(var j = 1; j<=2; j++){
+                  /*for(var j = 1; j<=2; j++){
                     var opt = document.createElement('option');
                     opt.value = j;
                     opt.innerHTML = j;
@@ -314,7 +317,7 @@
                     if(jsonData[i]["line_intersection_zone"][0]["zone_direction_1or2"]==j){
                       opt.setAttribute("selected",'true')
                     }
-                  }
+                  }*/
                   draw_line_intersection_zone(context,jsonData[i]["line_intersection_zone"][0]["start_point"],jsonData[i]["line_intersection_zone"][0]["end_point"],jsonData[i]["line_intersection_zone"][0]["zone_direction_1or2"])
                 }
               }
@@ -399,6 +402,65 @@
         ctx.drawImage(image, 0, 0);
       }
     })
+    updateValues();
+   
+    setInterval(updateValues, 1000);
+    var lastUpdateValue = "";
+
+    var AssociationData=null;
+
+    function updateValues() {
+      $.getJSON(window.location.href + "/get_association", function (data) {
+        console.log(data.Associations);
+        AssociationData=data.Associations
+        var htmlInsert = "";
+        for (var i = 0; i < data.Associations.length; i++) {
+  
+          htmlInsert +=
+            `<tr>
+            <td >${data.Associations[i][1]}</td>
+            <td>${data.Associations[i][0]}</td>
+            <td >${data.Associations[i][3]}</td>
+            <td>${data.Associations[i][2]}</td>
+            <td><i class="bi bi-trash" id="delete-${i}"></i></td>
+          </tr>`;
+        }
+  
+        //htmlInsert += `</div>`;
+        if (lastUpdateValue != htmlInsert) {
+          var container = (document.getElementById("add_association").innerHTML =
+            htmlInsert);
+          lastUpdateValue = htmlInsert;
+        }
+      });
+  
+      $("#Refresh").on("click", function () {
+        //console.log("{{data}}")
+        console.log(window.location.href + "refresh_all")
+        $.get(window.location.href + "refresh_all").done(function (data) {
+          console.log(data);
+        });
+      });
+    }
+
+//REMOVE BUTTON
+$(document).on("click", ".bi-trash", function () {
+  var StringID = this.id;
+  var indexes = StringID.split("-");
+  var data=[{"Name":AssociationData[indexes[1]][1],"ConfigName":AssociationData[indexes[1]][0]},{"Name":AssociationData[indexes[1]][3],"ConfigName":AssociationData[indexes[1]][2]}]
+  //console.log("AQUI", this.id,AssociationData[indexes[1]],data);
+  $.post(window.location.href + "/remove_association", {
+    data: JSON.stringify(data),
+  }).done(function (data) {
+    console.log(data);
+    //history.back();
+    location.reload()
+  });
+
+  
+});
+
+
 
 </script>
 

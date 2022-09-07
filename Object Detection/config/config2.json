@@ -1,5 +1,5 @@
 {
-    "ip": "192.168.1.46",
+    "ip": "localhost",
     "camera_id": 2,
     "camera_name": "Camera2",
     "camera_zone": "Escola de Engenharia",
