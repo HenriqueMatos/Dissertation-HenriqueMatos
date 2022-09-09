@@ -1,0 +1,58 @@
+body {
+    background-image: url("/static/ezgif.com-gif-maker.png");
+    /* background-image: url("/static/istockphoto-1339787499-170667a.jpg") */
+    width: 100% !important
+}
+
+nav,
+.accordion-item,
+.accordion-button {
+    background-color: #0b0c10 !important
+}
+
+a,
+button {
+    color: #66fcf1 !important
+}
+
+.btn {
+    color: #66fcf1 !important
+}
+
+th {
+    color: #45a29e !important
+}
+
+td {
+    color: #c5c6c7 !important
+}
+
+tr {
+    color: #c5c6c7 !important;
+}
+
+thead,
+tbody {
+    border-color: #45a29e !important
+}
+
+.table td {
+    text-align: center;
+}
+
+.table th {
+    text-align: center;
+}
+
+
+td {
+    margin-top: 20px;
+}
+
+/* colors */
+/* #0b0c10
+#1f2833
+#c5c6c7
+#66fcf1
+#45a29e */
+/* navbar-dark bg-dark */

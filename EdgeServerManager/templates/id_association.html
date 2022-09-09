@@ -15,9 +15,13 @@
   rel="stylesheet"
   href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css"
 />
+<link rel="stylesheet" href="{{ url_for('static', filename='stylesheets/style.css') }}" />
+
+
 
 {% block content %}
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<body>
+<nav class="navbar navbar-expand-lg navbar-light" style="width: 100%">
   <div class="container-fluid">
     <a class="navbar-brand">ID Association</a>
     <button
@@ -41,7 +45,7 @@
   </div>
 </nav>
 <br />
-<div class="row justify-content-center">
+<div class="row justify-content-center" style="width: 100%">
   <table class="table table-responsive" style="width: 80%">
     <thead>
       <tr>
@@ -62,7 +66,7 @@
   <div class="container">
     <div class="row">
       <div class="col">
-        <select   id="select-1" class="form-select" aria-label="Default select example">
+        <select   id="select-1" class="form-select btn-dark" aria-label="Default select example">
         <option class="option_select1" selected id="select-1-" value="">Open this select menu</option>
         {% for value in DataObject %}
         <option  class="option_select1" id="select-1-{{value["preferred_username"]}}" value="{{value["preferred_username"]}}">{{value["preferred_username"]}}</option>
@@ -70,7 +74,7 @@
       </select> 
     </div>
       <div class="col">
-        <select id="select-2" class="form-select" aria-label="Default select example">
+        <select id="select-2" class="form-select btn-dark" aria-label="Default select example">
             <option  class="option_select2" selected id="select-2-" value="">Open this select menu</option>
             {% for value in DataObject %}
             <option class="option_select2" id="select-2-{{value["preferred_username"]}}" value="{{value["preferred_username"]}}">{{value["preferred_username"]}}</option>
@@ -82,13 +86,13 @@
     <div class="row">
         <div style="display: inline-flex;justify-content: space-between;" class="col">
           <div class="col">
-            <select id="option-select-1-1" class="form-select" >
+            <select id="option-select-1-1" class="form-select btn-dark" >
             </select>
           </div> 
         </div>
         <div style="display: inline-flex;justify-content: space-between;" class="col">
           <div class="col">
-            <select  id="option-select-2-1" class="form-select" >
+            <select  id="option-select-2-1" class="form-select btn-dark" >
             </select>
           </div>
         </div>
@@ -114,6 +118,7 @@
   {% for value in DataObject  %}
   <img hidden src="data:image/jpg;base64,{{ value["frame"] }}" ismap />
   {% endfor %}
+</body>
 {% endblock %} 
 
 
@@ -266,7 +271,7 @@
                     drawImage1(jsonData[i]["frame"])
                   for (var j = 0; j<jsonData[i]["line_intersection_zone"].length; j++){
                       var opt = document.createElement('option');
-                      opt.value = j;
+                      opt.value = jsonData[i]["line_intersection_zone"][j]["name"];
                       opt.innerHTML = jsonData[i]["line_intersection_zone"][j]["name"];
                       select.appendChild(opt);
                   }
@@ -302,7 +307,7 @@
                   drawImage2(jsonData[i]["frame"])
                   for (var j = 0; j<jsonData[i]["line_intersection_zone"].length; j++){
                     var opt = document.createElement('option');
-                    opt.value = j;
+                    opt.value = jsonData[i]["line_intersection_zone"][j]["name"];
                     opt.innerHTML = jsonData[i]["line_intersection_zone"][j]["name"];
                     if(i==0){
                       opt.setAttribute("selected",'true')
@@ -328,14 +333,15 @@
       $(document).on("input", "#option-select-1-1,#option-select-2-1", function () {
         valor = $(this).val();
         var indexes = this.id.split("-");
-        console.log(indexes[2])
-        console.log("option-select-"+indexes[2]+"-1")
-        console.log(document.getElementById("option-select-"+indexes[2]+"-1").value)
-        var index2=document.getElementById("option-select-"+indexes[2]+"-1").value
+        //console.log(indexes[2])
+        //console.log("option-select-"+indexes[2]+"-1")
+        //console.log(document.getElementById("option-select-"+indexes[2]+"-1").value)
+        var optionValue=document.getElementById("option-select-"+indexes[2]+"-1").value
+        
+
         var index=document.getElementById("select-"+indexes[2]).value
         var canvas = document.getElementById("myCanvas"+indexes[2]);
         const context = canvas.getContext('2d');
-        console.log(index,index2)
         for (var i = 0; i < jsonData.length; i++) {
           if(jsonData[i]["preferred_username"]==index){
             if(indexes[2]==1){
@@ -344,14 +350,22 @@
             }else{
               drawImage2(jsonData[i]["frame"])
             }
-            draw_line_intersection_zone(context,jsonData[i]["line_intersection_zone"][index2]["start_point"],jsonData[i]["line_intersection_zone"][index2]["end_point"],jsonData[i]["line_intersection_zone"][index2]["zone_direction_1or2"])
+            console.log(jsonData[i]["line_intersection_zone"])
+
+            for (var j = 0; j < jsonData[i]["line_intersection_zone"].length; j++) {
+              if(jsonData[i]["line_intersection_zone"][j]["name"]==optionValue){
+    
+                draw_line_intersection_zone(context,jsonData[i]["line_intersection_zone"][j]["start_point"],jsonData[i]["line_intersection_zone"][j]["end_point"],jsonData[i]["line_intersection_zone"][j]["zone_direction_1or2"])
+              }
+            }
+
           }
         }
 
 
 
       });
-      $(document).on("input", "#option-select-1-2,#option-select-2-2", function () {
+     /* $(document).on("input", "#option-select-1-2,#option-select-2-2", function () {
         valor = $(this).val();
         var indexes = this.id.split("-");
         console.log(indexes[2])
@@ -373,7 +387,7 @@
             draw_line_intersection_zone(context,jsonData[i]["line_intersection_zone"][index2]["start_point"],jsonData[i]["line_intersection_zone"][index2]["end_point"],valor)
           }
         }
-      });
+      });*/
 
       function drawImage1(frame) {
         var c = document.getElementById("myCanvas1");
@@ -456,6 +470,35 @@ $(document).on("click", ".bi-trash", function () {
     //history.back();
     location.reload()
   });
+
+  
+});
+
+
+$(".btn").on("click", function () {
+  console.log("OLA MUNDO");
+  var config = "{{config}}";
+  var select1 = document.getElementById("select-1");
+  var select2 = document.getElementById("select-2");
+  var optionselect1 = document.getElementById("option-select-1-1");
+  var optionselect2 = document.getElementById("option-select-2-1");
+  
+  console.log(select1.value)
+  console.log(select2.value)
+  console.log(optionselect1.value)
+  console.log(optionselect2.value)
+
+  if(select1.value!= "" && select2.value!= "" && optionselect1.value!= "" && optionselect2.value!= ""){
+    var data=[{"Name":select1.value,"ConfigName":optionselect1.value},{"Name":select2.value,"ConfigName":optionselect2.value}]
+    $.post(window.location.href + "/add_association", {
+      data: JSON.stringify(data),
+    }).done(function (data) {
+      console.log(data);
+      //history.back();
+      location.reload()
+    });
+
+  }
 
   
 });

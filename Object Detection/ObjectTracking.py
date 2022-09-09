@@ -263,7 +263,7 @@ def main(view_img=False, config='./config/config.json', username='', password=''
         print("Error: unable to start thread")
 
     # print(ConfigDataUpdater.line_intesection_zone)
-    weights = './yolov5s.pt'  # model.pt path(s)
+    weights = './yolov5m.pt'  # model.pt path(s)
     # source = '0'  # file/dir/URL/glob, 0 for webcam
     # source = './ch01_08000000058000601.mp4'  # file/dir/URL/glob, 0 for webcam
     data = './data/coco128.yaml'  # dataset.yaml path
@@ -272,7 +272,7 @@ def main(view_img=False, config='./config/config.json', username='', password=''
     conf_thres = 0.25  # confidence threshold
     iou_thres = 0.45  # NMS IOU threshold
     max_det = 1000  # maximum detections per image
-    device = 'cpu'  # cuda device, i.e. 0 or 0,1,2,3 or cpu
+    device = '0'  # cuda device, i.e. 0 or 0,1,2,3 or cpu
     # view_img = True  # show
     # classes = 0  # filter by class: --class 0, or --class 0 2 3
     # classes = None  # filter by class: --class 0, or --class 0 2 3
@@ -332,32 +332,33 @@ def main(view_img=False, config='./config/config.json', username='', password=''
     Image_save_count = {}
     PASS_FRAMES=0
     for path, im, im0s, vid_cap, s in dataset:
-        if PASS_FRAMES>0:
-            PASS_FRAMES-=1
-            continue
+        # Pass frames
+        # if PASS_FRAMES>0:
+        #     PASS_FRAMES-=1
+        #     continue
         
         imageBackUp = im0s.copy()
         # COMENTADO PARA NÃO INTERFERIR COM AS IMAGENS
 
         ####### Polygon Remove #######
-        for remove_area in ConfigDataUpdater.config.input.remove_area:
-            mask = np.zeros(im0s.shape, dtype=np.uint8)
-            contours = np.array(remove_area)
-            cv2.fillPoly(mask, pts=[contours], color=(255, 255, 255))
-            # apply the mask
-            im0s = cv2.bitwise_or(im0s, mask)
+        # for remove_area in ConfigDataUpdater.config.input.remove_area:
+        #     mask = np.zeros(im0s.shape, dtype=np.uint8)
+        #     contours = np.array(remove_area)
+        #     cv2.fillPoly(mask, pts=[contours], color=(255, 255, 255))
+        #     # apply the mask
+        #     im0s = cv2.bitwise_or(im0s, mask)
 
         # # REMOVE ALL POINTS FROM POLYGON
 
-        # Draw Line_intersection_zone
-        for line_intersection_zone in ConfigDataUpdater.config.input.line_intersection_zone:
-            cv2.line(im0s, tuple(line_intersection_zone.start_point),
-                     tuple(line_intersection_zone.end_point), (0, 255, 0), 2)
+        # # Draw Line_intersection_zone
+        # for line_intersection_zone in ConfigDataUpdater.config.input.line_intersection_zone:
+        #     cv2.line(im0s, tuple(line_intersection_zone.start_point),
+        #              tuple(line_intersection_zone.end_point), (0, 255, 0), 2)
 
-        # Draw Zones
-        for zone in ConfigDataUpdater.config.input.zone:
-            cv2.polylines(im0s, [np.array(zone.points)],
-                          True, (255, 0, 0), 2)
+        # # Draw Zones
+        # for zone in ConfigDataUpdater.config.input.zone:
+        #     cv2.polylines(im0s, [np.array(zone.points)],
+        #                   True, (255, 0, 0), 2)
 
         t1 = time_sync()
 
@@ -386,7 +387,7 @@ def main(view_img=False, config='./config/config.json', username='', password=''
         # pred = utils.general.apply_classifier(pred, classifier_model, im, im0s)
 
         # Process predictions
-        f = open("ListOfData.txt", "a")
+        # f = open("ListOfData.txt", "a")
 
         for i, det in enumerate(pred):  # per image
             seen += 1

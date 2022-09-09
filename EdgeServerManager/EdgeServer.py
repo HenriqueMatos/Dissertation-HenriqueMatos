@@ -322,10 +322,53 @@ def RemoveAssociation():
                         sendData["type"] = "update"
                         sendData["config"] = DataServer[index]["config"]
                         client.publish("edge_config/"+DataServer[index]["preferred_username"],
-                               json.dumps(sendData))
+                                       json.dumps(sendData))
 
                 Names.pop(indexToRemove)
                 ConfigNames.pop(indexToRemove)
+
+        return "OK"
+
+
+@app.route('/id_association/add_association', methods=['POST'])
+def AddAssociation():
+    if request.method == "POST":
+        print(request.form)
+        data = json.loads(request.form["data"])
+        # data = json.loads(request.form["data"])
+        print(data)
+        for eachData in data:
+            print(eachData["Name"])
+            print(eachData["ConfigName"])
+        Names = [value2["Name"] for value2 in data]
+        ConfigNames = [value2["ConfigName"] for value2 in data]
+
+        for index in range(len(DataServer)):
+            if DataServer[index]["preferred_username"] in Names:
+                indexToAdd = Names.index(
+                    DataServer[index]["preferred_username"])
+
+                for index_line_intersection_Config in range(len(DataServer[index]["config"]["input"]["line_intersection_zone"])):
+                    if DataServer[index]["config"]["input"]["line_intersection_zone"][index_line_intersection_Config]["name"] == ConfigNames[indexToAdd]:
+                        if(indexToAdd == 0):
+                            DataServer[index]["config"]["input"]["line_intersection_zone"][index_line_intersection_Config]["id_association"] = {
+                                "publish_location": "edge_config/"+Names[1],
+                                "name": ConfigNames[1]
+                            }
+                        if(indexToAdd == 1):
+                            DataServer[index]["config"]["input"]["line_intersection_zone"][index_line_intersection_Config]["id_association"] = {
+                                "publish_location": "edge_config/"+Names[0],
+                                "name": ConfigNames[0]
+                            }
+                        # SEND TO TRACKING SYSTEMS
+                        sendData = {}
+                        sendData["type"] = "update"
+                        sendData["config"] = DataServer[index]["config"]
+                        client.publish("edge_config/"+DataServer[index]["preferred_username"],
+                                       json.dumps(sendData))
+
+                # Names.pop(indexToAdd)
+                # ConfigNames.pop(indexToAdd)
 
         return "OK"
 

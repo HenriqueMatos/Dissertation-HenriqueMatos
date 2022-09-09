@@ -15,8 +15,11 @@
   rel="stylesheet"
   href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.1/font/bootstrap-icons.css"
 />
+<link rel="stylesheet" href="{{ url_for('static', filename='stylesheets/style.css') }}" />
+
+
 {% block header %}
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
+<nav class="navbar navbar-expand-lg navbar-light">
   <div class="container-fluid">
     <a class="navbar-brand" >Config Sensor</a>
     <button
@@ -43,6 +46,56 @@
 </nav>
 <br>
 {% endblock %} {% block content %}
+
+<div class="row justify-content-center" style="width: 100%">
+  <table class="table table-responsive" style="width: 80%">
+    <tbody id="container">
+      <tr>
+        <td scope="col"><b>Username: </b> {{data.preferred_username}}</td>
+        <td scope="col"><b>SensorID: </b> {{data.sensorid}}</td>
+      </tr>
+      {% for item in config %}
+      {% if config[item]=="editable" %}
+      <tr>
+        <td scope="col"><b>{{item}}</b></td>
+        <td scope="col"><input class="form-control btn-dark" type="text" id="{{item}}" placeholder="{{data.config[item]}}"/></td>
+      </tr>
+      {% elif config[item]=="noneditable" %}
+      <tr>
+        <td scope="col"><b>{{item}}</b></td>
+        <td scope="col">{{data.config[item]}}</td>
+      </tr>
+      {% elif config[item]=="button" %}
+        {% for item2 in data.config[item] %} 
+          {% if item2=="zone" or item2=="remove_area" or item2=="line_intersection_zone"%}
+          <tr>
+            <td scope="col"colspan="2">
+              <form action="config_points" method="POST">
+              <input
+                hidden
+                name="preferred_username"
+                value="{{data.preferred_username}}"
+              />
+              <input hidden name="config" value="{{item}}" />
+              <input hidden name="config1" value="{{item2}}" />
+              <input  class="btn btn-outline-dark" type="submit" value="{{item2}}" />
+              </form>
+            </td>
+          </tr>
+          {% endif %} 
+        {% endfor %} 
+
+
+
+      {% endif %}
+      {% endfor %}
+
+
+
+      </tbody>
+  </table>
+</div>
+
 <div style="text-align: center">
   <div class="container">
     <div class="row">
@@ -55,7 +108,7 @@
       <div class="col"><b>{{item}}</b></div>
       <div class="col">
         <input
-        class="form-control"
+        class="form-control btn-dark"
           type="text"
           id="{{item}}"
           placeholder="{{data.config[item]}}"
