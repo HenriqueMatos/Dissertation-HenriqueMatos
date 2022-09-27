@@ -1,0 +1,96 @@
+{
+    "ip": "localhost",
+    "camera_id": 1,
+    "camera_name": "Camera1",
+    "camera_zone": "Escola de Engenharia",
+    "timestamp_config_creation": "07/06/2022 16:33:22",
+    "restart_count": "timestamp",
+    "object_detection_config": {
+        "threshold": 0.5,
+        "path_model_weights": "yolo/yolov3.weights",
+        "path_model_cfg": "yolo/yolov3.cfg",
+        "path_yolo_coco_names": "yolo/coco.names",
+        "object_data_tracking": [
+            "person",
+            "backpack",
+            "handbag",
+            "suitcase"
+        ]
+    },
+    "packet_default_output": [
+        "camera_id",
+        "timestamp",
+        "camera_zone"
+    ],
+    "packet_output": [
+        {
+            "num_people": null
+        }
+    ],
+    "publish_mqtt": "name",
+    "subscribe_mqtt": [
+        "name"
+    ],
+    "input": {
+        "zone": [
+            {
+                "name_inside_zone": "teste dentro",
+                "name_outside_zone": "teste fora",
+                "points": [
+                    [
+                        88,
+                        314
+                    ],
+                    [
+                        142,
+                        555
+                    ],
+                    [
+                        1137,
+                        173
+                    ],
+                    [
+                        1029,
+                        95
+                    ]
+                ]
+            }
+        ],
+        "line_intersection_zone": [
+            {
+                "name": "interior salas",
+                "start_point": [
+                    177,
+                    553
+                ],
+                "end_point": [
+                    534,
+                    425
+                ],
+                "zone_direction_1or2": 1,
+                "name_zone_before": "outside",
+                "name_zone_after": "inside",
+                "id_association": {}
+            },
+            {
+                "name": "123",
+                "start_point": [
+                    31,
+                    330
+                ],
+                "end_point": [
+                    111,
+                    572
+                ],
+                "zone_direction_1or2": "1",
+                "name_zone_before": "antes",
+                "name_zone_after": "depois",
+                "id_association": {
+                    "publish_location": "edge_config/trackingcamera2",
+                    "name": "Escola de Engenharia"
+                }
+            }
+        ],
+        "remove_area": []
+    }
+}

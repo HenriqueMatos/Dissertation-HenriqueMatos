@@ -1,0 +1,12 @@
+{
+    "ip": "noneditable",
+    "camera_id": "noneditable",
+    "camera_name": "editable",
+    "camera_zone": "editable",
+    "timestamp_config_creation": "noneditable",
+    "restart_count": "editable",
+    "object_detection_config": "editable",
+    "publish_mqtt": "editable",
+    "subscribe_mqtt": "editable",
+    "input": "button"
+}

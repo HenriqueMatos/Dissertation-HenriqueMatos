@@ -1,0 +1,59 @@
+{
+    "ip": "localhost",
+    "camera_id": 2,
+    "camera_name": "Camera2",
+    "camera_zone": "Escola de Engenharia",
+    "timestamp_config_creation": "07/06/2022 16:33:22",
+    "restart_count": "timestamp",
+    "object_detection_config": {
+        "threshold": 0.5,
+        "path_model_weights": "yolo/yolov3.weights",
+        "path_model_cfg": "yolo/yolov3.cfg",
+        "path_yolo_coco_names": "yolo/coco.names",
+        "object_data_tracking": [
+            "person",
+            "backpack",
+            "handbag",
+            "suitcase"
+        ]
+    },
+    "packet_default_output": [
+        "camera_id",
+        "timestamp",
+        "camera_zone"
+    ],
+    "packet_output": [
+        {
+            "num_people": null
+        }
+    ],
+    "publish_mqtt": "name",
+    "subscribe_mqtt": [
+        "name"
+    ],
+    "input": {
+        "num_people": null,
+        "zone": [],
+        "line_intersection_zone": [
+            {
+                "name": "Escola de Engenharia",
+                "start_point": [
+                    931,
+                    217
+                ],
+                "end_point": [
+                    1049,
+                    463
+                ],
+                "zone_direction_1or2": "1",
+                "name_zone_before": "exterior ",
+                "name_zone_after": "interior escola",
+                "id_association": {
+                    "publish_location": "edge_config/trackingcamera1",
+                    "name": "123"
+                }
+            }
+        ],
+        "remove_area": []
+    }
+}
