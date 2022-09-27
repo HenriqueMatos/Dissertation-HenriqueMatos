@@ -38,10 +38,7 @@ from pathlib import Path
 import torch
 import torch.backends.cudnn as cudnn
 
-# import deere_identification
 from deep_person_reid.re_identification import do_Re_Identification
-# from deep_person
-# import .deep_person_reid.re_identification as re_identification
 
 FILE = Path(__file__).resolve()
 ROOT = FILE.parents[0]  # YOLOv5 root directory
@@ -206,6 +203,8 @@ def main(view_img=False, config='./config/config.json', username='', password=''
     KeycloakUsername = username
     KeycloakPassword = password
 
+    max_Age = 100 # original 60
+
     with open(config_file, 'r') as f:
         data = json.load(f)
 
@@ -214,14 +213,13 @@ def main(view_img=False, config='./config/config.json', username='', password=''
     # cap = cv2.VideoCapture('/dev/video0')
     # cap = cv2.VideoCapture("./output.mp4")
     _, frame = cap.read()
-    # frame=cv2.cvtColor(frame,cv2.COLOR_BGR2RGB)
-    # frame = frame.astype('float64')
     height, width, channels = frame.shape
 
     cv2.imwrite("frame.jpg", frame)
 
     global ConfigDataUpdater
-    ConfigDataUpdater = Data_Config_Count([height/2, width/2])
+    ConfigDataUpdater = Data_Config_Count(
+        [height/2, width/2], maxDisappeared=max_Age)
     ConfigDataUpdater.register(data)
     print(ConfigDataUpdater.config.camera_id)
     url = 'http://'+ConfigDataUpdater.config.ip + \
@@ -252,7 +250,7 @@ def main(view_img=False, config='./config/config.json', username='', password=''
     model_filename = 'model_data/mars-small128.pb'
     encoder = gdet.create_box_encoder(model_filename, batch_size=1)
     # initialize tracker
-    tracker = Tracker(metric)
+    tracker = Tracker(metric, max_age=max_Age)
 
     with open("frame.jpg", "rb") as image_file:
         encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
@@ -269,7 +267,7 @@ def main(view_img=False, config='./config/config.json', username='', password=''
     data = './data/coco128.yaml'  # dataset.yaml path
     # imgsz = (height, width)  # inference size (height, width)
     imgsz = (640, 640)  # inference size (height, width)
-    conf_thres = 0.25  # confidence threshold
+    conf_thres = 0.25  # confidence threshold Original 0.25
     iou_thres = 0.45  # NMS IOU threshold
     max_det = 1000  # maximum detections per image
     device = '0'  # cuda device, i.e. 0 or 0,1,2,3 or cpu
@@ -330,13 +328,13 @@ def main(view_img=False, config='./config/config.json', username='', password=''
     dt, seen = [0.0, 0.0, 0.0], 0
 
     Image_save_count = {}
-    PASS_FRAMES=0
+    PASS_FRAMES = 0
     for path, im, im0s, vid_cap, s in dataset:
         # Pass frames
         # if PASS_FRAMES>0:
         #     PASS_FRAMES-=1
         #     continue
-        
+
         imageBackUp = im0s.copy()
         # COMENTADO PARA NÃO INTERFERIR COM AS IMAGENS
 
