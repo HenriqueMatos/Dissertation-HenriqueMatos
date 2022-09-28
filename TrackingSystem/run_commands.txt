@@ -1,0 +1,1 @@
+python3 tracking_system.py --weights yolov7-tiny.pt --source ch01_08000000033001401.mp4 --iou-thres 0.45 --conf-thres 0.09 --view-img --img-size 640 --device cpu --cmc-method orb --track_low_thresh 0.0001 --track_high_thresh 0.25 --new_track_thresh 0.4 --class 0 --aspect_ratio_thresh 5
