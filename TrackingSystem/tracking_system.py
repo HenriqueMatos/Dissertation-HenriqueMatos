@@ -3,55 +3,35 @@ import sys
 sys.path.insert(0, './yolov7')
 sys.path.append('.')
 
-from tracker.tracking_utils.timer import Timer
-from tracker.mc_bot_sort import BoTSORT
-from yolov7.utils.torch_utils import select_device, load_classifier, time_synchronized, TracedModel
-from yolov7.utils.plots import plot_one_box
+print(sys.path)
+
+from deep_person_reid.re_identification import do_Re_Identification
+import os
+from Data_Config_Count import Data_Config_Count
+import paho.mqtt.client as mqtt
+import requests
+import _thread
+from simplejson import OrderedDict
+import numpy as np
+import shutil
+import json
+import base64
+from pathlib import Path
+import time
+import argparse
+import cv2
+import torch
+import torch.backends.cudnn as cudnn
+from numpy import random
+from yolov7.models.experimental import attempt_load
+from yolov7.utils.datasets import LoadStreams, LoadImages
 from yolov7.utils.general import check_img_size, check_requirements, check_imshow, non_max_suppression, \
     apply_classifier, \
     scale_coords, xyxy2xywh, strip_optimizer, set_logging, increment_path
-from yolov7.utils.datasets import LoadStreams, LoadImages
-from yolov7.models.experimental import attempt_load
-from numpy import random
-import torch.backends.cudnn as cudnn
-import torch
-import cv2
-import argparse
-import time
-from pathlib import Path
-
-
-import base64
-import codecs
-import datetime
-import json
-import shutil
-import time
-import cv2
-import numpy as np
-from json import JSONEncoder
-from simplejson import OrderedDict
-import _thread
-import pika
-import sys
-import requests
-import paho.mqtt.client as mqtt
-
-# import NewClass_ID_Association
-from Data_Config_Count import Data_Config_Count
-
-
-import argparse
-import os
-import sys
-from pathlib import Path
-
-import torch
-import torch.backends.cudnn as cudnn
-
-from deep_person_reid.re_identification import do_Re_Identification
-
-
+from yolov7.utils.plots import plot_one_box
+from yolov7.utils.torch_utils import select_device, load_classifier, time_synchronized, TracedModel
+from tracker.mc_bot_sort import BoTSORT
+from tracker.tracking_utils.timer import Timer
 
 
 # Global
@@ -172,7 +152,7 @@ def on_message(client, userdata, message):
 
 def ThreadDataTransmitter(ConfigDataUpdater, frame):
 
-    print(response)
+    # print(response)
     sendData = {}
     sendData["frame"] = frame
     sendData["type"] = "login"
@@ -180,7 +160,7 @@ def ThreadDataTransmitter(ConfigDataUpdater, frame):
     sendData["Authenticate"] = response["access_token"]
     sendData["camera_id"] = ConfigDataUpdater.config.camera_id
     mqttBroker = ConfigDataUpdater.config.ip
-    # mqttBroker = "localhost"
+    
     ConfigDataUpdater.mqtt_client = mqtt.Client(
         str(ConfigDataUpdater.config.camera_id))
     ConfigDataUpdater.mqtt_client.connect(mqttBroker)
@@ -194,21 +174,6 @@ def ThreadDataTransmitter(ConfigDataUpdater, frame):
     ConfigDataUpdater.mqtt_client.loop_start()
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 def detect(config='./config/config.json',):
     global config_file
     global KeycloakUsername
@@ -218,7 +183,7 @@ def detect(config='./config/config.json',):
     KeycloakUsername = opt.username
     KeycloakPassword = opt.password
 
-    max_Age = opt.track_buffer # original 60
+    max_Age = opt.track_buffer  # original 60
 
     with open(config_file, 'r') as f:
         data = json.load(f)
@@ -252,10 +217,6 @@ def detect(config='./config/config.json',):
     if x.status_code != 200:
         sys.exit("Bad credentials")
 
-    # KeycloakUsername = "trackingcamera1"
-    # KeycloakPassword = "trackingcamera1"
-
-
     with open("frame.jpg", "rb") as image_file:
         encoded_string = base64.b64encode(image_file.read()).decode('utf-8')
     try:
@@ -263,19 +224,7 @@ def detect(config='./config/config.json',):
             ThreadDataTransmitter, (ConfigDataUpdater, encoded_string, ))
     except:
         print("Error: unable to start thread")
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
+
     source, weights, view_img, imgsz, trace = opt.source, opt.weights, opt.view_img, opt.img_size, opt.trace
     save_img = opt.save_frames and not source.endswith('.txt')  # save inference images
     webcam = source.isnumeric() or source.endswith('.txt') or source.lower().startswith(
@@ -284,7 +233,7 @@ def detect(config='./config/config.json',):
     # Directories
     save_dir = Path(increment_path(Path(opt.project) / opt.name,
                     exist_ok=opt.exist_ok))  # increment run
-    save_img=False
+    save_img = False
     if save_img:
         save_dir.mkdir(parents=True, exist_ok=True)  # make dir
 
@@ -336,31 +285,39 @@ def detect(config='./config/config.json',):
         model(torch.zeros(1, 3, imgsz, imgsz).to(device).type_as(
             next(model.parameters())))  # run once
     t0 = time.time()
-    
-    
+
     results = []
     fn = 0
     for path, img, im0s, vid_cap in dataset:
         fn += 1
+        imageBackUp = im0s.copy()
 
         timer.tic()
-        
+
         for line_intersection_zone in ConfigDataUpdater.config.input.line_intersection_zone:
-            print(line_intersection_zone.start_point)
-            print(line_intersection_zone.end_point)
             cv2.line(im0s, tuple(line_intersection_zone.start_point),
                      tuple(line_intersection_zone.end_point), (0, 255, 0), 2)
+            
+        for remove_area in ConfigDataUpdater.config.input.remove_area:
+            mask = np.zeros(im0s.shape, dtype=np.uint8)
+            contours = np.array(remove_area)
+            cv2.fillPoly(mask, pts=[contours], color=(255, 255, 255))
+            # apply the mask
+            im0s = cv2.bitwise_or(im0s, mask)
 
+        # # REMOVE ALL POINTS FROM POLYGON
 
+        # Draw Zones
+        for zone in ConfigDataUpdater.config.input.zone:
+            cv2.polylines(im0s, [np.array(zone.points)],
+                          True, (255, 0, 0), 2)
+            
 
         img = torch.from_numpy(img).to(device)
         img = img.half() if half else img.float()  # uint8 to fp16/32
         img /= 255.0  # 0 - 255 to 0.0 - 1.0
         if img.ndimension() == 3:
             img = img.unsqueeze(0)
-            
-        
-
 
         # Inference
         t1 = time_synchronized()
@@ -370,8 +327,6 @@ def detect(config='./config/config.json',):
         pred = non_max_suppression(pred, opt.conf_thres, opt.iou_thres,
                                    classes=opt.classes, agnostic=opt.agnostic_nms)
         t2 = time_synchronized()
-        
-        
 
         # Apply Classifier
         if classify:
@@ -387,10 +342,19 @@ def detect(config='./config/config.json',):
             # Run tracker
             detections = []
             if len(det):
+                # Print results
+                # for c in det[:, -1].unique():
+                #     n = (det[:, -1] == c).sum()  # detections per class
+                #     # add to string
+                #     s += f"{n} {names[int(c)]}{'s' * (n > 1)}, "
+                #     # print("AQUi "+s)
+                
                 boxes = scale_coords(img.shape[2:], det[:, :4], im0.shape)
                 boxes = boxes.cpu().numpy()
                 detections = det.cpu().numpy()
                 detections[:, :4] = boxes
+                
+                
 
             trackerTimer.tic()
             online_targets = tracker.update(detections, im0)
@@ -401,7 +365,7 @@ def detect(config='./config/config.json',):
             online_ids = []
             online_scores = []
             online_cls = []
-            
+
             ID_with_Box = OrderedDict()
             ID_with_Class = OrderedDict()
             ID_with_Box_Frame = OrderedDict()
@@ -420,9 +384,8 @@ def detect(config='./config/config.json',):
                         tlbr[1]), int(tlbr[2]), int(tlbr[3]))
                     ID_with_Class[tid] = names[int(tcls)]
 
-                    ID_with_Box_Frame[tid] = im0[int(tlbr[1]):int(
+                    ID_with_Box_Frame[tid] = imageBackUp[int(tlbr[1]):int(
                         tlbr[3]), int(tlbr[0]):int(tlbr[2])]
-                    
 
                     # save results
                     results.append(
@@ -436,10 +399,12 @@ def detect(config='./config/config.json',):
                             label = f'{tid}, {names[int(tcls)]}'
                         plot_one_box(tlbr, im0, label=label,
                                      color=colors[int(tid) % len(colors)], line_thickness=2)
-                        
-            
+
+            tbefore = time_synchronized()
             ConfigDataUpdater.updateData(ID_with_Box, ID_with_Class, ID_with_Box_Frame)
-                    
+            tafter = time_synchronized()
+
+            # print(f"\n Time Config {tafter - tbefore:.3f} s")
 
             p = Path(p)  # to Path
             save_path = str(save_dir / p.name)  # img.jpg
@@ -469,7 +434,7 @@ def detect(config='./config/config.json',):
                             save_path, cv2.VideoWriter_fourcc(*'mp4v'), fps, (w, h))
                     vid_writer.write(im0)
             print(f'{s}Done. ({time_synchronized() - t1:.3f}s)')
-
+    
     res_file = opt.project + '/' + opt.name + ".txt"
     with open(res_file, 'w') as f:
         f.writelines(results)
@@ -481,12 +446,12 @@ def detect(config='./config/config.json',):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser()
     parser.add_argument('--username', type=str, default='trackingcamera2',
-                        help='username') 
+                        help='username')
     parser.add_argument('--password', type=str, default='trackingcamera2',
-                        help='password') 
+                        help='password')
     parser.add_argument('--config', type=str, default='./config/config2.json',
-                        help='config path') 
-    
+                        help='config path')
+
     parser.add_argument('--source', type=str, default='inference/images',
                         help='source')  # file/folder, 0 for webcam
     parser.add_argument('--weights', nargs='+', type=str,

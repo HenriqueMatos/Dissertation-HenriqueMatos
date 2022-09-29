@@ -1,1 +1,5 @@
 python3 tracking_system.py --weights yolov7-tiny.pt --source ch01_08000000033001401.mp4 --iou-thres 0.45 --conf-thres 0.09 --view-img --img-size 640 --device cpu --cmc-method orb --track_low_thresh 0.0001 --track_high_thresh 0.25 --new_track_thresh 0.4 --class 0 --aspect_ratio_thresh 5
+
+python3 tracking_system.py --username trackingcamera2 --password trackingcamera2 --config ./config/config2.json --weights yolov7-tiny.pt --source ch01_08000000033001401.mp4 --iou-thres 0.45 --conf-thres 0.09 --view-img --img-size 640 --device cpu --cmc-method orb --track_low_thresh 0.0001 --track_high_thresh 0.25 --new_track_thresh 0.4 --class 0 --aspect_ratio_thresh 5 
+
+python3 tracking_system.py --username trackingcamera1 --password trackingcamera1 --config ./config/config.json --weights yolov7-tiny.pt --source ch01_08000000058000601.mp4 --iou-thres 0.45 --conf-thres 0.09 --view-img --img-size 640 --device cpu --cmc-method orb --track_low_thresh 0.0001 --track_high_thresh 0.25 --new_track_thresh 0.4 --class 0 --aspect_ratio_thresh 5 
