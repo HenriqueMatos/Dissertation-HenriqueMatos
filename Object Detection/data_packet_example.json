@@ -1,50 +1,40 @@
-[
-    {
-        "people": [
-            {
-                "local_id": 1,
-                "total_id": "1_2",
-                "zone": [
-                    "pátio escola de engenharia"
-                ],
-                "location": [
-                    640,
-                    480
-                ],
-                "objects": [
-                    "handbag"
-                ]
-            },
-            {
-                "local_id": 2,
-                "total_id": "1_4",
-                "zone": [
-                    "pátio escola de engenharia"
-                ],
-                "line_intersection": [
-                    {
-                        "name": "Teste 123",
-                        "zone_name": "outside"
-                    }
-                ],
-                "location": [
-                    640,
-                    480
-                ],
-                "objects": [
-                    "handbag"
-                ]
-            }
-        ],
-        "line_intersection": {
-            "Teste 123": {
-                "num_zone_before": 10,
-                "num_zone_after": 20
-            },
-            "Teste 456": {
-                "num_zone_before": 10,
-                "num_zone_after": 20
-            }
+{
+    "device_id": 1,
+    "people": [
+        {
+            "local_id": 1,
+            "total_id": "1_2",
+            "zone": [
+                "pátio escola de engenharia"
+            ],
+            "location": [
+                640,
+                480
+            ],
+            "objects": [
+                "handbag"
+            ]
+        },
+        {
+            "local_id": 2,
+            "total_id": "1_4",
+            "zone": [
+                "pátio escola de engenharia"
+            ],
+            "line_intersection": [
+                {
+                    "name": "Teste 123",
+                    "direction": "outside"
+                }
+            ],
+            "location": [
+                640,
+                480
+            ],
+            "objects": [
+                "handbag"
+            ]
         }
-    }
-]
+    ],
+    "timestamp": "123"
+}

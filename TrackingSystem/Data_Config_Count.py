@@ -1,4 +1,5 @@
 from collections import OrderedDict
+import datetime
 import json
 import os
 import string
@@ -197,7 +198,7 @@ class Data_Config_Count():
 
         DataPacket = {}
         DataPacket["people"] = []
-        DataPacket["line_intersection"] = []
+        # DataPacket["line_intersection"] = []
 
         PersonPacket = {}
         # print(ID_with_Box)
@@ -208,12 +209,7 @@ class Data_Config_Count():
             if ID_with_Class[id] == "person":
                 cX = int((value[0] + value[2]) / 2.0)
                 cY = int((value[1] + value[3]) / 2.0)
-                PersonPacket[id] = {}
-                PersonPacket[id]["local_id"] = id
-                PersonPacket[id]["zone"] = []  # Done
-                PersonPacket[id]["objects"] = []  # Done
-                PersonPacket[id]["line_intersection"] = []  # Not Done
-                PersonPacket[id]["location"] = [cX, cY]
+                
 
                 # Add New Data
                 if not self.ARRAY_FULL_DATA.keys().__contains__(id):
@@ -225,6 +221,13 @@ class Data_Config_Count():
                     )
                 self.ARRAY_FULL_DATA[id].appendData(
                     value, (cX, cY), ID_with_Box_Frame[id])
+                
+                
+                PersonPacket[id] = {}
+                PersonPacket[id]["local_id"] = id
+                # print(id)
+                PersonPacket[id]["global_id"] = self.ARRAY_FULL_DATA[id].global_id
+                PersonPacket[id]["location"] = [cX, cY]
 
                 PeopleList[id] = (cX, cY)
 
@@ -245,6 +248,8 @@ class Data_Config_Count():
             for id in PersonPacket:
                 if self.ARRAY_FULL_DATA[id].objects:
                     # if self.People_Objects.__contains__(id):
+                    if "objects" not in PersonPacket[id]:
+                        PersonPacket[id]["objects"] = []
                     PersonPacket[id]["objects"] = self.ARRAY_FULL_DATA[id].objects
 
         # Remove undetected People
@@ -280,10 +285,14 @@ class Data_Config_Count():
 
                     polygon = Polygon(item.points)
                     if polygon.contains(point):
+                        if "zone" not in PersonPacket[id]:
+                            PersonPacket[id]["zone"] = []
                         PersonPacket[id]["zone"].append(
                             item.name_inside_zone)
                         self.count_inside_zone[index] += 1
                     else:
+                        if "zone" not in PersonPacket[id]:
+                            PersonPacket[id]["zone"] = []
                         PersonPacket[id]["zone"].append(
                             item.name_outside_zone)
                         self.count_outside_zone[index] += 1
@@ -310,20 +319,24 @@ class Data_Config_Count():
                         # print("AQUI", DoIntersect, orientacao)
                         if DoIntersect:
                             # sleep(500000)
-                            
+
                             print("Intersect\n\n\n\n")
                             if item.zone_direction_1or2 == orientacao:
+                                if "line_intersection" not in PersonPacket[id]:
+                                    PersonPacket[id]["line_intersection"] = []
                                 PersonPacket[id]["line_intersection"].append({
                                     "name": item.name,
-                                    "zone_name": item.name_zone_after
+                                    "direction": item.name_zone_after
                                 })
                                 self.data_line_intersection_zone[item.name]["num_zone_after"] += 1
                                 print(item.name,
                                       item.name_zone_after, id)
                             else:
+                                if "line_intersection" not in PersonPacket[id]:
+                                    PersonPacket[id]["line_intersection"] = []
                                 PersonPacket[id]["line_intersection"].append({
                                     "name": item.name,
-                                    "zone_name": item.name_zone_before
+                                    "directtion": item.name_zone_before
                                 })
                                 self.data_line_intersection_zone[item.name]["num_zone_before"] += 1
                                 print(item.name,
@@ -397,13 +410,18 @@ class Data_Config_Count():
         print(self.count_inside_zone, self.count_outside_zone)
         print("Número de Pessoas", self.num_people_total)
 
-        # file1 = open("data_packet.json", "a")  # append mode
-        # for id, value in PersonPacket.items():
-        #     DataPacket["people"].append(value)
+        file1 = open("data_packet.json", "a")  # append mode
+        for id, value in PersonPacket.items():
+            DataPacket["people"].append(value)
+
+        DataPacket["device_id"] = self.config.camera_id
+        # datetime.time
+        DataPacket["timestamp"] = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
         # DataPacket["line_intersection"] = self.data_line_intersection_zone
 
-        # file1.write(json.dumps(DataPacket)+",")
-        # file1.close()
+        file1.write(json.dumps(DataPacket)+",")
+        file1.close()
+
     def setGlobalID(self, oldID, globalID):
         # print(oldID,globalID)
         # print(self.ARRAY_FULL_DATA.__contains__(oldID))

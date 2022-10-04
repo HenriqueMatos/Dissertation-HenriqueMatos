@@ -1,0 +1,7740 @@
+[
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    762,
+                    197
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    394,
+                    218
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    347,
+                    221
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1041,
+                    172
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    967,
+                    143
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    653,
+                    162
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    591,
+                    171
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    994,
+                    160
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    934,
+                    114
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:08"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    757,
+                    196
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    394,
+                    218
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    347,
+                    221
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1044,
+                    170
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    967,
+                    143
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    653,
+                    162
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    592,
+                    170
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    994,
+                    159
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    934,
+                    114
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:09"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    753,
+                    198
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    394,
+                    218
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    347,
+                    222
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1046,
+                    170
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    968,
+                    142
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    653,
+                    162
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    591,
+                    170
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    998,
+                    157
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    934,
+                    114
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:09"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    748,
+                    198
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    395,
+                    217
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    348,
+                    222
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1047,
+                    170
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    969,
+                    142
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    653,
+                    162
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    592,
+                    170
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    999,
+                    157
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    933,
+                    114
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:10"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    742,
+                    199
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    394,
+                    217
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    348,
+                    222
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1048,
+                    169
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    971,
+                    144
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    652,
+                    162
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    593,
+                    169
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1000,
+                    157
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    934,
+                    114
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:10"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    738,
+                    201
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    394,
+                    217
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    348,
+                    221
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1050,
+                    170
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    972,
+                    145
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    652,
+                    162
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    591,
+                    169
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1001,
+                    156
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    933,
+                    114
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:10"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    733,
+                    201
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    394,
+                    218
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    348,
+                    221
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1051,
+                    171
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    974,
+                    144
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    652,
+                    162
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    592,
+                    169
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1002,
+                    155
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    934,
+                    114
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:11"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    730,
+                    202
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    394,
+                    218
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    348,
+                    222
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1052,
+                    170
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    976,
+                    142
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    652,
+                    162
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    593,
+                    170
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1003,
+                    155
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    934,
+                    114
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:11"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    726,
+                    197
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    394,
+                    218
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    348,
+                    221
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1052,
+                    171
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    977,
+                    142
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    652,
+                    162
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    593,
+                    170
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1003,
+                    157
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    934,
+                    114
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:11"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    721,
+                    200
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    394,
+                    218
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    348,
+                    221
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1053,
+                    173
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    978,
+                    142
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    652,
+                    162
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    593,
+                    170
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1004,
+                    157
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    934,
+                    114
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:12"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    717,
+                    203
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    394,
+                    218
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    348,
+                    221
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1053,
+                    173
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    979,
+                    142
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    653,
+                    161
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    593,
+                    170
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1005,
+                    155
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    934,
+                    114
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:12"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    714,
+                    205
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    394,
+                    217
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    348,
+                    222
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1053,
+                    171
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    979,
+                    141
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    653,
+                    161
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    594,
+                    171
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1005,
+                    156
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    935,
+                    114
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:12"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    710,
+                    207
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    394,
+                    218
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    348,
+                    222
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1054,
+                    170
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    979,
+                    141
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    653,
+                    162
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    593,
+                    171
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1006,
+                    157
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    936,
+                    114
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:13"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    704,
+                    208
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    394,
+                    217
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    348,
+                    221
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1055,
+                    169
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    980,
+                    139
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    652,
+                    162
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    593,
+                    171
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1006,
+                    156
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    936,
+                    114
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:13"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    700,
+                    209
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    393,
+                    217
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    348,
+                    221
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1056,
+                    168
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    980,
+                    139
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    652,
+                    162
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    593,
+                    171
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1009,
+                    157
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    935,
+                    114
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:13"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    696,
+                    210
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    393,
+                    217
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    348,
+                    221
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1056,
+                    168
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    980,
+                    139
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    652,
+                    162
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    593,
+                    171
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1010,
+                    158
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    935,
+                    114
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:14"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    690,
+                    212
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    393,
+                    217
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    348,
+                    221
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1057,
+                    168
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    980,
+                    140
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    652,
+                    162
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    594,
+                    171
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1012,
+                    156
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    935,
+                    114
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:14"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    684,
+                    214
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    393,
+                    217
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    348,
+                    221
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1056,
+                    168
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    980,
+                    140
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    652,
+                    163
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    593,
+                    171
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1013,
+                    152
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    936,
+                    114
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:14"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    679,
+                    215
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    393,
+                    217
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    348,
+                    221
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1056,
+                    168
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    981,
+                    141
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    652,
+                    163
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    593,
+                    171
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1013,
+                    151
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    936,
+                    114
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:15"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    676,
+                    215
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    393,
+                    217
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    348,
+                    220
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1057,
+                    169
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    982,
+                    142
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    651,
+                    163
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    593,
+                    171
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1012,
+                    151
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    936,
+                    114
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:15"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    671,
+                    216
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    393,
+                    217
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    347,
+                    220
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1057,
+                    168
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    982,
+                    142
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    651,
+                    160
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    593,
+                    171
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1012,
+                    151
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    936,
+                    114
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:15"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    666,
+                    216
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    393,
+                    217
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    347,
+                    221
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1058,
+                    167
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    982,
+                    142
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    650,
+                    156
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    593,
+                    171
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1013,
+                    150
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    936,
+                    115
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:16"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    662,
+                    218
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    393,
+                    217
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    348,
+                    221
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1060,
+                    166
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    984,
+                    142
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    651,
+                    154
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    593,
+                    172
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1014,
+                    150
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    936,
+                    115
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:16"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    656,
+                    220
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    393,
+                    217
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    348,
+                    220
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1061,
+                    165
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    987,
+                    143
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    651,
+                    155
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    593,
+                    172
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1017,
+                    147
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    936,
+                    115
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:17"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    652,
+                    223
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    394,
+                    217
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    347,
+                    221
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1061,
+                    165
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    987,
+                    143
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    651,
+                    156
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    593,
+                    171
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1016,
+                    147
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    935,
+                    115
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:17"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    647,
+                    225
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    394,
+                    218
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    346,
+                    221
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1062,
+                    165
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    991,
+                    142
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    651,
+                    160
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    593,
+                    171
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1018,
+                    148
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    936,
+                    115
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:17"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    642,
+                    225
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    394,
+                    218
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    346,
+                    220
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1063,
+                    164
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    991,
+                    142
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    652,
+                    162
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    591,
+                    171
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1019,
+                    148
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    936,
+                    115
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:17"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    637,
+                    225
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    394,
+                    218
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    345,
+                    220
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1063,
+                    165
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    993,
+                    142
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    652,
+                    163
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    592,
+                    171
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1020,
+                    148
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    935,
+                    115
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:18"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    632,
+                    226
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    393,
+                    218
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    345,
+                    220
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1063,
+                    164
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    995,
+                    144
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    653,
+                    163
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    591,
+                    171
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1021,
+                    150
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    935,
+                    115
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:18"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    625,
+                    228
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    393,
+                    218
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    345,
+                    220
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1064,
+                    164
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    996,
+                    141
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    653,
+                    163
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    590,
+                    170
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1021,
+                    150
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    936,
+                    115
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:18"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    620,
+                    229
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    394,
+                    218
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    347,
+                    221
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1064,
+                    164
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    996,
+                    137
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    653,
+                    163
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    590,
+                    170
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1022,
+                    148
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    936,
+                    115
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:19"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    614,
+                    232
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    394,
+                    218
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    346,
+                    221
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1063,
+                    164
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    997,
+                    137
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    654,
+                    163
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    590,
+                    171
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1023,
+                    149
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    935,
+                    115
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:19"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    609,
+                    233
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    394,
+                    218
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    347,
+                    221
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1064,
+                    164
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    998,
+                    136
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    653,
+                    162
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    589,
+                    171
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1024,
+                    150
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    935,
+                    115
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:20"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    604,
+                    232
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    394,
+                    218
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    346,
+                    221
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1063,
+                    163
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    998,
+                    137
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    653,
+                    162
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    587,
+                    169
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1025,
+                    150
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    935,
+                    116
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:20"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    598,
+                    231
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    394,
+                    217
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    345,
+                    221
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1063,
+                    162
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    998,
+                    138
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    653,
+                    162
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    587,
+                    167
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1026,
+                    151
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    935,
+                    115
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 10,
+                "global_id": null,
+                "location": [
+                    720,
+                    147
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:20"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    592,
+                    236
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    394,
+                    217
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    345,
+                    221
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1064,
+                    162
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    999,
+                    137
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    653,
+                    161
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    588,
+                    168
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1027,
+                    151
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    936,
+                    115
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 10,
+                "global_id": null,
+                "location": [
+                    720,
+                    147
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:21"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    585,
+                    238
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    393,
+                    218
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    345,
+                    221
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1064,
+                    161
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    1001,
+                    135
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    653,
+                    162
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    588,
+                    168
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1028,
+                    151
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    936,
+                    115
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 10,
+                "global_id": null,
+                "location": [
+                    721,
+                    148
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:21"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    577,
+                    239
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    394,
+                    218
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    345,
+                    221
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1064,
+                    161
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    1001,
+                    137
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    653,
+                    162
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    590,
+                    170
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1029,
+                    153
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    936,
+                    115
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 10,
+                "global_id": null,
+                "location": [
+                    721,
+                    148
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:21"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    572,
+                    240
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    394,
+                    218
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    345,
+                    220
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1064,
+                    162
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    1002,
+                    135
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    653,
+                    162
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    592,
+                    171
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1029,
+                    153
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    936,
+                    115
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 10,
+                "global_id": null,
+                "location": [
+                    721,
+                    147
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:22"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    566,
+                    240
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    393,
+                    217
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    347,
+                    221
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1065,
+                    163
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    1002,
+                    134
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    653,
+                    162
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    593,
+                    171
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1029,
+                    153
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    935,
+                    115
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 10,
+                "global_id": null,
+                "location": [
+                    721,
+                    147
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:22"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    560,
+                    241
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    393,
+                    217
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    348,
+                    221
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1066,
+                    163
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    1003,
+                    136
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    653,
+                    162
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    593,
+                    171
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1029,
+                    152
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    935,
+                    115
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 10,
+                "global_id": null,
+                "location": [
+                    720,
+                    147
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 11,
+                "global_id": null,
+                "location": [
+                    952,
+                    116
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:22"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    552,
+                    242
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    394,
+                    217
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    348,
+                    222
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1066,
+                    164
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    1002,
+                    138
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    653,
+                    162
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    594,
+                    171
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1029,
+                    152
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    936,
+                    115
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 10,
+                "global_id": null,
+                "location": [
+                    720,
+                    147
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 11,
+                "global_id": null,
+                "location": [
+                    952,
+                    116
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:22"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    544,
+                    243
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    393,
+                    218
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    348,
+                    222
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1067,
+                    164
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    1003,
+                    135
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    653,
+                    162
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    593,
+                    171
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1030,
+                    153
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    936,
+                    115
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 10,
+                "global_id": null,
+                "location": [
+                    720,
+                    147
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 11,
+                "global_id": null,
+                "location": [
+                    952,
+                    116
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:23"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    536,
+                    245
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    394,
+                    218
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    348,
+                    222
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1068,
+                    164
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    1005,
+                    134
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    653,
+                    162
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    593,
+                    171
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1030,
+                    153
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    936,
+                    116
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 10,
+                "global_id": null,
+                "location": [
+                    721,
+                    147
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 11,
+                "global_id": null,
+                "location": [
+                    952,
+                    116
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 12,
+                "global_id": null,
+                "location": [
+                    807,
+                    134
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:23"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    531,
+                    247
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    393,
+                    218
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    346,
+                    221
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1068,
+                    164
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    1005,
+                    132
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    653,
+                    162
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    593,
+                    171
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1032,
+                    153
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    935,
+                    115
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 10,
+                "global_id": null,
+                "location": [
+                    721,
+                    147
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 11,
+                "global_id": null,
+                "location": [
+                    952,
+                    116
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 12,
+                "global_id": null,
+                "location": [
+                    807,
+                    134
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 13,
+                "global_id": null,
+                "location": [
+                    17,
+                    467
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:23"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    526,
+                    245
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    393,
+                    218
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    348,
+                    222
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1069,
+                    164
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    1006,
+                    137
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    653,
+                    162
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    593,
+                    171
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1032,
+                    155
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    935,
+                    115
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 10,
+                "global_id": null,
+                "location": [
+                    721,
+                    147
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 11,
+                "global_id": null,
+                "location": [
+                    952,
+                    117
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 12,
+                "global_id": null,
+                "location": [
+                    807,
+                    134
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 13,
+                "global_id": null,
+                "location": [
+                    20,
+                    466
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:24"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    520,
+                    247
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    393,
+                    218
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    348,
+                    222
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1069,
+                    164
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    1006,
+                    140
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    653,
+                    162
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    593,
+                    171
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1033,
+                    155
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    934,
+                    115
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 10,
+                "global_id": null,
+                "location": [
+                    721,
+                    147
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 11,
+                "global_id": null,
+                "location": [
+                    953,
+                    117
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 12,
+                "global_id": null,
+                "location": [
+                    807,
+                    134
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 13,
+                "global_id": null,
+                "location": [
+                    25,
+                    464
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:24"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    513,
+                    249
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    393,
+                    218
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    348,
+                    222
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1069,
+                    164
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    1008,
+                    141
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    653,
+                    162
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    593,
+                    171
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1034,
+                    155
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    934,
+                    115
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 10,
+                "global_id": null,
+                "location": [
+                    720,
+                    147
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 11,
+                "global_id": null,
+                "location": [
+                    953,
+                    117
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 12,
+                "global_id": null,
+                "location": [
+                    808,
+                    134
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 13,
+                "global_id": null,
+                "location": [
+                    33,
+                    458
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:24"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    506,
+                    249
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    393,
+                    218
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    349,
+                    222
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1070,
+                    163
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    1010,
+                    142
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    653,
+                    162
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    593,
+                    171
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1035,
+                    154
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    934,
+                    115
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 10,
+                "global_id": null,
+                "location": [
+                    720,
+                    147
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 11,
+                "global_id": null,
+                "location": [
+                    953,
+                    116
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 12,
+                "global_id": null,
+                "location": [
+                    808,
+                    134
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 13,
+                "global_id": null,
+                "location": [
+                    41,
+                    457
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:25"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    498,
+                    252
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    393,
+                    218
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    349,
+                    222
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1070,
+                    163
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    1011,
+                    143
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    653,
+                    162
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    594,
+                    170
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1035,
+                    153
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    934,
+                    115
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 10,
+                "global_id": null,
+                "location": [
+                    720,
+                    147
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 11,
+                "global_id": null,
+                "location": [
+                    953,
+                    116
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 12,
+                "global_id": null,
+                "location": [
+                    808,
+                    134
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 13,
+                "global_id": null,
+                "location": [
+                    48,
+                    455
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:25"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    492,
+                    255
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    393,
+                    218
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    349,
+                    222
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1070,
+                    163
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    1011,
+                    142
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    653,
+                    162
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    593,
+                    170
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1035,
+                    153
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    934,
+                    115
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 10,
+                "global_id": null,
+                "location": [
+                    720,
+                    147
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 11,
+                "global_id": null,
+                "location": [
+                    953,
+                    116
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 12,
+                "global_id": null,
+                "location": [
+                    809,
+                    134
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 13,
+                "global_id": null,
+                "location": [
+                    53,
+                    446
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:25"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    486,
+                    256
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    394,
+                    218
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    349,
+                    222
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1070,
+                    162
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    1012,
+                    142
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    653,
+                    162
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    593,
+                    171
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1035,
+                    152
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    935,
+                    115
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 10,
+                "global_id": null,
+                "location": [
+                    720,
+                    147
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 11,
+                "global_id": null,
+                "location": [
+                    953,
+                    116
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 12,
+                "global_id": null,
+                "location": [
+                    808,
+                    134
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 13,
+                "global_id": null,
+                "location": [
+                    59,
+                    440
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:26"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    480,
+                    255
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    394,
+                    218
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    349,
+                    222
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1070,
+                    162
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    1013,
+                    141
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    653,
+                    162
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    593,
+                    170
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1036,
+                    152
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    935,
+                    115
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 10,
+                "global_id": null,
+                "location": [
+                    720,
+                    147
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 11,
+                "global_id": null,
+                "location": [
+                    953,
+                    116
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 12,
+                "global_id": null,
+                "location": [
+                    808,
+                    134
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 13,
+                "global_id": null,
+                "location": [
+                    68,
+                    440
+                ],
+                "zone": [
+                    "teste fora"
+                ],
+                "line_intersection": [
+                    {
+                        "name": "123",
+                        "directtion": "antes"
+                    }
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:26"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    473,
+                    256
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    394,
+                    218
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    349,
+                    222
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1070,
+                    163
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    1013,
+                    140
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    653,
+                    162
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    593,
+                    171
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1036,
+                    155
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    936,
+                    115
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 10,
+                "global_id": null,
+                "location": [
+                    720,
+                    147
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 11,
+                "global_id": null,
+                "location": [
+                    951,
+                    116
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 12,
+                "global_id": null,
+                "location": [
+                    808,
+                    133
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 13,
+                "global_id": null,
+                "location": [
+                    77,
+                    438
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:27"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    462,
+                    258
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    394,
+                    218
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    349,
+                    222
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1070,
+                    162
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    1013,
+                    140
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    652,
+                    162
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    593,
+                    170
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1036,
+                    156
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    936,
+                    115
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 10,
+                "global_id": null,
+                "location": [
+                    720,
+                    147
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 11,
+                "global_id": null,
+                "location": [
+                    953,
+                    116
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 12,
+                "global_id": null,
+                "location": [
+                    807,
+                    133
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 13,
+                "global_id": null,
+                "location": [
+                    89,
+                    433
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:27"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    456,
+                    260
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    394,
+                    218
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    349,
+                    222
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1070,
+                    162
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    1013,
+                    140
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    652,
+                    162
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    591,
+                    170
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1035,
+                    154
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    936,
+                    115
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 10,
+                "global_id": null,
+                "location": [
+                    720,
+                    147
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 11,
+                "global_id": null,
+                "location": [
+                    953,
+                    116
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 12,
+                "global_id": null,
+                "location": [
+                    808,
+                    134
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 13,
+                "global_id": null,
+                "location": [
+                    98,
+                    433
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:27"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    452,
+                    262
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    394,
+                    218
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    349,
+                    222
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1070,
+                    161
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    1013,
+                    139
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    652,
+                    162
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    591,
+                    170
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1035,
+                    152
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    936,
+                    115
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 10,
+                "global_id": null,
+                "location": [
+                    720,
+                    147
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 11,
+                "global_id": null,
+                "location": [
+                    953,
+                    116
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 12,
+                "global_id": null,
+                "location": [
+                    808,
+                    134
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 13,
+                "global_id": null,
+                "location": [
+                    105,
+                    430
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:28"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    445,
+                    263
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    394,
+                    217
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    349,
+                    222
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1070,
+                    162
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    1015,
+                    140
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    653,
+                    162
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    590,
+                    170
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1035,
+                    151
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    935,
+                    115
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 10,
+                "global_id": null,
+                "location": [
+                    720,
+                    148
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 11,
+                "global_id": null,
+                "location": [
+                    952,
+                    116
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 12,
+                "global_id": null,
+                "location": [
+                    808,
+                    134
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 13,
+                "global_id": null,
+                "location": [
+                    110,
+                    426
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:28"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    439,
+                    265
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    394,
+                    217
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    349,
+                    221
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1070,
+                    161
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    1015,
+                    140
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    653,
+                    162
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    590,
+                    170
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1035,
+                    150
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    935,
+                    115
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 10,
+                "global_id": null,
+                "location": [
+                    720,
+                    148
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 11,
+                "global_id": null,
+                "location": [
+                    951,
+                    116
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 12,
+                "global_id": null,
+                "location": [
+                    807,
+                    134
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 13,
+                "global_id": null,
+                "location": [
+                    115,
+                    424
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:28"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    432,
+                    266
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    395,
+                    217
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    349,
+                    221
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1070,
+                    162
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    1017,
+                    141
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    653,
+                    162
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    591,
+                    170
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1033,
+                    149
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    935,
+                    115
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 10,
+                "global_id": null,
+                "location": [
+                    720,
+                    147
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 11,
+                "global_id": null,
+                "location": [
+                    951,
+                    116
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 12,
+                "global_id": null,
+                "location": [
+                    807,
+                    134
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 13,
+                "global_id": null,
+                "location": [
+                    123,
+                    425
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:29"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    425,
+                    268
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    395,
+                    217
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    348,
+                    221
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1071,
+                    162
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 5,
+                "global_id": null,
+                "location": [
+                    1019,
+                    138
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    653,
+                    162
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    592,
+                    170
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1030,
+                    147
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    936,
+                    115
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 10,
+                "global_id": null,
+                "location": [
+                    719,
+                    147
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 11,
+                "global_id": null,
+                "location": [
+                    950,
+                    116
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 12,
+                "global_id": null,
+                "location": [
+                    807,
+                    134
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 13,
+                "global_id": null,
+                "location": [
+                    136,
+                    428
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:29"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    416,
+                    269
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    395,
+                    218
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    347,
+                    221
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1071,
+                    161
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    653,
+                    162
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    593,
+                    170
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1029,
+                    148
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    936,
+                    114
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 10,
+                "global_id": null,
+                "location": [
+                    720,
+                    147
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 11,
+                "global_id": null,
+                "location": [
+                    950,
+                    116
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 12,
+                "global_id": null,
+                "location": [
+                    807,
+                    134
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 13,
+                "global_id": null,
+                "location": [
+                    148,
+                    423
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:29"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    409,
+                    270
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    395,
+                    217
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    348,
+                    221
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1071,
+                    161
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    653,
+                    162
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    593,
+                    171
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1029,
+                    148
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    935,
+                    114
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 10,
+                "global_id": null,
+                "location": [
+                    720,
+                    147
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 11,
+                "global_id": null,
+                "location": [
+                    950,
+                    116
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 12,
+                "global_id": null,
+                "location": [
+                    807,
+                    135
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 13,
+                "global_id": null,
+                "location": [
+                    159,
+                    418
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:30"
+    },
+    {
+        "people": [
+            {
+                "local_id": 1,
+                "global_id": null,
+                "location": [
+                    401,
+                    261
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 2,
+                "global_id": null,
+                "location": [
+                    396,
+                    219
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 3,
+                "global_id": null,
+                "location": [
+                    347,
+                    221
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 4,
+                "global_id": null,
+                "location": [
+                    1072,
+                    161
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 6,
+                "global_id": null,
+                "location": [
+                    653,
+                    162
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 7,
+                "global_id": null,
+                "location": [
+                    593,
+                    171
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 8,
+                "global_id": null,
+                "location": [
+                    1029,
+                    147
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 9,
+                "global_id": null,
+                "location": [
+                    935,
+                    114
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 10,
+                "global_id": null,
+                "location": [
+                    719,
+                    147
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 11,
+                "global_id": null,
+                "location": [
+                    950,
+                    116
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            },
+            {
+                "local_id": 12,
+                "global_id": null,
+                "location": [
+                    807,
+                    135
+                ],
+                "zone": [
+                    "teste fora"
+                ]
+            },
+            {
+                "local_id": 13,
+                "global_id": null,
+                "location": [
+                    164,
+                    414
+                ],
+                "zone": [
+                    "teste dentro"
+                ]
+            }
+        ],
+        "device_id": 1,
+        "timestamp": "04/10/2022 15:48:30"
+    }
+]
