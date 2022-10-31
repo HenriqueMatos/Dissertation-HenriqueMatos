@@ -1,6 +1,7 @@
 from collections import OrderedDict
 import datetime
 import json
+import math
 import os
 import string
 import sys
@@ -17,6 +18,38 @@ from sympy import centroid
 # import Config
 from Config import Config, Input, Zone, Line_intersection_zone, Id_association
 import intersect
+
+
+def scale(w, h, x, y, maximum=True):
+    nw = y * w / h
+    nh = x * h / w
+    if maximum ^ (nw >= x):
+        return nw or 1, y
+    return x, nh or 1
+
+
+def rotate(xy, theta):
+    cos_theta, sin_theta = math.cos(theta), math.sin(theta)
+
+    return (
+        xy[0] * cos_theta - xy[1] * sin_theta,
+        xy[0] * sin_theta + xy[1] * cos_theta
+    )
+
+
+def translate(xy, offset):
+    return xy[0] + offset[0], xy[1] + offset[1]
+
+
+def get_corresponding_coord(local_coord, cam_coordinates, scale, offset, degree=0):
+    new_coord = [(local_coord[0]*scale[0])/cam_coordinates[0],
+                 (local_coord[1]*scale[1])/cam_coordinates[1]]
+
+    new_rotate_coord = rotate(new_coord, math.radians(degree))
+
+    final_coord = translate(new_rotate_coord, offset)
+
+    return final_coord
 
 
 class NumpyArrayEncoder(json.JSONEncoder):
@@ -89,23 +122,15 @@ class PersonDetectionData:
 
 class Data_Config_Count():
     def __init__(self, centerFramePoint, maxDisappeared=60, maxCentroids=20, maxImageFrames=20):
+        ## Mapping ##
+        self.global_scale = None
+        self.global_angle = None
+        self.global_offset = None
+        self.cam_coordinates = None
+        #############
         self.JsonObjectString = None
         self.config = None
-        # Config
-        # self.ip = None
-        # self.camera_id = None
-        # self.camera_name = None
-        # self.camera_zone = None
-        # self.timestamp_config_creation = None
-        # self.restart_count = None
 
-        # self.threshold = None
-        # self.path_model_weights = None
-        # self.path_model_cfg = None
-        # self.path_yolo_coco_names = None
-        # self.object_data_tracking = None
-
-        # self.packet_default_output = None
         ##################
         # MQTT Send/Receive
         self.mqtt_client = None
@@ -194,6 +219,17 @@ class Data_Config_Count():
 
         print(jsonObject["ip"])
 
+        with open("campus_mapping.json", 'r') as f:
+            data = json.load(f)
+
+        for eachCam in data["cameras"]:
+            if eachCam["cam_id"] == self.config.camera_id:
+                self.global_scale = eachCam["map_global_config"]["scale"]
+                self.global_angle = eachCam["map_global_config"]["angle"]
+                self.global_offset = eachCam["map_global_config"]["offset"]
+                self.cam_coordinates = eachCam["cam_coordinates"]
+                break
+
     def updateData(self, ID_with_Box, ID_with_Class, ID_with_Box_Frame):
 
         DataPacket = {}
@@ -209,7 +245,6 @@ class Data_Config_Count():
             if ID_with_Class[id] == "person":
                 cX = int((value[0] + value[2]) / 2.0)
                 cY = int((value[1] + value[3]) / 2.0)
-                
 
                 # Add New Data
                 if not self.ARRAY_FULL_DATA.keys().__contains__(id):
@@ -221,13 +256,16 @@ class Data_Config_Count():
                     )
                 self.ARRAY_FULL_DATA[id].appendData(
                     value, (cX, cY), ID_with_Box_Frame[id])
-                
-                
+
                 PersonPacket[id] = {}
                 PersonPacket[id]["local_id"] = id
                 # print(id)
                 PersonPacket[id]["global_id"] = self.ARRAY_FULL_DATA[id].global_id
-                PersonPacket[id]["location"] = [cX, cY]
+
+                global_coordinates = get_corresponding_coord(
+                    [cX, cY], self.cam_coordinates, self.global_scale, self.global_offset, self.global_angle)
+                # PersonPacket[id]["location"] = [cX, cY]
+                PersonPacket[id]["location"] = global_coordinates
 
                 PeopleList[id] = (cX, cY)
 
@@ -285,16 +323,16 @@ class Data_Config_Count():
 
                     polygon = Polygon(item.points)
                     if polygon.contains(point):
-                        if "zone" not in PersonPacket[id]:
-                            PersonPacket[id]["zone"] = []
-                        PersonPacket[id]["zone"].append(
-                            item.name_inside_zone)
+                        # if "zone" not in PersonPacket[id]:
+                        #     PersonPacket[id]["zone"] = []
+                        # PersonPacket[id]["zone"].append(
+                        #     item.name_inside_zone)
                         self.count_inside_zone[index] += 1
                     else:
-                        if "zone" not in PersonPacket[id]:
-                            PersonPacket[id]["zone"] = []
-                        PersonPacket[id]["zone"].append(
-                            item.name_outside_zone)
+                        # if "zone" not in PersonPacket[id]:
+                        #     PersonPacket[id]["zone"] = []
+                        # PersonPacket[id]["zone"].append(
+                        #     item.name_outside_zone)
                         self.count_outside_zone[index] += 1
 
                 # LINE_INTERSECTION
@@ -322,22 +360,22 @@ class Data_Config_Count():
 
                             print("Intersect\n\n\n\n")
                             if item.zone_direction_1or2 == orientacao:
-                                if "line_intersection" not in PersonPacket[id]:
-                                    PersonPacket[id]["line_intersection"] = []
-                                PersonPacket[id]["line_intersection"].append({
-                                    "name": item.name,
-                                    "direction": item.name_zone_after
-                                })
+                                # if "line_intersection" not in PersonPacket[id]:
+                                #     PersonPacket[id]["line_intersection"] = []
+                                # PersonPacket[id]["line_intersection"].append({
+                                #     "name": item.name,
+                                #     "direction": item.name_zone_after
+                                # })
                                 self.data_line_intersection_zone[item.name]["num_zone_after"] += 1
                                 print(item.name,
                                       item.name_zone_after, id)
                             else:
-                                if "line_intersection" not in PersonPacket[id]:
-                                    PersonPacket[id]["line_intersection"] = []
-                                PersonPacket[id]["line_intersection"].append({
-                                    "name": item.name,
-                                    "directtion": item.name_zone_before
-                                })
+                                # if "line_intersection" not in PersonPacket[id]:
+                                #     PersonPacket[id]["line_intersection"] = []
+                                # PersonPacket[id]["line_intersection"].append({
+                                #     "name": item.name,
+                                #     "directtion": item.name_zone_before
+                                # })
                                 self.data_line_intersection_zone[item.name]["num_zone_before"] += 1
                                 print(item.name,
                                       item.name_zone_before, id)
@@ -416,9 +454,11 @@ class Data_Config_Count():
 
         DataPacket["device_id"] = self.config.camera_id
         # datetime.time
-        DataPacket["timestamp"] = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
+        # DataPacket["timestamp"] = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
         # DataPacket["line_intersection"] = self.data_line_intersection_zone
 
+        # WRITE DATA TO FILE
+        # SEND DATA TO MQTT BROKER
         file1.write(json.dumps(DataPacket)+",")
         file1.close()
 
