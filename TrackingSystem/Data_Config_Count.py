@@ -261,7 +261,7 @@ class Data_Config_Count():
                 PersonPacket[id]["local_id"] = id
                 # print(id)
                 PersonPacket[id]["global_id"] = self.ARRAY_FULL_DATA[id].global_id
-
+                print([cX, cY], self.cam_coordinates, self.global_scale, self.global_offset, self.global_angle)
                 global_coordinates = get_corresponding_coord(
                     [cX, cY], self.cam_coordinates, self.global_scale, self.global_offset, self.global_angle)
                 # PersonPacket[id]["location"] = [cX, cY]
