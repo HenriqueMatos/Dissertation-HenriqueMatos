@@ -2,6 +2,7 @@ from collections import OrderedDict
 import datetime
 import json
 import math
+from paho.mqtt import client as mqtt_client
 import os
 import string
 import sys
@@ -260,8 +261,8 @@ class Data_Config_Count():
                 PersonPacket[id] = {}
                 PersonPacket[id]["local_id"] = id
                 # print(id)
-                if self.ARRAY_FULL_DATA[id].global_id:
-                    PersonPacket[id]["global_id"] = "cam"+self.config.camera_id+"-"+id
+                if not self.ARRAY_FULL_DATA[id].global_id:
+                    PersonPacket[id]["global_id"] = "cam"+str(self.config.camera_id)+"-"+str(id)
                 else:
                     PersonPacket[id]["global_id"] = self.ARRAY_FULL_DATA[id].global_id
 
@@ -453,19 +454,39 @@ class Data_Config_Count():
         print(self.count_inside_zone, self.count_outside_zone)
         print("Número de Pessoas", self.num_people_total)
 
-        file1 = open("data_packet.json", "a")  # append mode
+        # file1 = open("data_packet.json", "a")  # append mode
         for id, value in PersonPacket.items():
             DataPacket["people"].append(value)
-
         DataPacket["device_id"] = self.config.camera_id
+
         # datetime.time
         # DataPacket["timestamp"] = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
         # DataPacket["line_intersection"] = self.data_line_intersection_zone
 
         # WRITE DATA TO FILE
+        # file1.write(json.dumps(DataPacket)+",")
+        # file1.close()
+        
+        
         # SEND DATA TO MQTT BROKER
-        file1.write(json.dumps(DataPacket)+",")
-        file1.close()
+        broker = 'homeassistant.local'
+        port = 1883
+        topic = '/homeassistant/people_tracking'
+        client_id = 'client-01'
+        username = 'mqtt_user'
+        password = '123abc!'
+        
+        client = mqtt_client.Client(client_id)
+        client.username_pw_set(username, password)
+        # client.on_connect = on_connect
+        # client.on_log = on_log
+        if not client.is_connected():
+            client.connect(broker, port)
+        print(DataPacket)
+        result = client.publish(topic, json.dumps(DataPacket))
+        
+        
+        
 
     def setGlobalID(self, oldID, globalID):
         # print(oldID,globalID)
