@@ -466,8 +466,7 @@ class Data_Config_Count():
         # WRITE DATA TO FILE
         # file1.write(json.dumps(DataPacket)+",")
         # file1.close()
-        
-        
+
         # SEND DATA TO MQTT BROKER
         broker = 'homeassistant.local'
         port = 1883
@@ -475,18 +474,21 @@ class Data_Config_Count():
         client_id = 'client-01'
         username = 'mqtt_user'
         password = '123abc!'
-        
-        client = mqtt_client.Client(client_id)
-        client.username_pw_set(username, password)
-        # client.on_connect = on_connect
-        # client.on_log = on_log
-        if not client.is_connected():
-            client.connect(broker, port)
-        print(DataPacket)
-        result = client.publish(topic, json.dumps(DataPacket))
-        
-        
-        
+
+        # client = mqtt_client.Client(client_id)
+        # client.username_pw_set(username, password)
+        # # client.on_connect = on_connect
+        # # client.on_log = on_log
+        # if not client.is_connected():
+        #     client.connect(broker, port)
+        # print(DataPacket)
+        # result = client.publish(topic, json.dumps(DataPacket))
+
+        for id, value in PersonPacket.items():
+            PersonPacket[id]["centroids"] = self.ARRAY_FULL_DATA[id].centroid[-20:]
+            PersonPacket[id]["box"] = self.ARRAY_FULL_DATA[id].box[-1]
+
+        return PersonPacket
 
     def setGlobalID(self, oldID, globalID):
         # print(oldID,globalID)

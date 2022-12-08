@@ -1,37 +1,36 @@
+from tracker.tracking_utils.timer import Timer
+from tracker.mc_bot_sort import BoTSORT
+from yolov7.utils.torch_utils import select_device, load_classifier, time_synchronized, TracedModel
+from yolov7.utils.plots import plot_one_box
+from yolov7.utils.general import check_img_size, check_requirements, check_imshow, non_max_suppression, \
+    apply_classifier, \
+    scale_coords, xyxy2xywh, strip_optimizer, set_logging, increment_path
+from yolov7.utils.datasets import LoadStreams, LoadImages
+from yolov7.models.experimental import attempt_load
+from numpy import random
+import torch.backends.cudnn as cudnn
+import torch
+import cv2
+import argparse
+import time
+from pathlib import Path
+import base64
+import json
+import shutil
+import numpy as np
+from simplejson import OrderedDict
+import _thread
+import requests
+import paho.mqtt.client as mqtt
+from Data_Config_Count import Data_Config_Count
+import os
+from deep_person_reid.re_identification import do_Re_Identification
 import sys
 
 sys.path.insert(0, './yolov7')
 sys.path.append('.')
 
 print(sys.path)
-
-from deep_person_reid.re_identification import do_Re_Identification
-import os
-from Data_Config_Count import Data_Config_Count
-import paho.mqtt.client as mqtt
-import requests
-import _thread
-from simplejson import OrderedDict
-import numpy as np
-import shutil
-import json
-import base64
-from pathlib import Path
-import time
-import argparse
-import cv2
-import torch
-import torch.backends.cudnn as cudnn
-from numpy import random
-from yolov7.models.experimental import attempt_load
-from yolov7.utils.datasets import LoadStreams, LoadImages
-from yolov7.utils.general import check_img_size, check_requirements, check_imshow, non_max_suppression, \
-    apply_classifier, \
-    scale_coords, xyxy2xywh, strip_optimizer, set_logging, increment_path
-from yolov7.utils.plots import plot_one_box
-from yolov7.utils.torch_utils import select_device, load_classifier, time_synchronized, TracedModel
-from tracker.mc_bot_sort import BoTSORT
-from tracker.tracking_utils.timer import Timer
 
 
 # Global
@@ -115,13 +114,14 @@ def on_message(client, userdata, message):
                                 query_directory+key+'.jpg', np.asarray(JsonData["frame"]))
 
                         # Do The Re-Identification
-                        if len(os.listdir(gallery_directory)) == 0 or len(os.listdir(query_directory)) == 0:
-                            break
+                        # if len(os.listdir(gallery_directory)) == 0 or len(os.listdir(query_directory)) == 0:
+                        #     break
 
                         result = do_Re_Identification(
                             gallery_directory, query_directory)
                         print(result)
-
+                        # sys.exit(-1)
+                        # time.sleep(50000000)
                         # Remove Query Files
                         shutil.rmtree(query_directory)
                         # If successful Re-Identification remove associated gallery files
@@ -160,7 +160,7 @@ def ThreadDataTransmitter(ConfigDataUpdater, frame):
     sendData["Authenticate"] = response["access_token"]
     sendData["camera_id"] = ConfigDataUpdater.config.camera_id
     mqttBroker = ConfigDataUpdater.config.ip
-    
+
     ConfigDataUpdater.mqtt_client = mqtt.Client(
         str(ConfigDataUpdater.config.camera_id))
     ConfigDataUpdater.mqtt_client.connect(mqttBroker)
@@ -233,7 +233,7 @@ def detect(config='./config/config.json',):
     # Directories
     save_dir = Path(increment_path(Path(opt.project) / opt.name,
                     exist_ok=opt.exist_ok))  # increment run
-    save_img = False
+    save_img = True
     if save_img:
         save_dir.mkdir(parents=True, exist_ok=True)  # make dir
 
@@ -297,7 +297,7 @@ def detect(config='./config/config.json',):
         for line_intersection_zone in ConfigDataUpdater.config.input.line_intersection_zone:
             cv2.line(im0s, tuple(line_intersection_zone.start_point),
                      tuple(line_intersection_zone.end_point), (0, 255, 0), 2)
-            
+
         for remove_area in ConfigDataUpdater.config.input.remove_area:
             mask = np.zeros(im0s.shape, dtype=np.uint8)
             contours = np.array(remove_area)
@@ -311,7 +311,6 @@ def detect(config='./config/config.json',):
         for zone in ConfigDataUpdater.config.input.zone:
             cv2.polylines(im0s, [np.array(zone.points)],
                           True, (255, 0, 0), 2)
-            
 
         img = torch.from_numpy(img).to(device)
         img = img.half() if half else img.float()  # uint8 to fp16/32
@@ -348,13 +347,11 @@ def detect(config='./config/config.json',):
                 #     # add to string
                 #     s += f"{n} {names[int(c)]}{'s' * (n > 1)}, "
                 #     # print("AQUi "+s)
-                
+
                 boxes = scale_coords(img.shape[2:], det[:, :4], im0.shape)
                 boxes = boxes.cpu().numpy()
                 detections = det.cpu().numpy()
                 detections[:, :4] = boxes
-                
-                
 
             trackerTimer.tic()
             online_targets = tracker.update(detections, im0)
@@ -391,20 +388,29 @@ def detect(config='./config/config.json',):
                     results.append(
                         f"{fn},{tid},{tlwh[0]:.2f},{tlwh[1]:.2f},{tlwh[2]:.2f},{tlwh[3]:.2f},{t.score:.2f},-1,-1,-1\n"
                     )
-
-                    if save_img or view_img:  # Add bbox to image
-                        if opt.hide_labels_name:
-                            label = f'{tid}, {int(tcls)}'
-                        else:
-                            label = f'{tid}, {names[int(tcls)]}'
-                        plot_one_box(tlbr, im0, label=label,
-                                     color=colors[int(tid) % len(colors)], line_thickness=2)
+                    # print(tlbr)
+                    # if save_img or view_img:  # Add bbox to image
+                    #     if opt.hide_labels_name:
+                    #         label = f'{tid}, {int(tcls)}'
+                    #     else:
+                    #         label = f'{tid}, {names[int(tcls)]}'
+                    #     plot_one_box(tlbr, im0, label=label,
+                    #                  color=colors[int(tid) % len(colors)], line_thickness=2)
 
             tbefore = time_synchronized()
-            ConfigDataUpdater.updateData(ID_with_Box, ID_with_Class, ID_with_Box_Frame)
+            PersonData = ConfigDataUpdater.updateData(ID_with_Box, ID_with_Class, ID_with_Box_Frame)
             tafter = time_synchronized()
 
-            # print(f"\n Time Config {tafter - tbefore:.3f} s")
+            # Draw on img
+            for id, value in PersonData.items():
+                print(value["global_id"],value["box"])
+                colorID = colors[int(id) % len(colors)]
+                label = f'{value["global_id"]}, {names[int(tcls)]}'
+                plot_one_box(list(value["box"]), im0, label=label,
+                             color=colorID, line_thickness=2)
+                for centroid in value["centroids"]:
+                    cv2.circle(
+                        im0, (centroid[0], centroid[1]), 3, colorID, -1)
 
             p = Path(p)  # to Path
             save_path = str(save_dir / p.name)  # img.jpg
@@ -434,7 +440,7 @@ def detect(config='./config/config.json',):
                             save_path, cv2.VideoWriter_fourcc(*'mp4v'), fps, (w, h))
                     vid_writer.write(im0)
             print(f'{s}Done. ({time_synchronized() - t1:.3f}s)')
-    
+
     res_file = opt.project + '/' + opt.name + ".txt"
     with open(res_file, 'w') as f:
         f.writelines(results)

@@ -120,6 +120,8 @@ def do_Re_Identification(gallery_directory, query_directory, use_gpu=False):
             if mean > max_mean_value:
                 max_mean_value = mean
                 FinalID=key
+                # os._exit(1)
+    # time.sleep(5000000)
     return FinalID
                 
 
