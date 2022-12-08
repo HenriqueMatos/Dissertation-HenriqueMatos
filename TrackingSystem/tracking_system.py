@@ -74,14 +74,7 @@ def on_message(client, userdata, message):
                 client.publish("camera_config", json.dumps(sendData))
 
             if JsonObject["type"] == "re-identification":
-                print(JsonObject["id"])
-                print(JsonObject["name"])
-                # print(JsonObject["frames"])
-                # print(JsonObject["frames"]['0'])
-
                 for intersectIndex, item in enumerate(ConfigDataUpdater.config.input.line_intersection_zone):
-                    print(item.name == JsonObject["name"])
-                    print(JsonObject["name"], item.name)
                     if item.name == JsonObject["name"]:
 
                         # Get gallery images directory
@@ -95,7 +88,6 @@ def on_message(client, userdata, message):
                         for file in os.listdir(gallery_directory):
                             d = os.path.join(gallery_directory, file)
                             if os.path.isdir(d):
-                                # print(d)
                                 ti_c = os.path.getctime(d)
                                 print(ti_c)
                                 print(time.time()-ti_c)
@@ -403,7 +395,6 @@ def detect(config='./config/config.json',):
 
             # Draw on img
             for id, value in PersonData.items():
-                print(value["global_id"],value["box"])
                 colorID = colors[int(id) % len(colors)]
                 label = f'{value["global_id"]}, {names[int(tcls)]}'
                 plot_one_box(list(value["box"]), im0, label=label,

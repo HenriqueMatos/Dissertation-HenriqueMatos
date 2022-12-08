@@ -266,8 +266,8 @@ class Data_Config_Count():
                 else:
                     PersonPacket[id]["global_id"] = self.ARRAY_FULL_DATA[id].global_id
 
-                print([cX, cY], self.cam_coordinates, self.global_scale,
-                      self.global_offset, self.global_angle)
+                # print([cX, cY], self.cam_coordinates, self.global_scale,
+                #       self.global_offset, self.global_angle)
                 global_coordinates = get_corresponding_coord(
                     [cX, cY], self.cam_coordinates, self.global_scale, self.global_offset, self.global_angle)
                 # PersonPacket[id]["location"] = [cX, cY]
@@ -354,13 +354,8 @@ class Data_Config_Count():
                 for intersectIndex, item in enumerate(self.config.input.line_intersection_zone):
 
                     if len(self.ARRAY_FULL_DATA[id].centroid) >= 2:
-                        # print(self.People_Centroids[id][-2],
-                        #       self.People_Centroids[id][-1])
-                        # print(tuple(item["start_point"]), tuple(item["end_point"]))
-                        # print(self.ARRAY_FULL_DATA[id].centroid[-2], self.ARRAY_FULL_DATA[id].centroid[-1], tuple(item.start_point), tuple(item.end_point))
                         DoIntersect, orientacao = intersect.doIntersect(
                             self.ARRAY_FULL_DATA[id].centroid[-2], self.ARRAY_FULL_DATA[id].centroid[-1], tuple(item.start_point), tuple(item.end_point))
-                        # print("AQUI", DoIntersect, orientacao)
                         if DoIntersect:
                             # sleep(500000)
 
@@ -491,8 +486,6 @@ class Data_Config_Count():
         return PersonPacket
 
     def setGlobalID(self, oldID, globalID):
-        # print(oldID,globalID)
-        # print(self.ARRAY_FULL_DATA.__contains__(oldID))
         if self.ARRAY_FULL_DATA.__contains__(oldID):
             self.ARRAY_FULL_DATA[oldID].global_id = globalID
         # sys.exit(0)
