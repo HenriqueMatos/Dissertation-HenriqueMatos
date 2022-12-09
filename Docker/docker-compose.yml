@@ -10,16 +10,6 @@ services:
       - PROXY_ADDRESS_FORWARDING=true
     volumes:
       - ./keycloak/data/:/opt/jboss/keycloak/standalone/data/
-  # rabbitmq:
-  #   image: rabbitmq:3.9-management
-  #   ports:
-  #     - "5672:5672"
-  #     - "15672:15672"
-  #   volumes:
-  #     - ./RabbitMQFiles/definitions.json:/srv/definitions.json
-  #     # - ./rabbitmq.conf:/etc/rabbitmq/rabbitmq.conf
-  #     - ./RabbitMQFiles/rabbitmq.conf:/etc/rabbitmq/conf.d/10-default-guest-user.conf
-  #     - ./RabbitMQFiles/enabled_plugins.txt:/etc/rabbitmq/enabled_plugins
   redis:
     image: redis:latest
     ports:
@@ -37,3 +27,20 @@ services:
     ports:
       - 1883:1883
       - 9001:9001 
+  edgeserver:
+    build: ./
+    # dockerfile: ./Dockerfile
+    command: python3 EdgeServer.py
+    ports:
+      - 5000:5000
+    depends_on:
+      - keycloak
+      - redis
+      - mosquitto
+    links:
+      - keycloak
+      - redis
+      - mosquitto
+networks:
+  my-network:
+    external: true

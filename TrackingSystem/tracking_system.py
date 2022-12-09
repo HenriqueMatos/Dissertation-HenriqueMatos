@@ -225,7 +225,7 @@ def detect(config='./config/config.json',):
     # Directories
     save_dir = Path(increment_path(Path(opt.project) / opt.name,
                     exist_ok=opt.exist_ok))  # increment run
-    save_img = True
+    save_img = False
     if save_img:
         save_dir.mkdir(parents=True, exist_ok=True)  # make dir
 
