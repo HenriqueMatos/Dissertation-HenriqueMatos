@@ -1,13 +1,22 @@
 body {
-    background-image: url("/static/ezgif.com-gif-maker.png");
+    background-image: url("/static/Vector_2677.jpg");
+    /* background-image: url("/static/ezgif.com-gif-maker.png"); */
     /* background-image: url("/static/istockphoto-1339787499-170667a.jpg") */
-    width: 100% !important
+    width: 100% !important;
+    background-size: cover;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
 }
 
 nav,
 .accordion-item,
 .accordion-button {
     background-color: #0b0c10 !important
+}
+
+.accordion{
+    margin: 11px auto;
+    width: 60%;
 }
 
 a,
@@ -37,17 +46,33 @@ tbody {
 }
 
 .table td {
-    text-align: center;
+    /* text-align: center; */
+    vertical-align: middle;
 }
 
 .table th {
-    text-align: center;
+    /* text-align: center; */
+    vertical-align: center;
 }
 
+.table {
+    border-collapse: separate;
+    border-spacing:0 5px;
+}
 
 td {
     margin-top: 20px;
 }
+
+.navbar-toggler{
+    color: #66fcf1 !important;
+    background-color:#66fcf1 !important;
+}
+
+/* .navbar-toggler-icon{
+    color: #66fcf1 !important;
+    background-color:#66fcf1 !important;
+} */
 
 /* colors */
 /* #0b0c10

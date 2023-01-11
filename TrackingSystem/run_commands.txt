@@ -3,3 +3,15 @@ python3 tracking_system.py --weights yolov7-tiny.pt --source ch01_08000000033001
 python3 tracking_system.py --username trackingcamera2 --password trackingcamera2 --config ./config/config2.json --weights yolov7-tiny.pt --source ch01_08000000033001401.mp4 --iou-thres 0.45 --conf-thres 0.09 --view-img --img-size 640 --device cpu --cmc-method orb --track_low_thresh 0.0001 --track_high_thresh 0.25 --new_track_thresh 0.4 --class 0 --aspect_ratio_thresh 5 
 
 python3 tracking_system.py --username trackingcamera1 --password trackingcamera1 --config ./config/config.json --weights yolov7-tiny.pt --source ch01_08000000058000601.mp4 --iou-thres 0.45 --conf-thres 0.09 --view-img --img-size 640 --device cpu --cmc-method orb --track_low_thresh 0.0001 --track_high_thresh 0.25 --new_track_thresh 0.4 --class 0 --aspect_ratio_thresh 5 
+
+python3 tracking_system.py --username trackingcamera2 --password trackingcamera2 --config ./config/config2.json --view-img --device cpu
+
+TOTAL TIME END-to-END (with loading networks and images):  366.10735297203064
+TOTAL TIME (Detector + Tracker): 354.03642106056213, FPS: 6.499331320509499
+TOTAL TIME (Tracker only): 30.02319574356079, FPS: 76.64074203338284
+
+python3 tracking_system.py --username trackingcamera1 --password trackingcamera1 --config ./config/config.json --view-img --device cpu
+
+TOTAL TIME END-to-END (with loading networks and images):  187.66690468788147
+TOTAL TIME (Detector + Tracker): 180.28132843971252, FPS: 3.8661796317586052
+TOTAL TIME (Tracker only): 71.33446145057678, FPS: 9.770873513679051

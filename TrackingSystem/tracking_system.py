@@ -58,6 +58,8 @@ def on_message(client, userdata, message):
                     except print(0):
                         pass
             if JsonObject["type"] == "refresh":
+                os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "rtsp_transport;udp"
+                cap = cv2.VideoCapture(ConfigDataUpdater.config.source, cv2.CAP_FFMPEG)
                 _, frame = cap.read()
 
                 cv2.imwrite("frame.jpg", frame)
@@ -151,22 +153,25 @@ def ThreadDataTransmitter(ConfigDataUpdater, frame):
     sendData["config"] = ConfigDataUpdater.JsonObjectString
     sendData["Authenticate"] = response["access_token"]
     sendData["camera_id"] = ConfigDataUpdater.config.camera_id
-    mqttBroker = ConfigDataUpdater.config.ip
 
     ConfigDataUpdater.mqtt_client = mqtt.Client(
-        str(ConfigDataUpdater.config.camera_id))
-    ConfigDataUpdater.mqtt_client.connect(mqttBroker)
-
+        str(ConfigDataUpdater.config.camera_name))
+    ConfigDataUpdater.mqtt_client.connect(ConfigDataUpdater.config.ip)
+    # print(sendData, ConfigDataUpdater.config.camera_name, ConfigDataUpdater.config.ip)
     ConfigDataUpdater.mqtt_client.publish(
         "camera_config", json.dumps(sendData))
+    # time.sleep(3)
+    # os._exit(1)
 
     ConfigDataUpdater.mqtt_client.subscribe("edge_config/"+KeycloakUsername)
     # client.subscribe("edge_config/"+str(ConfigDataUpdater.camera_id))
     ConfigDataUpdater.mqtt_client.on_message = on_message
     ConfigDataUpdater.mqtt_client.loop_start()
+    while(1):
+        time.sleep(30)
 
 
-def detect(config='./config/config.json',):
+def detect():
     global config_file
     global KeycloakUsername
     global KeycloakPassword
@@ -180,17 +185,17 @@ def detect(config='./config/config.json',):
     with open(config_file, 'r') as f:
         data = json.load(f)
 
-    global cap
-    cap = cv2.VideoCapture(opt.source)
-    _, frame = cap.read()
-    height, width, channels = frame.shape
-
-    cv2.imwrite("frame.jpg", frame)
-
     global ConfigDataUpdater
-    ConfigDataUpdater = Data_Config_Count(
-        [height/2, width/2], maxDisappeared=max_Age)
+    ConfigDataUpdater = Data_Config_Count(maxDisappeared=max_Age)
     ConfigDataUpdater.register(data)
+    opt.cmc_method=ConfigDataUpdater.config.cmc_method
+    opt.track_high_thresh=ConfigDataUpdater.config.track_high_thresh
+    opt.track_low_thresh=ConfigDataUpdater.config.track_low_thresh
+    opt.new_track_thresh=ConfigDataUpdater.config.new_track_thresh
+    opt.aspect_ratio_thresh=ConfigDataUpdater.config.aspect_ratio_thresh
+
+    # global cap
+
     print(ConfigDataUpdater.config.camera_id)
     url = 'http://'+ConfigDataUpdater.config.ip + \
         ':8080/auth/realms/AppAuthenticator/protocol/openid-connect/token'
@@ -216,10 +221,12 @@ def detect(config='./config/config.json',):
             ThreadDataTransmitter, (ConfigDataUpdater, encoded_string, ))
     except:
         print("Error: unable to start thread")
+        sys.exit(-1)
 
-    source, weights, view_img, imgsz, trace = opt.source, opt.weights, opt.view_img, opt.img_size, opt.trace
-    save_img = opt.save_frames and not source.endswith('.txt')  # save inference images
-    webcam = source.isnumeric() or source.endswith('.txt') or source.lower().startswith(
+    view_img, imgsz, trace = opt.view_img, ConfigDataUpdater.config.img_size, opt.trace
+    save_img = opt.save_frames and not ConfigDataUpdater.config.source.endswith(
+        '.txt')  # save inference images
+    webcam = ConfigDataUpdater.config.source.isnumeric() or ConfigDataUpdater.config.source.endswith('.txt') or ConfigDataUpdater.config.source.lower().startswith(
         ('rtsp://', 'rtmp://', 'http://', 'https://'))
 
     # Directories
@@ -235,31 +242,31 @@ def detect(config='./config/config.json',):
     half = device.type != 'cpu'  # half precision only supported on CUDA
 
     # Load model
-    model = attempt_load(weights, map_location=device)  # load FP32 model
+    model = attempt_load(ConfigDataUpdater.config.weights, map_location=device)  # load FP32 model
     stride = int(model.stride.max())  # model stride
     imgsz = check_img_size(imgsz, s=stride)  # check img_size
 
     if trace:
-        model = TracedModel(model, device, opt.img_size)
+        model = TracedModel(model, device, ConfigDataUpdater.config.img_size)
 
     if half:
         model.half()  # to FP16
 
     # Second-stage classifier
-    classify = False
-    if classify:
-        modelc = load_classifier(name='resnet101', n=2)  # initialize
-        modelc.load_state_dict(torch.load('weights/resnet101.pt',
-                               map_location=device)['model']).to(device).eval()
+    # classify = False
+    # if classify:
+    #     modelc = load_classifier(name='resnet101', n=2)  # initialize
+    #     modelc.load_state_dict(torch.load('weights/resnet101.pt',
+    #                            map_location=device)['model']).to(device).eval()
 
     # Set Dataloader
     vid_path, vid_writer = None, None
     if webcam:
         view_img = check_imshow()
         cudnn.benchmark = True  # set True to speed up constant image size inference
-        dataset = LoadStreams(source, img_size=imgsz, stride=stride)
+        dataset = LoadStreams(ConfigDataUpdater.config.source, img_size=imgsz, stride=stride)
     else:
-        dataset = LoadImages(source, img_size=imgsz, stride=stride)
+        dataset = LoadImages(ConfigDataUpdater.config.source, img_size=imgsz, stride=stride)
 
     if opt.ablation:
         dataset.files = dataset.files[len(dataset.files) // 2 + 1:]
@@ -287,7 +294,7 @@ def detect(config='./config/config.json',):
         timer.tic()
 
         for line_intersection_zone in ConfigDataUpdater.config.input.line_intersection_zone:
-            cv2.line(im0s, tuple(line_intersection_zone.start_point),
+            cv2.line(img, tuple(line_intersection_zone.start_point),
                      tuple(line_intersection_zone.end_point), (0, 255, 0), 2)
 
         for remove_area in ConfigDataUpdater.config.input.remove_area:
@@ -315,13 +322,13 @@ def detect(config='./config/config.json',):
         pred = model(img, augment=opt.augment)[0]
 
         # Apply NMS
-        pred = non_max_suppression(pred, opt.conf_thres, opt.iou_thres,
-                                   classes=opt.classes, agnostic=opt.agnostic_nms)
+        pred = non_max_suppression(pred, ConfigDataUpdater.config.conf_thres, ConfigDataUpdater.config.iou_thres,
+                                   classes=ConfigDataUpdater.config.classes, agnostic=opt.agnostic_nms)
         t2 = time_synchronized()
 
         # Apply Classifier
-        if classify:
-            pred = apply_classifier(pred, modelc, img, im0s)
+        # if classify:
+        #     pred = apply_classifier(pred, modelc, img, im0s)
 
         # Process detections
         for i, det in enumerate(pred):  # detections per image
@@ -449,24 +456,24 @@ if __name__ == '__main__':
     parser.add_argument('--config', type=str, default='./config/config2.json',
                         help='config path')
 
-    parser.add_argument('--source', type=str, default='inference/images',
-                        help='source')  # file/folder, 0 for webcam
-    parser.add_argument('--weights', nargs='+', type=str,
-                        default='yolov7.pt', help='model.pt path(s)')
+    # parser.add_argument('--source', type=str, default='inference/images',
+    #                     help='source')  # file/folder, 0 for webcam
+    # parser.add_argument('--weights', nargs='+', type=str,
+    #                     default='yolov7.pt', help='model.pt path(s)')
     parser.add_argument("--benchmark", dest="benchmark", type=str,
                         default='MOT17', help="benchmark to evaluate: MOT17 | MOT20")
     parser.add_argument("--eval", dest="split_to_eval", type=str, default='test',
                         help="split to evaluate: train | val | test")
 
-    parser.add_argument('--img-size', type=int, default=1280, help='inference size (pixels)')
-    parser.add_argument('--conf-thres', type=float, default=0.09,
-                        help='object confidence threshold')
-    parser.add_argument('--iou-thres', type=float, default=0.7, help='IOU threshold for NMS')
+    # parser.add_argument('--img-size', type=int, default=1280, help='inference size (pixels)')
+    # parser.add_argument('--conf-thres', type=float, default=0.09,
+    #                     help='object confidence threshold')
+    # parser.add_argument('--iou-thres', type=float, default=0.7, help='IOU threshold for NMS')
     parser.add_argument('--device', default='', help='cuda device, i.e. 0 or 0,1,2,3 or cpu')
     parser.add_argument('--view-img', action='store_true', help='display results')
 
-    parser.add_argument('--classes', nargs='+', type=int,
-                        help='filter by class: --class 0, or --class 0 2 3')
+    # parser.add_argument('--classes', nargs='+', type=int,
+    #                     help='filter by class: --class 0, or --class 0 2 3')
     parser.add_argument('--agnostic-nms', action='store_true', help='class-agnostic NMS')
     parser.add_argument('--augment', action='store_true', help='augmented inference')
     parser.add_argument("--fp16", dest="fp16", default=False, action="store_true",
@@ -486,24 +493,24 @@ if __name__ == '__main__':
                         action="store_true", help="save sequences with tracks.")
 
     # tracking args
-    parser.add_argument("--track_high_thresh", type=float, default=0.5,
-                        help="tracking confidence threshold")
-    parser.add_argument("--track_low_thresh", default=0.1,
-                        type=float, help="lowest detection threshold")
-    parser.add_argument("--new_track_thresh", default=0.6, type=float, help="new track thresh")
+    # parser.add_argument("--track_high_thresh", type=float, default=0.5,
+    #                     help="tracking confidence threshold")
+    # parser.add_argument("--track_low_thresh", default=0.1,
+    #                     type=float, help="lowest detection threshold")
+    # parser.add_argument("--new_track_thresh", default=0.6, type=float, help="new track thresh")
     parser.add_argument("--track_buffer", type=int, default=30,
                         help="the frames for keep lost tracks")
     parser.add_argument("--match_thresh", type=float, default=0.8,
                         help="matching threshold for tracking")
-    parser.add_argument("--aspect_ratio_thresh", type=float, default=1.6,
-                        help="threshold for filtering out boxes of which aspect ratio are above the given value.")
+    # parser.add_argument("--aspect_ratio_thresh", type=float, default=1.6,
+    #                     help="threshold for filtering out boxes of which aspect ratio are above the given value.")
     parser.add_argument('--min_box_area', type=float, default=10, help='filter out tiny boxes')
     parser.add_argument("--fuse-score", dest="mot20", default=False, action="store_true",
                         help="fuse score and iou for association")
 
     # CMC
-    parser.add_argument("--cmc-method", default="file", type=str,
-                        help="cmc method: files (Vidstab GMC) | orb | ecc")
+    # parser.add_argument("--cmc-method", default="file", type=str,
+    #                     help="cmc method: files (Vidstab GMC) | orb | ecc")
     parser.add_argument("--ablation", dest="ablation", default=False,
                         action="store_true", help="ablation ")
 

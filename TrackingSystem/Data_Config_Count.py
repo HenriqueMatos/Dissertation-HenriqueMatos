@@ -122,7 +122,7 @@ class PersonDetectionData:
 
 
 class Data_Config_Count():
-    def __init__(self, centerFramePoint, maxDisappeared=60, maxCentroids=20, maxImageFrames=20):
+    def __init__(self, maxDisappeared=60, maxCentroids=20, maxImageFrames=20):
         ## Mapping ##
         self.global_scale = None
         self.global_angle = None
@@ -136,11 +136,7 @@ class Data_Config_Count():
         # MQTT Send/Receive
         self.mqtt_client = None
 
-        # self.subscribe_mqtt = None
-        # self.publish_mqtt = None
         ##################
-        # self.config_zone = False
-        # self.zone = []
         self.count_inside_zone = {}
         self.count_outside_zone = {}
 
@@ -167,7 +163,7 @@ class Data_Config_Count():
         self.maxDisappeared = maxDisappeared
         self.maxCentroids = maxCentroids
         self.maxImageFrames = maxImageFrames
-        self.centerFramePoint = centerFramePoint
+        self.centerFramePoint = None
 
     def register(self, jsonObject):
         self.JsonObjectString = json.dumps(jsonObject)
@@ -192,7 +188,6 @@ class Data_Config_Count():
                 name=line_intersection_zone["name"],
                 start_point=line_intersection_zone["start_point"],
                 end_point=line_intersection_zone["end_point"],
-                zone_direction_1or2=line_intersection_zone["zone_direction_1or2"],
                 name_zone_before=line_intersection_zone["name_zone_before"],
                 name_zone_after=line_intersection_zone["name_zone_after"],
                 id_association=id_association
@@ -209,16 +204,21 @@ class Data_Config_Count():
             camera_name=jsonObject["camera_name"],
             camera_zone=jsonObject["camera_zone"],
             timestamp_config_creation=jsonObject["timestamp_config_creation"],
-            restart_count=jsonObject["restart_count"],
-            object_detection_config=jsonObject["object_detection_config"],
-            packet_output=jsonObject["packet_output"],
-            publish_mqtt=jsonObject["publish_mqtt"],
-            subscribe_mqtt=jsonObject["subscribe_mqtt"],
+            weights=jsonObject["weights"],
+            source=jsonObject["source"],
+            iou_thres=jsonObject["iou_thres"],
+            conf_thres=jsonObject["conf_thres"],
+            img_size=jsonObject["img_size"],
+            cmc_method=jsonObject["cmc_method"],
+            track_low_thresh=jsonObject["track_low_thresh"],
+            track_high_thresh=jsonObject["track_high_thresh"],
+            new_track_thresh=jsonObject["new_track_thresh"],
+            classes=jsonObject["classes"],
+            aspect_ratio_thresh=jsonObject["aspect_ratio_thresh"],
+
             input=input
         )
         self.config = configuration
-
-        print(jsonObject["ip"])
 
         with open("campus_mapping.json", 'r') as f:
             data = json.load(f)
@@ -230,6 +230,19 @@ class Data_Config_Count():
                 self.global_offset = eachCam["map_global_config"]["offset"]
                 self.cam_coordinates = eachCam["cam_coordinates"]
                 break
+            
+            
+            
+        os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "rtsp_transport;udp"
+        cap = cv2.VideoCapture(self.config.source,cv2.CAP_FFMPEG)
+        
+        _, frame = cap.read()
+        height, width, channels = frame.shape
+
+        cv2.imwrite("frame.jpg", frame)
+        self.centerFramePoint=[height/2, width/2]
+        # print("ACABOU")
+
 
     def updateData(self, ID_with_Box, ID_with_Class, ID_with_Box_Frame):
 
@@ -357,39 +370,7 @@ class Data_Config_Count():
                         DoIntersect, orientacao = intersect.doIntersect(
                             self.ARRAY_FULL_DATA[id].centroid[-2], self.ARRAY_FULL_DATA[id].centroid[-1], tuple(item.start_point), tuple(item.end_point))
                         if DoIntersect:
-                            # sleep(500000)
 
-                            print("Intersect\n\n\n\n")
-                            if item.zone_direction_1or2 == orientacao:
-                                # if "line_intersection" not in PersonPacket[id]:
-                                #     PersonPacket[id]["line_intersection"] = []
-                                # PersonPacket[id]["line_intersection"].append({
-                                #     "name": item.name,
-                                #     "direction": item.name_zone_after
-                                # })
-                                self.data_line_intersection_zone[item.name]["num_zone_after"] += 1
-                                print(item.name,
-                                      item.name_zone_after, id)
-                            else:
-                                # if "line_intersection" not in PersonPacket[id]:
-                                #     PersonPacket[id]["line_intersection"] = []
-                                # PersonPacket[id]["line_intersection"].append({
-                                #     "name": item.name,
-                                #     "directtion": item.name_zone_before
-                                # })
-                                self.data_line_intersection_zone[item.name]["num_zone_before"] += 1
-                                print(item.name,
-                                      item.name_zone_before, id)
-                                # if orientacao == 0:
-                                #     print("Collinear", id)
-                                # if orientacao == 1:
-                                #     print("Esquerda", id)
-                                # if orientacao == 2:
-                                #     print("Direita", id)
-                            print("\n\n\n\n\n")
-                            print(isGoingInsideFrame(
-                                self.centerFramePoint, self.ARRAY_FULL_DATA[id].centroid[-1], self.ARRAY_FULL_DATA[id].centroid[0]))
-                            # sleep(50000)
                             if item.id_association:
                                 # Check if Person just went inside the frame or outside
                                 if isGoingInsideFrame(self.centerFramePoint, self.ARRAY_FULL_DATA[id].centroid[-1], self.ARRAY_FULL_DATA[id].centroid[0]):
@@ -453,14 +434,6 @@ class Data_Config_Count():
         for id, value in PersonPacket.items():
             DataPacket["people"].append(value)
         DataPacket["device_id"] = self.config.camera_id
-
-        # datetime.time
-        # DataPacket["timestamp"] = datetime.datetime.now().strftime("%d/%m/%Y %H:%M:%S")
-        # DataPacket["line_intersection"] = self.data_line_intersection_zone
-
-        # WRITE DATA TO FILE
-        # file1.write(json.dumps(DataPacket)+",")
-        # file1.close()
 
         # SEND DATA TO MQTT BROKER
         broker = 'homeassistant.local'

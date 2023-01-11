@@ -26,13 +26,15 @@ import pickle
 from keycloak_utils import get_oidc2, get_oidc, get_token, check_token, verifyToken
 # from torchreid.models.nasnet import BranchSeparables
 
+SERVER_IP = "192.168.233.139"
 
-SERVER_URL = "http://keycloak:8080/auth/"
+
+SERVER_URL = "http://"+SERVER_IP+":8080/auth/"
 REALM_NAME = "AppAuthenticator"
 CLIENT_ID = "EdgeServer1"
 CLIENT_SECRET = "deCGEfmNbxFkC5z32UnwxtyQThTx4Evy"
 
-r = redis.Redis(host="redis", port="6379")
+r = redis.Redis(host=SERVER_IP, port="6379")
 
 global client
 global DataServer
@@ -76,10 +78,17 @@ def configObject():
         "camera_name": "editable",
         "camera_zone": "editable",
         "timestamp_config_creation": "noneditable",
-        "restart_count": "editable",
-        "object_detection_config": "editable",
-        "publish_mqtt": "editable",
-        "subscribe_mqtt": "editable",
+        "weights":"noneditable",
+        "source":"noneditable",
+        "iou_thres":"editable",
+        "conf_thres":"editable",
+        "img_size":"noneditable",
+        "cmc_method":"noneditable",
+        "track_high_thresh":"editable",
+        "track_low_thresh":"editable",
+        "new_track_thresh":"editable",
+        "aspect_ratio_thresh":"editable",
+        "classes":"editable",
         "input": "button"
     }
     if request.method == "POST":
@@ -109,7 +118,6 @@ KEYS_line_intersection_zone = {
     'name': 'Teste 123',
     'start_point':  ([], "list"),
     'end_point':  ([], "list"),
-    'zone_direction_1or2': 1,
     'name_zone_before': 'outside',
     'name_zone_after': 'inside',
     'id_association': {}
@@ -377,57 +385,17 @@ def web():
     app.run(debug=True, use_reloader=False, host='0.0.0.0', port=5000)
 
 
-def runningWorker():
+# def runningWorker():
 
-    # credentials = pika.PlainCredentials('admin', 'admin')
 
-    # connection_parameters = pika.ConnectionParameters(
-    #     'localhost', credentials=credentials, virtual_host="keycloak_test")
-    # connection = pika.BlockingConnection(
-    #     connection_parameters)
-    # channel = connection.channel()
+if __name__ == '__main__':
+    client = mqtt.Client("EdgeServer1")
 
-    # channel.queue_declare(queue='hello')
-
-    # def callback(ch, method, properties, body):
-    #     # print(" [x] Received %r" % body)
-
-    #     receivedObject = json.loads(body)
-    #     if receivedObject.__contains__("type"):
-    #         if receivedObject["type"] == "login":
-    #             check, data = verifyToken(
-    #                 oidc_obj, receivedObject["Authenticate"])
-    #             print(check,data)
-    #             if check:
-    #                 flag = True
-    #                 Findindex = -1
-    #                 for i, d in enumerate(DataServer):
-    #                     if d['preferred_username'] == data["preferred_username"]:
-    #                         flag = False
-    #                         Findindex = i
-    #                         break
-    #                 else:
-    #                     i = -1
-    #                 if flag is False:
-    #                     DataServer.pop(Findindex)
-    #                 receivedObject["preferred_username"] = data["preferred_username"]
-    #                 for key in receivedObject:
-    #                     # print(key)
-    #                     if key == "config":
-    #                         # print(receivedObject[key])
-    #                         receivedObject[key] = json.loads(
-    #                             receivedObject[key])
-
-    #                 DataServer.append(receivedObject)
-    # channel.basic_consume(
-    #     queue='hello', on_message_callback=callback, auto_ack=True)
-
-    # print(' [*] Waiting for messages. To exit press CTRL+C')
-    # channel.start_consuming()
+    threading.Thread(target=web, daemon=False).start()
 
     def on_message(client, userdata, message):
-        # print("Received message: ", str(message.payload.decode("utf-8")),
-        #       " From: ", message.topic, " ")
+        print("Received message: ", str(message.payload.decode("utf-8")),
+              " From: ", message.topic, " ")
         receivedObject = json.loads(message.payload)
         if receivedObject.__contains__("type"):
             if receivedObject["type"] == "login":
@@ -462,24 +430,9 @@ def runningWorker():
                     DataServer.append(receivedObject)
                 r.set("data", json.dumps(DataServer))
 
-    mqttBroker = "mosquitto"
-    client.connect(mqttBroker)
-
-    client.loop_start()
+    client.connect(SERVER_IP)
     client.subscribe("camera_config")
     client.on_message = on_message
-    time.sleep(30)
     client.loop_start()
-
-
-client = mqtt.Client("EdgeServer1")
-if __name__ == '__main__':
-
-    threading.Thread(target=web, daemon=False).start()
-    threading.Thread(target=runningWorker, daemon=False).start()
-    while True:
-        time.sleep(5)
-        # g.dataserver = DataServer
-        # print(DataServer)
-    #     for thread in threading.enumerate():
-    #         print(thread.name)
+    while(1):
+        time.sleep(30)

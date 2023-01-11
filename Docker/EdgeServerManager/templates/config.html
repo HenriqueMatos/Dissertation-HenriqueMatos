@@ -23,7 +23,7 @@
   <div class="container-fluid">
     <a class="navbar-brand" >Config Sensor</a>
     <button
-      class="navbar-toggler"
+      class="navbar-toggler btn btn-outline-dark"
       type="button"
       data-bs-toggle="collapse"
       data-bs-target="#navbarSupportedContent"
@@ -55,112 +55,77 @@
         <td scope="col"><b>SensorID: </b> {{data.sensorid}}</td>
       </tr>
       {% for item in config %}
-      {% if config[item]=="editable" %}
-      <tr>
-        <td scope="col"><b>{{item}}</b></td>
-        <td scope="col"><input class="form-control btn-dark" type="text" id="{{item}}" placeholder="{{data.config[item]}}"/></td>
-      </tr>
-      {% elif config[item]=="noneditable" %}
-      <tr>
-        <td scope="col"><b>{{item}}</b></td>
-        <td scope="col">{{data.config[item]}}</td>
-      </tr>
-      {% elif config[item]=="button" %}
-        {% for item2 in data.config[item] %} 
-          {% if item2=="zone" or item2=="remove_area" or item2=="line_intersection_zone"%}
+        {% if config[item]=="editable" %}
           <tr>
-            <td scope="col"colspan="2">
-              <form action="config_points" method="POST">
-              <input
-                hidden
-                name="preferred_username"
-                value="{{data.preferred_username}}"
-              />
-              <input hidden name="config" value="{{item}}" />
-              <input hidden name="config1" value="{{item2}}" />
-              <input  class="btn btn-outline-dark" type="submit" value="{{item2}}" />
-              </form>
-            </td>
+            <td scope="row"><b>{{item}}</b></td>
+            <td ><input class="form-control btn-dark" type="text" id="{{item}}" placeholder="{{data.config[item]}}"/></td>
           </tr>
-          {% endif %} 
-        {% endfor %} 
+        {% elif config[item]=="noneditable" %}
+          <tr>
+            <td scope="row"><b>{{item}}</b></td>
+            <td >{{data.config[item]}}</td>
+          </tr>
+        {% elif config[item]=="button" %}
 
-
-
-      {% endif %}
+          <!--{% for item2 in data.config[item] %} 
+            {% if item2=="zone" or item2=="remove_area" or item2=="line_intersection_zone"%}
+              <tr>
+                <td >
+                  <form action="config_points" method="POST">
+                  <input
+                    hidden
+                    name="preferred_username"
+                    value="{{data.preferred_username}}"
+                  />
+                  <input hidden name="config" value="{{item}}" />
+                  <input hidden name="config1" value="{{item2}}" />
+                  <input  class="btn btn-outline-dark" type="submit" value="{{item2}}" />
+                  </form>
+                </td>
+              </tr>
+            {% endif %} 
+          {% endfor %} -->
+        {% endif %}
       {% endfor %}
 
 
-
       </tbody>
+      
   </table>
-</div>
 
-<div style="text-align: center">
-  <div class="container">
-    <div class="row">
-      <div class="col"><b>Username: </b> {{data.preferred_username}}</div>
-      <div class="col"><b>SensorID: </b> {{data.sensorid}}</div>
-    </div>
-    <br>
-    {% for item in config %} {% if config[item]=="editable" %}
-    <div class="row">
-      <div class="col"><b>{{item}}</b></div>
-      <div class="col">
-        <input
-        class="form-control btn-dark"
-          type="text"
-          id="{{item}}"
-          placeholder="{{data.config[item]}}"
-        />
-      </div>
-    </div>
-    </br>
-    {% elif config[item]=="noneditable" %}
-    <div class="row">
-      <div class="col"><b>{{item}}</b></div>
-      <div class="col">{{data.config[item]}}</div>
-    </div>
-    <br>
-    {% elif config[item]=="button" %}
-      {% for item2 in data.config[item] %} {% if item2=="zone" or
-      item2=="remove_area" or item2=="line_intersection_zone"%}
-      <div class="row">
-        <div class="col">
-        <form action="config_points" method="POST">
-        <input
-          hidden
-          name="preferred_username"
-          value="{{data.preferred_username}}"
-        />
-        <input hidden name="config" value="{{item}}" />
-        <input hidden name="config1" value="{{item2}}" />
-        <input  class="btn btn-outline-dark" type="submit" value="{{item2}}" />
-        </form>
-      </div>
-    </br>
-    </div>
-      {% endif %} {% endfor %} 
-      {% endif %} {% endfor %}
-    </div>
-  </div>
-  {% endblock %} 
+  <table class="table table-responsive" style="width: 80%">
+    <tbody id="button">
+      <!--<tr>
+        <td scope="col"><b>Username: </b> </td>
+        <td scope="col"><b>SensorID: </b> </td>
+      </tr>-->
+    </tbody>
+  </table>
+
 </div>
+{% endblock %}
+
+
 <script>
-  $(document).ready(function () {
-  const isEqual = (...objects) => objects.every(obj => JSON.stringify(obj) === JSON.stringify(objects[0]));
-  var data = "{{data.config}}";
-  var parser = new DOMParser();
-  var dom = parser.parseFromString(
+  function dataParser(nametoParse) {
+    var data = nametoParse;
+    var parser = new DOMParser();
+    var dom = parser.parseFromString(
     "<!doctype html><body>" + data,
     "text/html"
     );
     var decodedString = dom.body.textContent;
     console.log(decodedString);
-  let result = decodedString.split("'").join('"');
-  let result2 = result.replaceAll("None", "null");
-  //console.log(result2);
-  var jsonData = JSON.parse(result2);
+    let result = decodedString.split("'").join('"');
+    let result2 = result.replaceAll("None", "null");
+    //console.log(result2);
+    var jsonData = JSON.parse(result2);
+    return jsonData;
+  }
+
+  $(document).ready(function () {
+  var jsonData=dataParser("{{data.config}}")
+  var buttonData=jsonData["input"]
   delete jsonData["input"];
   var jsonDataOriginal=$.extend( true, {}, jsonData );
   //console.log(jsonData);
@@ -194,7 +159,56 @@
    
   });
 
+  
+  //console.log(jsonData);
+  //console.log(buttonData);
+  //console.log(Object.keys(buttonData));
+  FullData=dataParser("{{data}}")
 
+  
+  
+  
+  var tableDiv = document.createElement('tr');
+  
+  for (let i = 0; i < Object.keys(buttonData).length; i++) {
+    var elemDiv = document.createElement('td');
+    elemDiv.style.textAlign = "center";
+
+    var formDiv = document.createElement('form');
+    formDiv.action="config_points"
+    formDiv.method="POST"
+
+    var inputDiv = document.createElement('input');
+    inputDiv.setAttribute("type", "hidden");
+    inputDiv.setAttribute("name", "preferred_username");
+    inputDiv.setAttribute("value", FullData.preferred_username);
+    formDiv.appendChild(inputDiv);
+
+    var inputDiv = document.createElement('input');
+    inputDiv.setAttribute("type", "hidden");
+    inputDiv.setAttribute("name", "config");
+    inputDiv.setAttribute("value", "input");
+    formDiv.appendChild(inputDiv);
+
+    var inputDiv = document.createElement('input');
+    inputDiv.setAttribute("type", "hidden");
+    inputDiv.setAttribute("name", "config1");
+    inputDiv.setAttribute("value", Object.keys(buttonData)[i]);
+    formDiv.appendChild(inputDiv);
+
+    var inputDiv = document.createElement('input');
+    inputDiv.setAttribute("class", "btn btn-dark");
+    //inputDiv.setAttribute("class", "btn btn-outline-dark");
+    inputDiv.setAttribute("type", "submit");
+    inputDiv.setAttribute("value", Object.keys(buttonData)[i]);
+    formDiv.appendChild(inputDiv);
+
+    
+    elemDiv.appendChild(formDiv);  
+    tableDiv.appendChild(elemDiv);  
+  }
+
+  document.getElementById('button').appendChild(tableDiv);
 })
 
 </script>
