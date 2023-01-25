@@ -128,6 +128,12 @@ class Data_Config_Count():
         self.global_angle = None
         self.global_offset = None
         self.cam_coordinates = None
+
+        self.folder_remove_seconds = None
+        self.ReID_mean_threshold = None
+        self.ReID_median_threshold = None
+        self.ReID_mode_threshold = None
+
         #############
         self.JsonObjectString = None
         self.config = None
@@ -220,29 +226,25 @@ class Data_Config_Count():
         )
         self.config = configuration
 
-        with open("campus_mapping.json", 'r') as f:
-            data = json.load(f)
-
-        for eachCam in data["cameras"]:
-            if eachCam["cam_id"] == self.config.camera_id:
-                self.global_scale = eachCam["map_global_config"]["scale"]
-                self.global_angle = eachCam["map_global_config"]["angle"]
-                self.global_offset = eachCam["map_global_config"]["offset"]
-                self.cam_coordinates = eachCam["cam_coordinates"]
-                break
-            
-            
-            
-        os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "rtsp_transport;udp"
-        cap = cv2.VideoCapture(self.config.source,cv2.CAP_FFMPEG)
+        self.global_scale = jsonObject["global_map_scale"]
+        self.global_angle = jsonObject["global_map_angle"]
+        self.global_offset = jsonObject["global_map_offset"]
+        self.cam_coordinates = jsonObject["cam_coordinates"]
         
+        self.folder_remove_seconds = jsonObject["folder_remove_seconds"]
+        self.ReID_mean_threshold = jsonObject["ReID_mean_threshold"]
+        self.ReID_median_threshold = jsonObject["ReID_median_threshold"]
+        self.ReID_mode_threshold = jsonObject["ReID_mode_threshold"]
+        
+
+        os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "rtsp_transport;udp"
+        cap = cv2.VideoCapture(self.config.source, cv2.CAP_FFMPEG)
+
         _, frame = cap.read()
         height, width, channels = frame.shape
 
         cv2.imwrite("frame.jpg", frame)
-        self.centerFramePoint=[height/2, width/2]
-        # print("ACABOU")
-
+        self.centerFramePoint = [height/2, width/2]
 
     def updateData(self, ID_with_Box, ID_with_Class, ID_with_Box_Frame):
 
@@ -412,7 +414,7 @@ class Data_Config_Count():
                                     #                       - cam0-id = globalID -> cam{camID}-{personID}
                                     #                               |- frames.jpg (images)
                                     #               - intersect-1
-                                    #
+
                                     SaveDir = "./GalleryData/intersect-{}/cam{}-{}/".format(
                                         intersectIndex, self.config.camera_id, id)
                                     if self.ARRAY_FULL_DATA[id].global_id:

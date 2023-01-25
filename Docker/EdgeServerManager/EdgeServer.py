@@ -1,4 +1,5 @@
 import codecs
+import copy
 from enum import Flag
 import json
 import re
@@ -78,17 +79,25 @@ def configObject():
         "camera_name": "editable",
         "camera_zone": "editable",
         "timestamp_config_creation": "noneditable",
-        "weights":"noneditable",
-        "source":"noneditable",
-        "iou_thres":"editable",
-        "conf_thres":"editable",
-        "img_size":"noneditable",
-        "cmc_method":"noneditable",
-        "track_high_thresh":"editable",
-        "track_low_thresh":"editable",
-        "new_track_thresh":"editable",
-        "aspect_ratio_thresh":"editable",
-        "classes":"editable",
+        "weights": "noneditable",
+        "source": "noneditable",
+        "iou_thres": "editable",
+        "conf_thres": "editable",
+        "img_size": "noneditable",
+        "cmc_method": "noneditable",
+        "track_high_thresh": "editable",
+        "track_low_thresh": "editable",
+        "new_track_thresh": "editable",
+        "aspect_ratio_thresh": "editable",
+        "classes": "editable",
+        "folder_remove_seconds": "editable",
+        "ReID_mean_threshold": "editable",
+        "ReID_median_threshold": "editable",
+        "ReID_mode_threshold": "editable",
+        "cam_coordinates": "noneditable",
+        "global_map_scale": "editable",
+        "global_map_angle": "editable",
+        "global_map_offset": "editable",
         "input": "button"
     }
     if request.method == "POST":
@@ -97,20 +106,11 @@ def configObject():
         data["preferred_username"] = preferred_username
         for x in DataServer:
             if x["preferred_username"] == preferred_username:
-                # configData = json.loads(x["config"])
                 configData = x["config"]
                 data["config"] = configData
                 data["sensorid"] = x["camera_id"]
                 print(x["config"])
-                # for item in configData:
-                #     if type(configData[item]) is dict:
-                #         config[item] = list(configData[item].keys())
-                #     elif type(configData[item]) is list:
-                #         config[item] = "list"
-                #     else:
-                #         config[item] = None
                 break
-# configBefore=config_name_before, config=config_name
     return render_template('config.html', config=config, data=data)
 
 
@@ -155,17 +155,18 @@ def configPoints():
         for index in range(len(DataServer)):
             if DataServer[index]["preferred_username"] == preferred_username:
                 imageData = DataServer[index]["frame"]
-                data = DataServer[index]["config"][config_name_before][config_name]
+                data=copy.deepcopy(DataServer[index]["config"][config_name_before][config_name])
+
                 if config_name == "line_intersection_zone":
-                    # for index in range(len(data)):
-                    #     del data[index]['id_association']
+                    for index2 in range(len(data)):
+                        data[index2].pop('id_association')
                     keys = KEYS_line_intersection_zone
                 elif config_name == "zone":
                     keys = KEYS_zone
                 elif config_name == "remove_area":
                     keys = KEYS_remove_area
                 break
-        print(data)
+
 
     return render_template('config_points.html', keys=keys, preferred_username=preferred_username, configBefore=config_name_before, config=config_name, data=data, image=base64.b64encode(base64.decodebytes(imageData.encode('utf-8'))).decode('utf-8'))
 
@@ -178,21 +179,37 @@ def SetconfigPoints():
         config_name_before = data["configBefore"]
         config_name = data["config"]
         new_data = data["data"]
-        print(preferred_username, config_name_before, config_name)
+        print("CONA",preferred_username, config_name_before, config_name)
         print(new_data)
 
         for index in range(len(DataServer)):
             if DataServer[index]["preferred_username"] == preferred_username:
-                print(DataServer[index]["config"]
-                      [config_name_before][config_name])
+                # print(DataServer[index]["config"]
+                #       [config_name_before][config_name])
                 # SAVE IN DATABASE (REDIS)
                 if(DataServer[index]["config"][config_name_before][config_name] != new_data):
                     # Send to Camera
-                    print("NEW")
+                    # print(DataServer[index]["config"][config_name_before][config_name])
+                    # print("NEW")
+        
+                    # if(config_name=="line_intersection_zone"):
+                    #     for index, value in enumerate(new_data):
+                    #         if len(DataServer[index]["config"][config_name_before][config_name])<=index:
+                    #             DataServer[index]["config"][config_name_before][config_name].append(value)
+                    #         else:
+                    #             for key,name in value.items():
+                    #                 DataServer[index]["config"][config_name_before][config_name][index][key]=name
+                            
+                    # else:
+                    #     DataServer[index]["config"][config_name_before][config_name] = new_data
+                    # # Config[config_name_before][config_name]=new_data
 
-                    DataServer[index]["config"][config_name_before][config_name] = new_data
-                    # Config[config_name_before][config_name]=new_data
-                    print()
+                    for index2, value in enumerate(new_data):
+                        if len(DataServer[index]["config"][config_name_before][config_name])<=index2:
+                            DataServer[index]["config"][config_name_before][config_name].append(value)
+                        else:
+                            DataServer[index]["config"][config_name_before][config_name][index2].update(value)
+                    print(DataServer[index]["config"][config_name_before][config_name])
                 else:
                     print("OLD")
                 break
@@ -265,6 +282,8 @@ def id_association():
                     break
 
             if notisInTuple == False:
+                print([key, value["preferred_username"], value["name"],
+                                     ID_associations[value["name"]]["preferred_username"]])
                 Associations.append([key, value["preferred_username"], value["name"],
                                      ID_associations[value["name"]]["preferred_username"]])
 

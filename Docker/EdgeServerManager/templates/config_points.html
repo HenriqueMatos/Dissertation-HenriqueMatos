@@ -91,148 +91,133 @@
       <div class="accordion-body">
         <div class="card text-white bg-dark text-center">
           <ul class="list-group list-group-flush" id="ul-{{actualIndex}}">
-            {% if config=="line_intersection_zone" %} {% for eachData in
-            ExistingData %} {% if keys[eachData][1]=="list" %}
-            <div id="content-{{actualIndex}}" class="card-header">
-              {{eachData}}
-              <i
-                class="bi bi-pencil-square"
-                id="{{actualIndex}}-{{eachData}}"
-              ></i>
-            </div>
-            <li class="list-group-item bg-dark">
-              X:
-              <input
-                class="X_inputMAX"
-                min="0"
-                style="width: 30%"
-                type="number"
-                id="{{actualIndex}}-{{eachData}}-0"
-                value="{{ExistingData[eachData][0]}}"
-              />
-              Y:
-              <input
-                class="Y_inputMAX"
-                min="0"
-                style="width: 30%"
-                type="number"
-                id="{{actualIndex}}-{{eachData}}-1"
-                value="{{ExistingData[eachData][1]}}"
-              />
-            </li>
-            {% else %}
-            <div class="card-header">{{eachData}}</div>
-            {% if eachData=="zone_direction_1or2" %}
-
-            <li class="list-group-item bg-dark">
-              <select
-                id="{{actualIndex}}-{{eachData}}"
-                class="form-select form-control"
-                aria-label="Default select example"
-              >
-                {% if ExistingData[eachData]=="2" %}
-                <option value="1">1</option>
-                <option selected value="2" style="font-weight: bold">2</option>
+            {% if config=="line_intersection_zone" %} 
+              {% for eachData in ExistingData %} 
+                {% if keys[eachData][1]=="list" %}
+                  <div id="content-{{actualIndex}}" class="card-header">
+                    {{eachData}}
+                    <i class="bi bi-pencil-square" id="{{actualIndex}}-{{eachData}}"></i>
+                  </div>
+                  <li class="list-group-item bg-dark">
+                    X:
+                    <input
+                      class="X_inputMAX"
+                      min="0"
+                      style="width: 30%"
+                      type="number"
+                      id="{{actualIndex}}-{{eachData}}-0"
+                      value="{{ExistingData[eachData][0]}}"
+                    />
+                    Y:
+                    <input
+                      class="Y_inputMAX"
+                      min="0"
+                      style="width: 30%"
+                      type="number"
+                      id="{{actualIndex}}-{{eachData}}-1"
+                      value="{{ExistingData[eachData][1]}}"
+                    />
+                  </li>
                 {% else %}
-                <option selected value="1" style="font-weight: bold">1</option>
-                <option value="2">2</option>
-                {% endif %}
-              </select>
-            </li>
-            {% else %}
+                  <div class="card-header">{{eachData}}</div>
 
-            <li class="list-group-item bg-dark">
-              <input
-                type="text"
-                class="form-control"
-                id="{{actualIndex}}-{{eachData}}"
-                name="fname"
-                placeholder="{{ExistingData[eachData]}}"
-              />
-            </li>
-            {% endif %} {% endif %} {% endfor %} {% elif config=="zone" %} {%
-            for eachData in ExistingData %} {% if
-            keys[eachData][1]=="listoflist" %}
-            <div id="content-{{actualIndex}}" class="card-header">
-              {{eachData}}
-              <i class="bi bi-plus-circle" id="{{actualIndex}}"></i>
-            </div>
-            {% for eachPoint in ExistingData[eachData] %}
-            <li class="list-group-item bg-dark">
-              X:
-              <input
-                class="X_inputMAX"
-                min="0"
-                style="width: 30%"
-                type="number"
-                id="{{actualIndex}}-{{ loop.index}}-0"
-                value="{{eachPoint[0]}}"
-              />
-              Y:
-              <input
-                class="Y_inputMAX"
-                min="0"
-                style="width: 30%"
-                type="number"
-                id="{{actualIndex}}-{{ loop.index}}-1"
-                value="{{eachPoint[1]}}"
-              />
-              <i
-                class="bi bi-pencil-square"
-                id="{{actualIndex}}-{{ loop.index}}"
-              ></i>
-              <i class="bi bi-trash" id="{{actualIndex}}-{{ loop.index}}"></i>
-            </li>
-            {% endfor %} {% else %}
-            <div class="card-header">{{eachData}}</div>
-
-            <li class="list-group-item bg-dark">
-              <input
-                type="text"
-                class="form-control"
-                id="{{actualIndex}}-{{eachData}}"
-                name="fname"
-                placeholder="{{ExistingData[eachData]}}"
-              />
-            </li>
-            {% endif %} {% endfor %} {% elif config=="remove_area" %}
-            <div id="content-{{actualIndex}}" class="card-header">
-              {{config}}
-              <i class="bi bi-plus-circle" id="{{actualIndex}}"></i>
-            </div>
-            {% for eachData in ExistingData%}
-            <li class="list-group-item bg-dark">
-              X:
-              <input
-                class="X_inputMAX"
-                min="0"
-                style="width: 30%"
-                type="number"
-                id="{{actualIndex}}-{{ loop.index}}-0"
-                value="{{eachData[0]}}"
-              />
-              Y:
-              <input
-                class="Y_inputMAX"
-                min="0"
-                style="width: 30%"
-                type="number"
-                id="{{actualIndex}}-{{ loop.index}}-1"
-                value="{{eachData[1]}}"
-              />
-              <i
-                class="bi bi-pencil-square"
-                id="{{actualIndex}}-{{ loop.index}}"
-              ></i>
-              <i class="bi bi-trash" id="{{actualIndex}}-{{ loop.index}}"></i>
-            </li>
-
-            {% endfor %} {% endif%}
+                    <li class="list-group-item bg-dark">
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="{{actualIndex}}-{{eachData}}"
+                        name="fname"
+                        placeholder="{{ExistingData[eachData]}}"
+                      />
+                    </li>
+                {% endif %}  
+              {% endfor %} 
+            {% elif config=="zone" %} 
+              {% for eachData in ExistingData %} 
+                {% if keys[eachData][1]=="listoflist" %}
+                  <div id="content-{{actualIndex}}" class="card-header">
+                    {{eachData}}
+                    <i class="bi bi-plus-circle" id="{{actualIndex}}"></i>
+                  </div>
+                  {% for eachPoint in ExistingData[eachData] %}
+                    <li class="list-group-item bg-dark">
+                      X:
+                      <input
+                        class="X_inputMAX"
+                        min="0"
+                        style="width: 30%"
+                        type="number"
+                        id="{{actualIndex}}-{{ loop.index}}-0"
+                        value="{{eachPoint[0]}}"
+                      />
+                      Y:
+                      <input
+                        class="Y_inputMAX"
+                        min="0"
+                        style="width: 30%"
+                        type="number"
+                        id="{{actualIndex}}-{{ loop.index}}-1"
+                        value="{{eachPoint[1]}}"
+                      />
+                      <i
+                        class="bi bi-pencil-square"
+                        id="{{actualIndex}}-{{ loop.index}}"
+                      ></i>
+                      <i class="bi bi-trash" id="{{actualIndex}}-{{ loop.index}}"></i>
+                    </li>
+                  {% endfor %} 
+                {% else %}
+                  <div class="card-header">{{eachData}}</div>
+                    <li class="list-group-item bg-dark">
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="{{actualIndex}}-{{eachData}}"
+                        name="fname"
+                        placeholder="{{ExistingData[eachData]}}"
+                      />
+                    </li>
+                {% endif %} 
+              {% endfor %} 
+            {% elif config=="remove_area" %}
+              <div id="content-{{actualIndex}}" class="card-header">
+                {{config}}
+                <i class="bi bi-plus-circle" id="{{actualIndex}}"></i>
+              </div>
+              {% for eachData in ExistingData%}
+                <li class="list-group-item bg-dark">
+                  X:
+                  <input
+                    class="X_inputMAX"
+                    min="0"
+                    style="width: 30%"
+                    type="number"
+                    id="{{actualIndex}}-{{ loop.index}}-0"
+                    value="{{eachData[0]}}"
+                  />
+                  Y:
+                  <input
+                    class="Y_inputMAX"
+                    min="0"
+                    style="width: 30%"
+                    type="number"
+                    id="{{actualIndex}}-{{ loop.index}}-1"
+                    value="{{eachData[1]}}"
+                  />
+                  <i
+                    class="bi bi-pencil-square"
+                    id="{{actualIndex}}-{{ loop.index}}"
+                  ></i>
+                  <i class="bi bi-trash" id="{{actualIndex}}-{{ loop.index}}"></i>
+                </li>
+              {% endfor %} 
+            {% endif%}
           </ul>
         </div>
       </div>
     </div>
-    {% endfor %} {% set actualIndex = data|length+1%}
+    {% endfor %} 
+    {% set actualIndex = data|length+1%}
     <div class="accordion-item">
       <h2 class="accordion-header" id="heading-{{actualIndex}}">
         <button
@@ -256,59 +241,47 @@
         <div class="accordion-body">
           <div class="card text-white bg-dark text-center ">
             <ul id="ul-{{actualIndex}}" class="list-group list-group-flush">
-              {% if config=="line_intersection_zone" %} {% for eachData in keys
-              %} {% if keys[eachData][1]=="list" %}
-              <div id="content-{{actualIndex}}" class="card-header">
-                {{eachData}}
-                <i
-                  class="bi bi-pencil-square"
-                  id="{{actualIndex}}-{{eachData}}"
-                ></i>
-              </div>
-              <li class="list-group-item bg-dark">
-                X:
-                <input
-                  class="X_inputMAX CleanInput"
-                  min="0"
-                  style="width: 30%"
-                  type="number"
-                  id="{{actualIndex}}-{{eachData}}-0"
-                />
-                Y:
-                <input
-                  class="Y_inputMAX CleanInput"
-                  min="0"
-                  style="width: 30%"
-                  type="number"
-                  id="{{actualIndex}}-{{eachData}}-1"
-                />
-              </li>
-
-              {% else %}
-              <div class="card-header">{{eachData}}</div>
-              {% if eachData=="zone_direction_1or2" %}
-
-              <li class="list-group-item bg-dark">
-                <select
-                  id="{{actualIndex}}-{{eachData}}"
-                  class="form-select"
-                  aria-label="Default select example"
-                >
-                  <option selected value="1">1</option>
-                  <option value="2">2</option>
-                </select>
-              </li>
-              {% else %}
-
-              <li class="list-group-item bg-dark">
-                <input
-                  class="form-control"
-                  type="text"
-                  id="{{actualIndex}}-{{eachData}}"
-                  name="fname"
-                />
-              </li>
-              {% endif %}{% endif %} {% endfor %} {% elif config=="zone" %} {%
+              {% if config=="line_intersection_zone" %} 
+              {% for eachData in keys %} 
+                {% if keys[eachData][1]=="list" %}
+                  <div id="content-{{actualIndex}}" class="card-header">
+                    {{eachData}}
+                    <i
+                      class="bi bi-pencil-square"
+                      id="{{actualIndex}}-{{eachData}}"
+                    ></i>
+                  </div>
+                  <li class="list-group-item bg-dark">
+                    X:
+                    <input
+                      class="X_inputMAX CleanInput"
+                      min="0"
+                      style="width: 30%"
+                      type="number"
+                      id="{{actualIndex}}-{{eachData}}-0"
+                    />
+                    Y:
+                    <input
+                      class="Y_inputMAX CleanInput"
+                      min="0"
+                      style="width: 30%"
+                      type="number"
+                      id="{{actualIndex}}-{{eachData}}-1"
+                    />
+                  </li>
+                {% else %}
+                  <div class="card-header">{{eachData}}</div>
+                  <li class="list-group-item bg-dark">
+                    <input
+                      class="form-control"
+                      type="text"
+                      id="{{actualIndex}}-{{eachData}}"
+                      name="fname"
+                    />
+                  </li>
+                {% endif %}
+              {% endfor %} 
+              {% elif config=="zone" %} {%
               for eachData in keys %} {% if keys[eachData][1]=="listoflist" %}
               <div id="content-{{actualIndex}}" class="card-header">
                 {{eachData}}
@@ -341,78 +314,6 @@
 </div>
 
 <script>
-  class Point {
-    constructor(x, y) {
-      this.x = x;
-
-      this.y = y;
-    }
-  }
-
-  // To find orientation of ordered triplet
-  // (p1, p2, p3). The function returns
-  // following values
-  // 0 --> p, q and r are collinear
-  // 1 --> Clockwise
-  // 2 --> Counterclockwise
-
-  function orientation(p1, p2, p3) {
-    // See 10th slides from following link
-
-    // for derivation of the formula
-
-    let val = (p2.y - p1.y) * (p3.x - p2.x) - (p2.x - p1.x) * (p3.y - p2.y);
-
-    if (val == 0) return 0; // collinear
-
-    // clock or counterclock wise
-
-    return val > 0 ? 1 : 2;
-  }
-  function drawArrow(ctx, fromx, fromy, tox, toy, arrowWidth, color) {
-    //variables to be used when creating the arrow
-    var headlen = 10;
-    var angle = Math.atan2(toy - fromy, tox - fromx);
-
-    ctx.save();
-    ctx.strokeStyle = color;
-
-    //starting path of the arrow from the start square to the end square
-    //and drawing the stroke
-    ctx.beginPath();
-    ctx.moveTo(fromx, fromy);
-    ctx.lineTo(tox, toy);
-    ctx.lineWidth = arrowWidth;
-    ctx.stroke();
-
-    //starting a new path from the head of the arrow to one of the sides of
-    //the point
-    ctx.beginPath();
-    ctx.moveTo(tox, toy);
-    ctx.lineTo(
-      tox - headlen * Math.cos(angle - Math.PI / 7),
-      toy - headlen * Math.sin(angle - Math.PI / 7)
-    );
-
-    //path from the side point of the arrow, to the other side point
-    ctx.lineTo(
-      tox - headlen * Math.cos(angle + Math.PI / 7),
-      toy - headlen * Math.sin(angle + Math.PI / 7)
-    );
-
-    //path from the side point back to the tip of the arrow, and then
-    //again to the opposite side point
-    ctx.lineTo(tox, toy);
-    ctx.lineTo(
-      tox - headlen * Math.cos(angle - Math.PI / 7),
-      toy - headlen * Math.sin(angle - Math.PI / 7)
-    );
-
-    //draws the paths created above
-    ctx.stroke();
-    ctx.restore();
-  }
-
   var NewConfig_FLAG = false;
   var NewConfig_zone = {
     name_inside_zone: "",
@@ -423,10 +324,9 @@
     name: "",
     start_point: [],
     end_point: [],
-    zone_direction_1or2: "",
     name_zone_before: "",
     name_zone_after: "",
-    id_association: {},
+    //id_association: {},
   };
   var NewConfig_remove_area = [];
   var Default_Config_zone = {
@@ -438,7 +338,6 @@
     name: "",
     start_point: [],
     end_point: [],
-    zone_direction_1or2: "",
     name_zone_before: "",
     name_zone_after: "",
     id_association: {},
@@ -513,49 +412,13 @@
         }
       });
     }
-    function draw_line_intersection_zone(
-      arrayData,
-      arrayData2,
-      zone_direction_1or2
-    ) {
+    function draw_line_intersection_zone(arrayData,arrayData2) {
       ctx.fillStyle = "#000000";
       ctx.beginPath();
       ctx.moveTo(arrayData[0], arrayData[1]);
       ctx.lineTo(arrayData2[0], arrayData2[1]);
       ctx.closePath();
       ctx.stroke();
-
-      (centrePointX = (arrayData[0] + arrayData2[0]) / 2),
-        (centrePointY = (arrayData[1] + arrayData2[1]) / 2),
-        (angle = Math.atan2(
-          arrayData2[1] - arrayData[1],
-          arrayData2[0] - arrayData[0]
-        )),
-        (dist = 20);
-
-      startX = Math.sin(angle) * dist + centrePointX;
-      startY = -Math.cos(angle) * dist + centrePointY;
-      endX = -Math.sin(angle) * dist + centrePointX;
-      endY = Math.cos(angle) * dist + centrePointY;
-      let o = orientation(
-        new Point(arrayData[0], arrayData[1]),
-        new Point(arrayData2[0], arrayData2[1]),
-        new Point(startX, startY)
-        //new Point(endX, endY)
-      );
-      /*let o2 = orientation(
-        new Point(arrayData[0], arrayData[1]),
-        new Point(arrayData2[0], arrayData2[1]),
-        new Point(endX, endY)
-      );*/
-      console.log("ola", zone_direction_1or2);
-      if ((o == zone_direction_1or2) == 1) {
-        drawArrow(ctx, endX, endY, startX, startY, 3, "green");
-      } else {
-        drawArrow(ctx, startX, startY, endX, endY, 3, "green");
-      }
-
-      console.log("orientation", o, startX, startY, endX, endY);
     }
     function draw_remove_area(arrayData) {
       ctx.fillStyle = "#FFFFFF";
@@ -602,8 +465,6 @@
             NewConfig_FLAG = true;
             NewConfig_line_intersection_zone[indexes[1]][0] = valor;
             if ([indexes[1]] == "start_point") {
-              zone_direction_1or2 =
-                NewConfig_line_intersection_zone["zone_direction_1or2"];
               arrayData = NewConfig_line_intersection_zone[indexes[1]];
               arrayData2 = NewConfig_line_intersection_zone["end_point"];
             } else {
@@ -619,14 +480,11 @@
               arrayData = jsonData[parseInt(indexes[0] - 1)]["start_point"];
               arrayData2 = jsonData[parseInt(indexes[0] - 1)][indexes[1]];
             }
-            zone_direction_1or2 =
-              jsonData[parseInt(indexes[0] - 1)]["zone_direction_1or2"];
           }
           drawImage();
           draw_line_intersection_zone(
             arrayData,
-            arrayData2,
-            zone_direction_1or2
+            arrayData2
           );
           break;
         case "remove_area":
@@ -680,8 +538,6 @@
               arrayData = NewConfig_line_intersection_zone["start_point"];
               arrayData2 = NewConfig_line_intersection_zone[indexes[1]];
             }
-            zone_direction_1or2 =
-              NewConfig_line_intersection_zone["zone_direction_1or2"];
           } else {
             jsonData[parseInt(indexes[0] - 1)][indexes[1]][1] = valor;
             if ([indexes[1]] == "start_point") {
@@ -691,14 +547,11 @@
               arrayData = jsonData[parseInt(indexes[0] - 1)]["start_point"];
               arrayData2 = jsonData[parseInt(indexes[0] - 1)][indexes[1]];
             }
-            zone_direction_1or2 =
-              jsonData[parseInt(indexes[0] - 1)]["zone_direction_1or2"];
           }
           drawImage();
           draw_line_intersection_zone(
             arrayData,
-            arrayData2,
-            zone_direction_1or2
+            arrayData2
           );
           break;
         case "remove_area":
@@ -863,8 +716,6 @@
                 arrayData = NewConfig_line_intersection_zone["start_point"];
                 arrayData2 = NewConfig_line_intersection_zone[indexes[1]];
               }
-              zone_direction_1or2 =
-                NewConfig_line_intersection_zone["zone_direction_1or2"];
             } else {
               jsonData[parseInt(indexes[0] - 1)][indexes[1]][0] = parseInt(X);
               jsonData[parseInt(indexes[0] - 1)][indexes[1]][1] = parseInt(Y);
@@ -880,16 +731,13 @@
                 arrayData = jsonData[parseInt(indexes[0] - 1)]["start_point"];
                 arrayData2 = jsonData[parseInt(indexes[0] - 1)][indexes[1]];
               }
-              zone_direction_1or2 =
-                jsonData[parseInt(indexes[0] - 1)]["zone_direction_1or2"];
             }
 
             //startpoint = arrayData ; endpoint = arrayData2
             drawImage();
             draw_line_intersection_zone(
               arrayData,
-              arrayData2,
-              zone_direction_1or2
+              arrayData2
             );
           });
 
@@ -1325,18 +1173,14 @@
             if (IntIndex >= jsonData.length) {
               arrayData = NewConfig_line_intersection_zone["start_point"];
               arrayData2 = NewConfig_line_intersection_zone["end_point"];
-              zone_direction_1or2 =
-                NewConfig_line_intersection_zone["zone_direction_1or2"];
             } else {
               arrayData = jsonData[IntIndex]["start_point"];
               arrayData2 = jsonData[IntIndex]["end_point"];
-              zone_direction_1or2 = jsonData[IntIndex]["zone_direction_1or2"];
             }
             console.log(config);
             draw_line_intersection_zone(
               arrayData,
-              arrayData2,
-              zone_direction_1or2
+              arrayData2
             );
             break;
           case "remove_area":

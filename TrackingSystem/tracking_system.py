@@ -91,12 +91,9 @@ def on_message(client, userdata, message):
                             d = os.path.join(gallery_directory, file)
                             if os.path.isdir(d):
                                 ti_c = os.path.getctime(d)
-                                print(ti_c)
-                                print(time.time()-ti_c)
-                                # REMOVE IF FOLDER HAS MORE THAN 1 DAY
-                                if (time.time()-ti_c) > 1*24*60*60:
+                                # print(time.time()-ti_c)
+                                if (time.time()-ti_c) > ConfigDataUpdater.folder_remove_seconds:
                                     shutil.rmtree(d)
-                        # time.sleep(1000000)
 
                         # Save images in query
                         query_directory = "./QueryData/"
@@ -112,10 +109,9 @@ def on_message(client, userdata, message):
                         #     break
 
                         result = do_Re_Identification(
-                            gallery_directory, query_directory)
+                            gallery_directory, query_directory, ConfigDataUpdater.ReID_mean_threshold, ConfigDataUpdater.ReID_median_threshold, ConfigDataUpdater.ReID_mode_threshold)
                         print(result)
-                        # sys.exit(-1)
-                        # time.sleep(50000000)
+
                         # Remove Query Files
                         shutil.rmtree(query_directory)
                         # If successful Re-Identification remove associated gallery files
@@ -146,7 +142,6 @@ def on_message(client, userdata, message):
 
 def ThreadDataTransmitter(ConfigDataUpdater, frame):
 
-    # print(response)
     sendData = {}
     sendData["frame"] = frame
     sendData["type"] = "login"
@@ -160,11 +155,8 @@ def ThreadDataTransmitter(ConfigDataUpdater, frame):
     # print(sendData, ConfigDataUpdater.config.camera_name, ConfigDataUpdater.config.ip)
     ConfigDataUpdater.mqtt_client.publish(
         "camera_config", json.dumps(sendData))
-    # time.sleep(3)
-    # os._exit(1)
 
     ConfigDataUpdater.mqtt_client.subscribe("edge_config/"+KeycloakUsername)
-    # client.subscribe("edge_config/"+str(ConfigDataUpdater.camera_id))
     ConfigDataUpdater.mqtt_client.on_message = on_message
     ConfigDataUpdater.mqtt_client.loop_start()
     while(1):
@@ -188,11 +180,11 @@ def detect():
     global ConfigDataUpdater
     ConfigDataUpdater = Data_Config_Count(maxDisappeared=max_Age)
     ConfigDataUpdater.register(data)
-    opt.cmc_method=ConfigDataUpdater.config.cmc_method
-    opt.track_high_thresh=ConfigDataUpdater.config.track_high_thresh
-    opt.track_low_thresh=ConfigDataUpdater.config.track_low_thresh
-    opt.new_track_thresh=ConfigDataUpdater.config.new_track_thresh
-    opt.aspect_ratio_thresh=ConfigDataUpdater.config.aspect_ratio_thresh
+    opt.cmc_method = ConfigDataUpdater.config.cmc_method
+    opt.track_high_thresh = ConfigDataUpdater.config.track_high_thresh
+    opt.track_low_thresh = ConfigDataUpdater.config.track_low_thresh
+    opt.new_track_thresh = ConfigDataUpdater.config.new_track_thresh
+    opt.aspect_ratio_thresh = ConfigDataUpdater.config.aspect_ratio_thresh
 
     # global cap
 

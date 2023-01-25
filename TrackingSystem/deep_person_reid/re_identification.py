@@ -10,7 +10,7 @@ import os.path as osp
 from deep_person_reid.torchreid.data import ImageDataset
 
 
-def do_Re_Identification(gallery_directory, query_directory, use_gpu=False):
+def do_Re_Identification(gallery_directory, query_directory, ReID_mean_threshold, ReID_median_threshold, ReID_mode_threshold, use_gpu=False):
 
     class NewDataset(ImageDataset):
         dataset_dir = 'Actual_Tracking'
@@ -105,9 +105,9 @@ def do_Re_Identification(gallery_directory, query_directory, use_gpu=False):
     )
     # print(IDsObjectList)
     FinalID = None
-    meanAcceptValue = 70
-    medianAcceptValue = 70
-    modeAcceptValue = 75
+    # meanAcceptValue = 70
+    # medianAcceptValue = 70
+    # modeAcceptValue = 75
     max_mean_value = 0
     for key, value in IDsObjectList.items():
         mean = statistics.fmean(value)
@@ -116,13 +116,13 @@ def do_Re_Identification(gallery_directory, query_directory, use_gpu=False):
         print(mean)
         print(median)
         print(mode)
-        if mean > meanAcceptValue and median > medianAcceptValue and mode > modeAcceptValue:
+        if mean > ReID_mean_threshold and median > ReID_median_threshold and mode > ReID_mode_threshold:
             if mean > max_mean_value:
                 max_mean_value = mean
-                FinalID=key
+                FinalID = key
                 # os._exit(1)
     # time.sleep(5000000)
     return FinalID
-                
+
 
 # do_Re_Identification('./reid-data/intersect_gallery_cam1', './reid-data/intersect_gallery_cam0/64dir1')

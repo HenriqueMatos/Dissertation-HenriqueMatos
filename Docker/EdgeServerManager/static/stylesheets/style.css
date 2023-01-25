@@ -62,6 +62,8 @@ tbody {
 
 td {
     margin-top: 20px;
+    /* padding-bottom: 1em; */
+    height: 50px;
 }
 
 .navbar-toggler{
