@@ -58,7 +58,7 @@
         {% if config[item]=="editable" %}
           <tr>
             <td scope="row"><b>{{item}}</b></td>
-            <td ><input class="form-control btn-dark" type="text" id="{{item}}" placeholder="{{data.config[item]}}"/></td>
+            <td ><input class="form-control" type="text" id="{{item}}" placeholder="{{data.config[item]}}"/></td>
           </tr>
         {% elif config[item]=="noneditable" %}
           <tr>
@@ -163,12 +163,10 @@
   //console.log(jsonData);
   //console.log(buttonData);
   //console.log(Object.keys(buttonData));
-  FullData=dataParser("{{data}}")
-
   
-  
-  
-  var tableDiv = document.createElement('tr');
+  window.onload = function() {
+    FullData=dataParser("{{data}}")
+    var tableDiv = document.createElement('tr');
   
   for (let i = 0; i < Object.keys(buttonData).length; i++) {
     var elemDiv = document.createElement('td');
@@ -209,6 +207,10 @@
   }
 
   document.getElementById('button').appendChild(tableDiv);
+  };
+  
+  
+  
 })
 
 </script>

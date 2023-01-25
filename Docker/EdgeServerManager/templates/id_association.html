@@ -66,7 +66,7 @@
   <div class="container">
     <div class="row">
       <div class="col">
-        <select   id="select-1" class="form-select btn-dark" aria-label="Default select example">
+        <select   id="select-1" class="form-select " aria-label="Default select example">
         <option class="option_select1" selected id="select-1-" value="">Open this select menu</option>
         {% for value in DataObject %}
         <option  class="option_select1" id="select-1-{{value["preferred_username"]}}" value="{{value["preferred_username"]}}">{{value["preferred_username"]}}</option>
@@ -74,7 +74,7 @@
       </select> 
     </div>
       <div class="col">
-        <select id="select-2" class="form-select btn-dark" aria-label="Default select example">
+        <select id="select-2" class="form-select " aria-label="Default select example">
             <option  class="option_select2" selected id="select-2-" value="">Open this select menu</option>
             {% for value in DataObject %}
             <option class="option_select2" id="select-2-{{value["preferred_username"]}}" value="{{value["preferred_username"]}}">{{value["preferred_username"]}}</option>
@@ -86,13 +86,13 @@
     <div class="row">
         <div style="display: inline-flex;justify-content: space-between;" class="col">
           <div class="col">
-            <select id="option-select-1-1" class="form-select btn-dark" >
+            <select id="option-select-1-1" class="form-select " >
             </select>
           </div> 
         </div>
         <div style="display: inline-flex;justify-content: space-between;" class="col">
           <div class="col">
-            <select  id="option-select-2-1" class="form-select btn-dark" >
+            <select  id="option-select-2-1" class="form-select " >
             </select>
           </div>
         </div>

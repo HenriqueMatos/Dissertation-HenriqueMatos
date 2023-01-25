@@ -8,6 +8,13 @@ body {
     background-attachment: fixed;
 }
 
+/* .form-control{
+    width: 50% !important;
+    display: block;
+    margin-right: auto;
+    margin-left: auto; 
+} */
+
 nav,
 .accordion-item,
 .accordion-button {
