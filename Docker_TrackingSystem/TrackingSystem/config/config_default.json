@@ -1,0 +1,45 @@
+{
+    "ip": "192.168.233.139",
+    "camera_id": -1,
+    "camera_name": "",
+    "camera_zone": "",
+    "timestamp_config_creation": "",
+    "weights": "yolov7-tiny.pt",
+    "source": "ch01_08000000058000601.mp4",
+    "iou_thres": 0.45,
+    "conf_thres": 0.09,
+    "img_size": 640,
+    "cmc_method": "orb",
+    "track_high_thresh": 0.25,
+    "track_low_thresh": 0.0001,
+    "new_track_thresh": 0.4,
+    "aspect_ratio_thresh": 5,
+    "classes": [
+        0,
+        24,
+        26,
+        28
+    ],
+    "folder_remove_seconds": 1800,
+    "ReID_mean_threshold": 70,
+    "ReID_median_threshold": 70,
+    "ReID_mode_threshold": 75,
+    "cam_coordinates": [
+        1280,
+        720
+    ],
+    "global_map_scale": [
+        1785.6,
+        1004.4
+    ],
+    "global_map_angle": -21.76,
+    "global_map_offset": [
+        64278,
+        32242
+    ],
+    "input": {
+        "zone": [],
+        "line_intersection_zone": [],
+        "remove_area": []
+    }
+}

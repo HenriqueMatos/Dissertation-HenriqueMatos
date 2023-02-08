@@ -29,7 +29,6 @@ services:
       - 9001:9001 
   edgeserver:
     build: ./
-    # dockerfile: ./Dockerfile
     command: python3 EdgeServer.py
     ports:
       - 5000:5000
@@ -41,6 +40,7 @@ services:
       - keycloak
       - redis
       - mosquitto
-networks:
-  my-network:
-    external: true
+
+
+
+      

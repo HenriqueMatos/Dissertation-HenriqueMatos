@@ -152,13 +152,14 @@ def ThreadDataTransmitter(ConfigDataUpdater, frame):
     ConfigDataUpdater.mqtt_client = mqtt.Client(
         str(ConfigDataUpdater.config.camera_name))
     ConfigDataUpdater.mqtt_client.connect(ConfigDataUpdater.config.ip)
-    # print(sendData, ConfigDataUpdater.config.camera_name, ConfigDataUpdater.config.ip)
+    print(sendData, ConfigDataUpdater.config.camera_name, ConfigDataUpdater.config.ip)
     ConfigDataUpdater.mqtt_client.publish(
         "camera_config", json.dumps(sendData))
 
     ConfigDataUpdater.mqtt_client.subscribe("edge_config/"+KeycloakUsername)
     ConfigDataUpdater.mqtt_client.on_message = on_message
     ConfigDataUpdater.mqtt_client.loop_start()
+    quit()
     while(1):
         time.sleep(30)
 
@@ -218,7 +219,7 @@ def detect():
     view_img, imgsz, trace = opt.view_img, ConfigDataUpdater.config.img_size, opt.trace
     save_img = opt.save_frames and not ConfigDataUpdater.config.source.endswith(
         '.txt')  # save inference images
-    webcam = ConfigDataUpdater.config.source.isnumeric() or ConfigDataUpdater.config.source.endswith('.txt') or ConfigDataUpdater.config.source.lower().startswith(
+    webcam = str(ConfigDataUpdater.config.source).isnumeric() or ConfigDataUpdater.config.source.endswith('.txt') or ConfigDataUpdater.config.source.lower().startswith(
         ('rtsp://', 'rtmp://', 'http://', 'https://'))
 
     # Directories
@@ -281,7 +282,10 @@ def detect():
     fn = 0
     for path, img, im0s, vid_cap in dataset:
         fn += 1
-        imageBackUp = im0s.copy()
+        if str(ConfigDataUpdater.config.source).isnumeric():
+            imageBackUp = img.copy()
+        else:
+            imageBackUp = im0s.copy()
 
         timer.tic()
 
@@ -300,7 +304,7 @@ def detect():
 
         # Draw Zones
         for zone in ConfigDataUpdater.config.input.zone:
-            cv2.polylines(im0s, [np.array(zone.points)],
+            cv2.polylines(img, [np.array(zone.points)],
                           True, (255, 0, 0), 2)
 
         img = torch.from_numpy(img).to(device)
@@ -371,7 +375,8 @@ def detect():
                     ID_with_Box[tid] = (int(tlbr[0]), int(
                         tlbr[1]), int(tlbr[2]), int(tlbr[3]))
                     ID_with_Class[tid] = names[int(tcls)]
-
+                    print((int(tlbr[0]), int(
+                        tlbr[1]), int(tlbr[2]), int(tlbr[3])))
                     ID_with_Box_Frame[tid] = imageBackUp[int(tlbr[1]):int(
                         tlbr[3]), int(tlbr[0]):int(tlbr[2])]
 

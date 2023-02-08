@@ -29,7 +29,6 @@ from keycloak_utils import get_oidc2, get_oidc, get_token, check_token, verifyTo
 
 SERVER_IP = "192.168.233.139"
 
-
 SERVER_URL = "http://"+SERVER_IP+":8080/auth/"
 REALM_NAME = "AppAuthenticator"
 CLIENT_ID = "EdgeServer1"
@@ -401,18 +400,11 @@ def AddAssociation():
 
 
 def web():
-    app.run(debug=True, use_reloader=False, host='0.0.0.0', port=5000)
+    app.run(debug=False, use_reloader=False, host='0.0.0.0', port=5000)
 
 
 # def runningWorker():
-
-
-if __name__ == '__main__':
-    client = mqtt.Client("EdgeServer1")
-
-    threading.Thread(target=web, daemon=False).start()
-
-    def on_message(client, userdata, message):
+def on_message(client, userdata, message):
         print("Received message: ", str(message.payload.decode("utf-8")),
               " From: ", message.topic, " ")
         receivedObject = json.loads(message.payload)
@@ -449,9 +441,22 @@ if __name__ == '__main__':
                     DataServer.append(receivedObject)
                 r.set("data", json.dumps(DataServer))
 
+
+
+if __name__ == '__main__':
+    print("START")
+    
+    client = mqtt.Client("EdgeServer1")
+
+    threading.Thread(target=web, daemon=False).start()
+    
     client.connect(SERVER_IP)
     client.subscribe("camera_config")
     client.on_message = on_message
     client.loop_start()
     while(1):
-        time.sleep(30)
+        print("AQUI")        
+        time.sleep(2)
+
+
+

@@ -20,6 +20,23 @@
         26,
         28
     ],
+    "folder_remove_seconds": 1800,
+    "ReID_mean_threshold": 70,
+    "ReID_median_threshold": 70,
+    "ReID_mode_threshold": 75,
+    "cam_coordinates": [
+        1280,
+        720
+    ],
+    "global_map_scale": [
+        518.4,
+        291.6
+    ],
+    "global_map_angle": -33,
+    "global_map_offset": [
+        59541.5,
+        35355
+    ],
     "input": {
         "zone": [],
         "line_intersection_zone": [

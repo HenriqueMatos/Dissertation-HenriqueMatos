@@ -230,15 +230,17 @@ class Data_Config_Count():
         self.global_angle = jsonObject["global_map_angle"]
         self.global_offset = jsonObject["global_map_offset"]
         self.cam_coordinates = jsonObject["cam_coordinates"]
-        
+
         self.folder_remove_seconds = jsonObject["folder_remove_seconds"]
         self.ReID_mean_threshold = jsonObject["ReID_mean_threshold"]
         self.ReID_median_threshold = jsonObject["ReID_median_threshold"]
         self.ReID_mode_threshold = jsonObject["ReID_mode_threshold"]
-        
 
-        os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "rtsp_transport;udp"
-        cap = cv2.VideoCapture(self.config.source, cv2.CAP_FFMPEG)
+        if str(self.config.source).isnumeric():
+            cap = cv2.VideoCapture(int(self.config.source))
+        else:
+            os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "rtsp_transport;udp"
+            cap = cv2.VideoCapture(self.config.source)
 
         _, frame = cap.read()
         height, width, channels = frame.shape
@@ -438,21 +440,22 @@ class Data_Config_Count():
         DataPacket["device_id"] = self.config.camera_id
 
         # SEND DATA TO MQTT BROKER
-        broker = 'homeassistant.local'
+        # broker = 'homeassistant.local'
+        broker ='192.168.233.156'
         port = 1883
         topic = '/homeassistant/people_tracking'
-        client_id = 'client-01'
+        client_id = 'client-'
         username = 'mqtt_user'
         password = '123abc!'
 
-        # client = mqtt_client.Client(client_id)
-        # client.username_pw_set(username, password)
-        # # client.on_connect = on_connect
-        # # client.on_log = on_log
-        # if not client.is_connected():
-        #     client.connect(broker, port)
+        client = mqtt_client.Client(client_id+str(self.config.camera_id))
+        client.username_pw_set(username, password)
+        # client.on_connect = on_connect
+        # client.on_log = on_log
+        if not client.is_connected():
+            client.connect(broker, port)
         # print(DataPacket)
-        # result = client.publish(topic, json.dumps(DataPacket))
+        result = client.publish(topic, json.dumps(DataPacket))
 
         for id, value in PersonPacket.items():
             PersonPacket[id]["centroids"] = self.ARRAY_FULL_DATA[id].centroid[-20:]
