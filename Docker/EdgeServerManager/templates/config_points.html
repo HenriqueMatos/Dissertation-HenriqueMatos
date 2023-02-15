@@ -369,8 +369,8 @@
     var ctx = c.getContext("2d");
     var image = new Image();
     image.src = "data:image/jpg;base64,{{ image }}";
-    console.log(image.width);
-    console.log(image.height);
+    //console.log(image.width);
+    //console.log(image.height);
 
     var data = "{{data}}";
     var parser = new DOMParser();
@@ -572,7 +572,7 @@
     $(document).on("input", ".form-control", function () {
       valor = $(this).val();
       var config = "{{config}}";
-      console.log(this.id, valor);
+      //console.log(this.id, valor);
       var indexes = this.id.split("-");
       if (indexes[0] > jsonData.length) {
         NewConfig_FLAG = true;
@@ -592,7 +592,7 @@
     $(document).on("input", ".form-select", function () {
       valor = $(this).val();
       var config = "{{config}}";
-      console.log(this.id, valor);
+      //console.log(this.id, valor);
       var indexes = this.id.split("-");
       if (indexes[0] > jsonData.length) {
         NewConfig_FLAG = true;
@@ -616,7 +616,6 @@
     });
 
     $(".btn").on("click", function () {
-      console.log("OLA MUNDO");
       var config = "{{config}}";
       if (NewConfig_FLAG) {
         switch (config) {
@@ -631,7 +630,7 @@
             break;
         }
       }
-      console.log(jsonData);
+      //console.log(jsonData);
       let DataSend = {
         data: jsonData,
         configBefore: "{{configBefore}}",
@@ -641,7 +640,7 @@
       $.post(window.location.href + "_set", {
         data: JSON.stringify(DataSend),
       }).done(function (data) {
-        console.log(data);
+        //console.log(data);
         history.back();
       });
     });
@@ -656,15 +655,15 @@
       var StringID = this.id;
       var indexes = StringID.split("-");
       var config = "{{config}}";
-      console.log(config);
+      //console.log(config);
       switch (config) {
         case "zone":
           $("#myCanvas").one("click", function (e) {
             var offset = $(this).offset();
             X = e.pageX - offset.left;
             Y = e.pageY - offset.top;
-            console.log(X, Y);
-            console.log(indexes, jsonData.length);
+            //console.log(X, Y);
+            //console.log(indexes, jsonData.length);
             // Check if is new config
             if (indexes[0] > jsonData.length) {
               NewConfig_FLAG = true;
@@ -688,7 +687,7 @@
 
               arrayData = jsonData[parseInt(indexes[0] - 1)]["points"];
             }
-            console.log(arrayData);
+            //console.log(arrayData);
 
             drawImage();
             draw_zone(arrayData);
@@ -700,8 +699,8 @@
             var offset = $(this).offset();
             X = e.pageX - offset.left;
             Y = e.pageY - offset.top;
-            console.log(X, Y);
-            console.log(indexes, jsonData.length);
+            //console.log(X, Y);
+            //console.log(indexes, jsonData.length);
             // Check if is new config
             if (indexes[0] > jsonData.length) {
               NewConfig_FLAG = true;
@@ -747,8 +746,8 @@
             var offset = $(this).offset();
             X = e.pageX - offset.left;
             Y = e.pageY - offset.top;
-            console.log(X, Y);
-            console.log(indexes, jsonData.length);
+            //console.log(X, Y);
+            //console.log(indexes, jsonData.length);
             // Check if is new config
             if (indexes[0] > jsonData.length) {
               NewConfig_FLAG = true;
@@ -768,7 +767,7 @@
 
               arrayData = jsonData[parseInt(indexes[0] - 1)];
             }
-            console.log("ola", arrayData);
+           //console.log("ola", arrayData);
 
             drawImage();
             draw_remove_area(arrayData);
@@ -781,12 +780,12 @@
     //REMOVE BUTTON
     $(document).on("click", ".bi-trash", function () {
       scrollToCanvas();
-      console.log("AQUI", this.id, jsonData.length);
+      //console.log("AQUI", this.id, jsonData.length);
       var StringID = this.id;
       var indexes = StringID.split("-");
       var config = "{{config}}";
       if (indexes[0] == "config") {
-        console.log(StringID, indexes[1]);
+        //console.log(StringID, indexes[1]);
 
         //this.parentElement.remove();
 
@@ -797,7 +796,7 @@
             .getElementById("ul-" + indexes[1])
             .getElementsByClassName("form-control");
           for (let i = 0; i < RemoveInputs.length; i++) {
-            console.log(RemoveInputs[i].id);
+           // console.log(RemoveInputs[i].id);
             RemoveInputs[i].value = "";
           }
           NewConfig_FLAG = false;
@@ -805,7 +804,7 @@
             .getElementById("ul-" + indexes[1])
             .getElementsByClassName("CleanInput");
           for (let i = 0; i < RemoveInputs.length; i++) {
-            console.log(RemoveInputs[i].id);
+            //console.log(RemoveInputs[i].id);
             RemoveInputs[i].value = "";
           }
 
@@ -887,7 +886,7 @@
               }
             }
 
-            console.log(arrayData);
+            //console.log(arrayData);
             drawImage();
             draw_zone(arrayData);
 
@@ -934,7 +933,7 @@
                 );
               }
             }
-            console.log(arrayData);
+            //console.log(arrayData);
             drawImage();
             draw_remove_area(arrayData);
             break;
@@ -945,11 +944,11 @@
     //ADD BUTTON
     $(".bi-plus-circle").on("click", function () {
       scrollToCanvas();
-      console.log("AQUI", this.id);
+      //console.log("AQUI", this.id);
       var StringID = this.id;
       var indexes = StringID.split("-");
       var config = "{{config}}";
-      console.log(indexes[0]);
+      //console.log(indexes[0]);
 
       switch (config) {
         case "zone":
@@ -957,8 +956,8 @@
             var offset = $(this).offset();
             X = e.pageX - offset.left;
             Y = e.pageY - offset.top;
-            console.log(X, Y);
-            console.log(indexes);
+            //console.log(X, Y);
+            //console.log(indexes);
             //Check if is new config
 
             if (indexes[0] > jsonData.length) {
@@ -1040,7 +1039,7 @@
               "afterend",
               AddValue
             );
-            console.log(arrayData);
+            //console.log(arrayData);
             drawImage();
             draw_zone(arrayData);
           });
@@ -1050,8 +1049,8 @@
             var offset = $(this).offset();
             X = e.pageX - offset.left;
             Y = e.pageY - offset.top;
-            console.log(X, Y);
-            console.log(indexes);
+            //console.log(X, Y);
+            //console.log(indexes);
             //Check if is new config
 
             if (indexes[0] > jsonData.length) {
@@ -1133,7 +1132,7 @@
               "afterend",
               AddValue
             );
-            console.log(arrayData);
+            //console.log(arrayData);
             drawImage();
             draw_remove_area(arrayData);
           });
@@ -1145,7 +1144,7 @@
       var config = "{{config}}";
       var index = this.id.split("-")[1];
       var IntIndex = parseInt(index) - 1;
-      console.log(IntIndex, jsonData.length);
+      //console.log(IntIndex, jsonData.length);
       if (IntIndex > jsonData.length) {
         // Para uma nova configuração
         drawImage();
@@ -1177,7 +1176,7 @@
               arrayData = jsonData[IntIndex]["start_point"];
               arrayData2 = jsonData[IntIndex]["end_point"];
             }
-            console.log(config);
+            //console.log(config);
             draw_line_intersection_zone(
               arrayData,
               arrayData2
@@ -1189,7 +1188,7 @@
             } else {
               arrayData = jsonData[IntIndex];
             }
-            console.log(arrayData);
+            //console.log(arrayData);
             draw_remove_area(arrayData);
 
             break;

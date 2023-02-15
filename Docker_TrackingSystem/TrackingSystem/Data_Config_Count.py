@@ -2,7 +2,7 @@ from collections import OrderedDict
 import datetime
 import json
 import math
-from paho.mqtt import client as mqtt_client
+import paho.mqtt.client as mqtt
 import os
 import string
 import sys
@@ -68,7 +68,7 @@ def isGoingInsideFrame(CenterPoint, InicialPoint, FinalPoint):
     inicial_distance = np.linalg.norm(center_point-inicial_point)
     final_distance = np.linalg.norm(center_point-final_point)
     # está a afastar-se
-    print(final_distance, inicial_distance)
+    # print(final_distance, inicial_distance)
     if inicial_distance > final_distance:
         return False
     else:
@@ -448,15 +448,17 @@ class Data_Config_Count():
         username = 'mqtt_user'
         password = '123abc!'
 
-        client = mqtt_client.Client(client_id+str(self.config.camera_id))
+        client = mqtt.Client(client_id+str(self.config.camera_id))
         client.username_pw_set(username, password)
-        # client.on_connect = on_connect
-        # client.on_log = on_log
         if not client.is_connected():
-            client.connect(broker, port)
-        # print(DataPacket)
-        result = client.publish(topic, json.dumps(DataPacket))
-
+            try:
+                client.connect(broker, port)
+            except:
+                print("Connection error")
+                pass
+        if client.is_connected():
+            result = client.publish(topic, json.dumps(DataPacket))
+            print("AQUI ",result.is_published())
         for id, value in PersonPacket.items():
             PersonPacket[id]["centroids"] = self.ARRAY_FULL_DATA[id].centroid[-20:]
             PersonPacket[id]["box"] = self.ARRAY_FULL_DATA[id].box[-1]

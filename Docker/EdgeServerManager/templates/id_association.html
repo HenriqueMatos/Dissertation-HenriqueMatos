@@ -237,7 +237,7 @@
     const result = decodedString.split("'").join('"');
     //console.log(result);
     var jsonData = JSON.parse(result);
-    console.log(jsonData);
+    //console.log(jsonData);
     $(document).on("input", "#select-1,#select-2", function () {
         valor = $(this).val();
         var indexes = this.id.split("-");
@@ -322,7 +322,7 @@
             }else{
               drawImage2(jsonData[i]["frame"])
             }
-            console.log(jsonData[i]["line_intersection_zone"])
+            //console.log(jsonData[i]["line_intersection_zone"])
 
             for (var j = 0; j < jsonData[i]["line_intersection_zone"].length; j++) {
               if(jsonData[i]["line_intersection_zone"][j]["name"]==optionValue){
@@ -397,7 +397,7 @@
 
     function updateValues() {
       $.getJSON(window.location.href + "/get_association", function (data) {
-        console.log(data.Associations);
+        //console.log(data.Associations);
         AssociationData=data.Associations
         var htmlInsert = "";
         for (var i = 0; i < data.Associations.length; i++) {
@@ -422,9 +422,9 @@
   
       $("#Refresh").on("click", function () {
         //console.log("{{data}}")
-        console.log(window.location.href + "refresh_all")
+        //console.log(window.location.href + "refresh_all")
         $.get(window.location.href + "refresh_all").done(function (data) {
-          console.log(data);
+          //console.log(data);
         });
       });
     }
@@ -438,7 +438,7 @@ $(document).on("click", ".bi-trash", function () {
   $.post(window.location.href + "/remove_association", {
     data: JSON.stringify(data),
   }).done(function (data) {
-    console.log(data);
+    //console.log(data);
     //history.back();
     location.reload()
   });
@@ -448,24 +448,23 @@ $(document).on("click", ".bi-trash", function () {
 
 
 $(".btn").on("click", function () {
-  console.log("OLA MUNDO");
   var config = "{{config}}";
   var select1 = document.getElementById("select-1");
   var select2 = document.getElementById("select-2");
   var optionselect1 = document.getElementById("option-select-1-1");
   var optionselect2 = document.getElementById("option-select-2-1");
   
-  console.log(select1.value)
-  console.log(select2.value)
-  console.log(optionselect1.value)
-  console.log(optionselect2.value)
+  //console.log(select1.value)
+  //console.log(select2.value)
+  //console.log(optionselect1.value)
+  //console.log(optionselect2.value)
 
   if(select1.value!= "" && select2.value!= "" && optionselect1.value!= "" && optionselect2.value!= ""){
     var data=[{"Name":select1.value,"ConfigName":optionselect1.value},{"Name":select2.value,"ConfigName":optionselect2.value}]
     $.post(window.location.href + "/add_association", {
       data: JSON.stringify(data),
     }).done(function (data) {
-      console.log(data);
+      //console.log(data);
       //history.back();
       location.reload()
     });

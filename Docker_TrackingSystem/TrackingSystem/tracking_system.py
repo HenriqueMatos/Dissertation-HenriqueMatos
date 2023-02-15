@@ -73,7 +73,14 @@ def on_message(client, userdata, message):
                 sendData["Authenticate"] = response["access_token"]
                 sendData["camera_id"] = ConfigDataUpdater.config.camera_id
 
-                client.publish("camera_config", json.dumps(sendData))
+                
+                try:
+                    if not ConfigDataUpdater.mqtt_client.is_connected():
+                        ConfigDataUpdater.mqtt_client.reconnect()
+                    client.publish("camera_config", json.dumps(sendData)) 
+                except :
+                    os._exit(-1)
+                
 
             if JsonObject["type"] == "re-identification":
                 for intersectIndex, item in enumerate(ConfigDataUpdater.config.input.line_intersection_zone):
@@ -124,9 +131,16 @@ def on_message(client, userdata, message):
                             sendData["type"] = "reid-association"
                             sendData["old-id"] = JsonObject["id"]
                             sendData["new-id"] = result
+                            
+                            try:
+                                if not ConfigDataUpdater.mqtt_client.is_connected():
+                                    ConfigDataUpdater.mqtt_client.reconnect()
+                                client.publish(item.id_association.publish_location,
+                                           json.dumps(sendData)) 
+                            except :
+                                os._exit(-1)
 
-                            client.publish(item.id_association.publish_location,
-                                           json.dumps(sendData))
+                            
 
                         # If any association was made Send New ID to tracking system
 
@@ -150,18 +164,34 @@ def ThreadDataTransmitter(ConfigDataUpdater, frame):
     sendData["camera_id"] = ConfigDataUpdater.config.camera_id
 
     ConfigDataUpdater.mqtt_client = mqtt.Client(
-        str(ConfigDataUpdater.config.camera_name))
-    ConfigDataUpdater.mqtt_client.connect(ConfigDataUpdater.config.ip)
-    print(sendData, ConfigDataUpdater.config.camera_name, ConfigDataUpdater.config.ip)
-    ConfigDataUpdater.mqtt_client.publish(
-        "camera_config", json.dumps(sendData))
-
+        str(ConfigDataUpdater.config.camera_name),clean_session=False)
+    ConfigDataUpdater.mqtt_client.connect(ConfigDataUpdater.config.ip,keepalive=1)
+    
+    result=ConfigDataUpdater.mqtt_client.publish(
+            "camera_config", json.dumps(sendData))
+    # result.wait_for_publish()
+    # try:
+    #     if not ConfigDataUpdater.mqtt_client.is_connected():
+    #         ConfigDataUpdater.mqtt_client.reconnect()
+    #         result=ConfigDataUpdater.mqtt_client.publish(
+    #         "camera_config", json.dumps(sendData))
+    #         print("AQUI ",result.is_published())  
+    # except :
+    #     os._exit(-1)
+      
+        
     ConfigDataUpdater.mqtt_client.subscribe("edge_config/"+KeycloakUsername)
     ConfigDataUpdater.mqtt_client.on_message = on_message
     ConfigDataUpdater.mqtt_client.loop_start()
-    quit()
+    
+        
     while(1):
         time.sleep(30)
+        try:
+            if not ConfigDataUpdater.mqtt_client.is_connected():
+                ConfigDataUpdater.mqtt_client.reconnect()
+        except :
+            pass
 
 
 def detect():
@@ -349,7 +379,11 @@ def detect():
                 detections[:, :4] = boxes
 
             trackerTimer.tic()
-            online_targets = tracker.update(detections, im0)
+            try:
+                online_targets = tracker.update(detections, im0)
+            except:
+                print("Erro de proximidade")
+                continue
             trackerTimer.toc()
             timer.toc()
 
@@ -375,8 +409,6 @@ def detect():
                     ID_with_Box[tid] = (int(tlbr[0]), int(
                         tlbr[1]), int(tlbr[2]), int(tlbr[3]))
                     ID_with_Class[tid] = names[int(tcls)]
-                    print((int(tlbr[0]), int(
-                        tlbr[1]), int(tlbr[2]), int(tlbr[3])))
                     ID_with_Box_Frame[tid] = imageBackUp[int(tlbr[1]):int(
                         tlbr[3]), int(tlbr[0]):int(tlbr[2])]
 

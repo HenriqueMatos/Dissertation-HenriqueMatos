@@ -100,24 +100,10 @@
   var lastUpdateValue = "";
   function updateValues() {
     $.getJSON(window.location.href + "updateDataServer", function (data) {
-      console.log(data);
-      /*<tr>
-        <th scope="row">1</th>
-        <td>Mark</td>
-        <td>Otto</td>
-        <td>@mdo</td>
-      </tr>
-      <tr>
-        <th scope="row">2</th>
-        <td>Jacob</td>
-        <td>Thornton</td>
-        <td>@fat</td>
-      </tr>
-      */
-      //var htmlInsert = `<div class="row">`;
+      //console.log(data);
       var htmlInsert = "";
       for (var i = 0; i < data.DataServer.length; i++) {
-        console.log(data.DataServer[i]);
+        //console.log(data.DataServer[i]);
 
         htmlInsert +=
           `<tr>
@@ -157,9 +143,9 @@
       });
     });*/
     $("#Refresh").unbind().click(function () {
-      console.log(window.location.href + "refresh_all");
+      //console.log(window.location.href + "refresh_all");
       $.get(window.location.href + "refresh_all").done(function (data) {
-        console.log(data);
+        //console.log(data);
       });
     });
   }

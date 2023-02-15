@@ -178,7 +178,6 @@ def SetconfigPoints():
         config_name_before = data["configBefore"]
         config_name = data["config"]
         new_data = data["data"]
-        print("CONA",preferred_username, config_name_before, config_name)
         print(new_data)
 
         for index in range(len(DataServer)):
@@ -446,17 +445,21 @@ def on_message(client, userdata, message):
 if __name__ == '__main__':
     print("START")
     
-    client = mqtt.Client("EdgeServer1")
 
     threading.Thread(target=web, daemon=False).start()
     
-    client.connect(SERVER_IP)
+    client = mqtt.Client("EdgeServer1",clean_session=False)
+    client.connect(SERVER_IP,keepalive=1)
     client.subscribe("camera_config")
     client.on_message = on_message
     client.loop_start()
     while(1):
-        print("AQUI")        
-        time.sleep(2)
+        # try:
+        #     if not client.is_connected():
+        #         client.reconnect()
+        # except :
+        #     pass
+        time.sleep(30)
 
 
 

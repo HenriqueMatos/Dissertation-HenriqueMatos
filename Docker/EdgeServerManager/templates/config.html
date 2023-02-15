@@ -115,7 +115,7 @@
     "text/html"
     );
     var decodedString = dom.body.textContent;
-    console.log(decodedString);
+    //console.log(decodedString);
     let result = decodedString.split("'").join('"');
     let result2 = result.replaceAll("None", "null");
     //console.log(result2);
@@ -132,37 +132,25 @@
 
   $(document).on("input", ".form-control", function () {
     valor = $(this).val();
-    //console.log(this.id, valor);
     if(!valor){
       jsonData[this.id]=jsonDataOriginal[this.id]
     }else{
       jsonData[this.id]=valor
     }
-    //console.log(jsonData)
   });
 
   $("#SendDevice").on("click", function () {
-    //console.log("{{data}}")
       let DataSend = {
         data: jsonData,
         preferred_username: "{{data.preferred_username}}",
       };
-      console.log(DataSend)
       $.post(window.location.href + "_set", {
         data: JSON.stringify(DataSend),
       }).done(function (data) {
-        console.log(data);
         window.location.href = window.location.href.replace("config","");
       });
-    
-    
-   
   });
 
-  
-  //console.log(jsonData);
-  //console.log(buttonData);
-  //console.log(Object.keys(buttonData));
   
   window.onload = function() {
     FullData=dataParser("{{data}}")
