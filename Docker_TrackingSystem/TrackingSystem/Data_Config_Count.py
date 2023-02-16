@@ -448,17 +448,15 @@ class Data_Config_Count():
         username = 'mqtt_user'
         password = '123abc!'
 
-        client = mqtt.Client(client_id+str(self.config.camera_id))
+        client = mqtt.Client(client_id+str(self.config.camera_id),clean_session=False)
         client.username_pw_set(username, password)
-        if not client.is_connected():
-            try:
-                client.connect(broker, port)
-            except:
-                print("Connection error")
-                pass
-        if client.is_connected():
-            result = client.publish(topic, json.dumps(DataPacket))
-            print("AQUI ",result.is_published())
+        try:
+            client.connect(broker, port,keepalive=1)
+        except:
+            print("Connection error")
+            pass
+        result = client.publish(topic, json.dumps(DataPacket))
+        # print("AQUI ",result.is_published())
         for id, value in PersonPacket.items():
             PersonPacket[id]["centroids"] = self.ARRAY_FULL_DATA[id].centroid[-20:]
             PersonPacket[id]["box"] = self.ARRAY_FULL_DATA[id].box[-1]
