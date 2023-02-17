@@ -2,6 +2,7 @@ from collections import OrderedDict
 import datetime
 import json
 import math
+import time
 import paho.mqtt.client as mqtt
 import os
 import string
@@ -308,9 +309,6 @@ class Data_Config_Count():
             # Assign Objects to PersonPacket Variable
             for id in PersonPacket:
                 if self.ARRAY_FULL_DATA[id].objects:
-                    # if self.People_Objects.__contains__(id):
-                    if "objects" not in PersonPacket[id]:
-                        PersonPacket[id]["objects"] = []
                     PersonPacket[id]["objects"] = self.ARRAY_FULL_DATA[id].objects
 
         # Remove undetected People
@@ -438,6 +436,7 @@ class Data_Config_Count():
         for id, value in PersonPacket.items():
             DataPacket["people"].append(value)
         DataPacket["device_id"] = self.config.camera_id
+        DataPacket["timestamp"] = time.time()
 
         # SEND DATA TO MQTT BROKER
         # broker = 'homeassistant.local'
