@@ -9,3 +9,11 @@ ________________________
 Adicionado o timestamp na trama final
 
 https://github.com/HenriqueMatos/Dissertation-HenriqueMatos/commit/5423f341e269c85238631c2db4adbb255878dc47
+
+________________________
+
+13 março 2023
+Adicionado o ficheiro de log_changes 
+Parou de enviar tramas quando nenhuma pessoa foi detetada
+
+https://github.com/HenriqueMatos/Dissertation-HenriqueMatos/commit/5423f341e269c85238631c2db4adbb255878dc47
