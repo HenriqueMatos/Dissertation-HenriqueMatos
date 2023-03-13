@@ -432,7 +432,6 @@ class Data_Config_Count():
         print(self.count_inside_zone, self.count_outside_zone)
         print("Número de Pessoas", self.num_people_total)
 
-        # file1 = open("data_packet.json", "a")  # append mode
         for id, value in PersonPacket.items():
             DataPacket["people"].append(value)
         DataPacket["device_id"] = self.config.camera_id
@@ -454,7 +453,8 @@ class Data_Config_Count():
         except:
             print("Connection error")
             pass
-        result = client.publish(topic, json.dumps(DataPacket))
+        if DataPacket["people"]:
+            result = client.publish(topic, json.dumps(DataPacket))
         # print("AQUI ",result.is_published())
         for id, value in PersonPacket.items():
             PersonPacket[id]["centroids"] = self.ARRAY_FULL_DATA[id].centroid[-20:]

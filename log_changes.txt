@@ -1,0 +1,11 @@
+16 fevereiro 2023
+Corrigido o erro de conexão e envio para o homeassistant
+
+https://github.com/HenriqueMatos/Dissertation-HenriqueMatos/commit/4a5c943aa775a246565659aa32cd290d416167ec
+
+________________________
+
+17 fevereiro 2023
+Adicionado o timestamp na trama final
+
+https://github.com/HenriqueMatos/Dissertation-HenriqueMatos/commit/5423f341e269c85238631c2db4adbb255878dc47
