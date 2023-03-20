@@ -5,7 +5,7 @@
     "camera_zone": "Escola de Engenharia",
     "timestamp_config_creation": "07/06/2022 16:33:22",
     "weights": "yolov7-tiny.pt",
-    "source": "ch01_08000000033001401.mp4",
+    "source": "0",
     "iou_thres": 0.45,
     "conf_thres": 0.09,
     "img_size": 640,

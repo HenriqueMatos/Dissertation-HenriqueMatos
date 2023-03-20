@@ -17,3 +17,8 @@ Adicionado o ficheiro de log_changes
 Parou de enviar tramas quando nenhuma pessoa foi detetada
 
 https://github.com/HenriqueMatos/Dissertation-HenriqueMatos/commit/5423f341e269c85238631c2db4adbb255878dc47
+
+________________________
+
+20 março 2023
+Corrigido erro de aceder ao video em stream quando já está a ser usado

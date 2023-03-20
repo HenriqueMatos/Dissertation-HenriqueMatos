@@ -58,11 +58,14 @@ def on_message(client, userdata, message):
                     except print(0):
                         pass
             if JsonObject["type"] == "refresh":
-                os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "rtsp_transport;udp"
-                cap = cv2.VideoCapture(ConfigDataUpdater.config.source, cv2.CAP_FFMPEG)
-                _, frame = cap.read()
+                # if str(ConfigDataUpdater.config.source).isnumeric():
+                #     cap = cv2.VideoCapture(int(ConfigDataUpdater.config.source))
+                # else:
+                #     os.environ["OPENCV_FFMPEG_CAPTURE_OPTIONS"] = "rtsp_transport;udp"
+                #     cap = cv2.VideoCapture(ConfigDataUpdater.config.source)
+                # _, frame = cap.read()
 
-                cv2.imwrite("frame.jpg", frame)
+                # cv2.imwrite("frame.jpg", frame)
                 with open("frame.jpg", "rb") as image_file:
                     encoded_string = base64.b64encode(
                         image_file.read()).decode('utf-8')
@@ -286,6 +289,7 @@ def detect():
     vid_path, vid_writer = None, None
     if webcam:
         view_img = check_imshow()
+        view_img = False
         cudnn.benchmark = True  # set True to speed up constant image size inference
         dataset = LoadStreams(ConfigDataUpdater.config.source, img_size=imgsz, stride=stride)
     else:
