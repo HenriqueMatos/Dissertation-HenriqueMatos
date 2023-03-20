@@ -22,3 +22,5 @@ ________________________
 
 20 março 2023
 Corrigido erro de aceder ao video em stream quando já está a ser usado
+
+https://github.com/HenriqueMatos/Dissertation-HenriqueMatos/commit/c6c9a2a9039ddcc9a354a1c9f124982bcd04a492
